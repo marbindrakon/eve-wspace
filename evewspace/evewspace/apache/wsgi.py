@@ -14,6 +14,7 @@ framework.
 
 """
 import os
+import sys
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evewspace.settings")
 
@@ -26,3 +27,9 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
+
+
+# Needed for Apache to find the settings file
+base = os.path.dirname(os.path.dirname(__file__))
+base_parent = os.path.dirname(base)
+sys.path.append(base_parent)
