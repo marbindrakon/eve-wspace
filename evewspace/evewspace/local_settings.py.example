@@ -1,4 +1,5 @@
 # Set this to False for production or you'll leak memory
+# DEBUG = not True
 DEBUG = True
 
 # Set this to a secret value, google "django secret key" will give you
