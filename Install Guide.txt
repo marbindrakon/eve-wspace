@@ -1,0 +1,92 @@
+Quick install guide to get eve-wspace installed for testing on Ubuntu 12.04 LTS 64bit using Nginx
+
+Download eve-wspace from http://marbindrakon.github.com/eve-wspace/ to get latest zip or tarball package
+	Upload to server
+	expand the file and rename to evewspace
+
+Make sure everything is up to date before starting.
+	sudo apt-get update
+	sudo apt-get upgrade
+	
+Install dependencies.
+	sudo apt-get install git git-core build-essential python-dev python-pip nginx bzip2 memcached libmysqlclient-dev unzip python-mysqldb mysql-server vim
+	
+	When mysql-server is being installed leave the root password blank.
+	
+Install rabbitmq-server.
+	sudo vi /etc/apt/sources.list
+		Add.
+			deb http://www.rabbitmq.com/debian/ testing main
+		Write and quit.
+	wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+	sudo apt-key add rabbitmq-signing-key-public.asc
+	sudo apt-get update && sudo apt-get install rabbitmq-server
+	
+Install some more stuff.
+	cd evewspace
+	sudo easy_install -U distribute	
+	sudo pip install -r requirements.txt
+	sudo pip install gunicorn
+
+Setup mysql.
+	mysql -u root
+		create database djangotest;
+		quit
+	cd ~
+	wget http://donbot.fcftw.org/mysql55-inferno12-extended.sql.bz2
+	bunzip2 mysql55-inferno12-extended.sql.bz2
+	mysql -u root -D djangotest < mysql55-inferno12-extended.sql 
+
+Make static directory.
+	mkdir static
+	cd static
+	python ~/evewspace/evewspace/manage.py collectstatic --noinput
+
+	
+	cd ~/evewspace/evewspace
+	./manage.py syncdb --noinput
+	./manage.py migrate
+	./manage.py buildsystemdata
+	./manage.py loaddata ~/evewspace/evewspace/*/fixtures/*.json
+	./manage.py resetadmin
+	./manage.py syncrss
+	
+	
+Nginx.
+	sudo vi /etc/nginx/sites-available/evewspace
+	Example - replace x.x.x.x with your IP and rename username to your username where the static folder is located.
+	
+		server {
+			listen 80;
+			server_name x.x.x.x;
+			underscores_in_headers on;
+
+			location /static {
+				alias /home/username/static;
+			}
+			location / {
+				proxy_pass_header Server;
+				proxy_set_header Host $http_host;
+				proxy_redirect off;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Scheme $scheme;
+				proxy_connect_timeout 10;
+				proxy_read_timeout 30;
+				proxy_pass http://localhost:8000;
+			}
+		}
+	
+	
+	sudo rm /etc/nginx/sites-enabled/default 
+	sudo ln -s /etc/nginx/sites-available/evewspace /etc/nginx/sites-enabled/evewspace
+	sudo service nginx stop
+	sudo service nginx start
+	
+Start it up. (I used two terminal windows to start this, but you could use screen also)
+	cd ~/evewspace/evewspace/
+	python manage.py celery worker -B --loglevel=INFO --concurrency=3
+	
+	cd ~/evewspace/evewspace/evewspace/
+	gunicorn_django -w 4 settings.py
+	
+Open up a web browser and go to the IP or URL of the test server.
