@@ -95,6 +95,7 @@ Next, you should create and activate a virtual Python environment for Eve W-Spac
 :command:`$ virtualenv --no-site-packages /home/maptool/eve-wspace`
 
 :command:`$ source /home/maptool/eve-wspace/bin/activate`
+	If you use bash the command is $ . /home/maptool/eve-wspace/bin/activate
 
 You will notice that your shell changes to include *(eve-wspace)* when the virtual environment is active.
 
