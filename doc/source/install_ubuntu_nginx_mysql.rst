@@ -18,13 +18,13 @@ Requirements
     * libmysqlclient-dev
     * mysql-server
     * libxml2-dev
-    * libslt-dev
+    * libxslt-dev
     * rabbitmq-server
     * supervisor
 
 You can install all required packages with the following. You will be prompted for a mysql root password. You may leave this blank if you wish, but it is recommended that you set a secure password and remember it for later.
 
-:command:`$ sudo apt-get install git-core build-essential python-dev python-pip nginx bzip2 memcached libmysqlclient-dev mysql-server libxml2-dev libslt-dev rabbitmq-server supervisor`
+:command:`$ sudo apt-get install git-core build-essential python-dev python-pip nginx bzip2 memcached libmysqlclient-dev mysql-server libxml2-dev libxslt-dev rabbitmq-server supervisor`
 
 You will also be needing to edit text, so make sure to install your favorite text editor if *nano* or *vi* (not *vim*) aren't your cup of tea:
 
@@ -45,7 +45,7 @@ Enter the root password you set when installing MySQL before:
 
 Then, create the database and grant access to it to a new mysql user called *maptool* with a password you should remember for later. If you want to simply use the root MySQL user, simply ignore the *GRANT PRIVILEGES* command.::
 
-    mysql> CREATE DATABASE evewspace CHARACTER SET utf-8;
+    mysql> CREATE DATABASE evewspace CHARACTER SET utf8;
 
     mysql> GRANT ALL PRIVILEGES ON 'evewspace'.'*' TO 'maptool'@'localhost' IDENTIFIED BY '<insert a password>;
 
@@ -158,7 +158,7 @@ CCP releases a Static Data Export for each major patch in MS SQL format. Steve R
     (eve-wspace)$ cd /home/maptool
     (eve-wspace)$ curl -O http://www.fuzzwork.co.uk/dump/mysql55-retribution-1.1-84566.tbz2
     (eve-wspace)$ bunzip2 mysql55-retribution-1.1-84566.tbz2
-    (eve-wspace)$ tar xvf mysql55-retribution-1.1-84566.tbz2
+    (eve-wspace)$ tar xvf mysql55-retribution-1.1-84566.tar
     (eve-wspace)$ mysql -u evewspace -p<password> < retribution-1.1-84566/mysql55-retribution-1.1-84566.sql
 
 The sql import will take a few minutes to run. When it completes, your MySQL database will have all of the Static Data Export tables available.
