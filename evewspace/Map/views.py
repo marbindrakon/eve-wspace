@@ -14,12 +14,12 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from datetime import datetime, timedelta
+import json
+import csv
+
 from Map.models import *
 from Map import utils
-from API import utils as handler
-from POS import tasks as pos_tasks
-from POS.models import POS
-from core.models import Type, Corporation
 from core.utils import get_config
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -30,12 +30,8 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group, Permission
 from django.shortcuts import render, get_object_or_404
-from django.conf import settings
-from datetime import datetime, timedelta, time
 import pytz
-import json
-import eveapi
-import csv
+
 
 # Decorator to check map permissions. Takes request and mapID
 # Permissions are 0 = None, 1 = View, 2 = Change
@@ -44,16 +40,19 @@ import csv
 def require_map_permission(permission=2):
     def _dec(view_func):
         def _view(request, mapID, *args, **kwargs):
-            map = get_object_or_404(Map, pk=mapID)
-            if map.get_permission(request.user) < permission:
+            curMap = get_object_or_404(Map, pk=mapID)
+            if curMap.get_permission(request.user) < permission:
                 raise PermissionDenied
             else:
                 return view_func(request, mapID, *args, **kwargs)
+
         _view.__name__ = view_func.__name__
         _view.__doc__ = view_func.__doc__
         _view.__dict__ = view_func.__dict__
         return _view
+
     return _dec
+
 
 @login_required
 @require_map_permission(permission=1)
@@ -62,9 +61,9 @@ def get_map(request, mapID):
     If we do, then return a TemplateResponse for the map. If map does not
     exist, return 404. If we don't have permission, return PermissionDenied.
     """
-    map = get_object_or_404(Map, pk=mapID)
-    context = {'map': map, 'access': map.get_permission(request.user),
-            'systemsJSON': map.as_json(request.user)}
+    curMap = get_object_or_404(Map, pk=mapID)
+    context = {'map': curMap, 'access': curMap.get_permission(request.user),
+               'systemsJSON': curMap.as_json(request.user)}
     return TemplateResponse(request, 'map.html', context)
 
 
@@ -73,13 +72,12 @@ def get_map(request, mapID):
 def map_checkin(request, mapID):
     # Initialize json return dict
     jsonvalues = {}
-    profile = request.user.get_profile()
     currentmap = get_object_or_404(Map, pk=mapID)
 
     # Out AJAX requests should post a JSON datetime called loadtime
     # back that we use to get recent logs.
-    if  'loadtime' not in request.POST:
-        return HttpResponse(json.dumps({error: "No loadtime"}),mimetype="application/json")
+    if 'loadtime' not in request.POST:
+        return HttpResponse(json.dumps({'error': "No loadtime"}), mimetype="application/json")
     timestring = request.POST['loadtime']
 
     loadtime = datetime.strptime(timestring, "%Y-%m-%d %H:%M:%S.%f")
@@ -91,7 +89,7 @@ def map_checkin(request, mapID):
             jsonvalues.update({'dialogHTML': dialogHtml})
 
     newlogquery = MapLog.objects.filter(timestamp__gt=loadtime, visible=True,
-            map=currentmap)
+                                        map=currentmap)
     loglist = []
 
     for log in newlogquery:
@@ -103,6 +101,7 @@ def map_checkin(request, mapID):
 
     return HttpResponse(json.dumps(jsonvalues), mimetype="application/json")
 
+
 @login_required
 @require_map_permission(permission=1)
 def map_refresh(request, mapID):
@@ -112,25 +111,28 @@ def map_refresh(request, mapID):
     """
     if not request.is_ajax():
         raise PermissionDenied
-    map = get_object_or_404(Map, pk=mapID)
+    curMap = get_object_or_404(Map, pk=mapID)
     result = [datetime.strftime(datetime.now(pytz.utc), "%Y-%m-%d %H:%M:%S.%f"),
-            utils.MapJSONGenerator(map, request.user).get_systems_json()]
+              utils.MapJSONGenerator(curMap, request.user).get_systems_json()]
     return HttpResponse(json.dumps(result))
 
-def checkin_igb_trusted(request, map):
+
+def checkin_igb_trusted(request, curMap):
     """
     Runs the specific code for the case that the request came from an igb that
     trusts us, returns None if no further action is required, returns a string
     containing the html for a system add dialog if we detect that a new system
     needs to be added
     """
-    profile = request.user.get_profile()
     currentsystem = System.objects.get(name=request.eve_systemname)
     oldsystem = None
     result = None
     threshold = datetime.now(pytz.utc) - timedelta(minutes=5)
-    recentlyactive = request.user.locations.filter(timestamp__gt=threshold,
-            charactername=request.eve_charname).all()
+    recentlyactive = request.user.locations.filter(
+        timestamp__gt=threshold,
+        charactername=request.eve_charname
+    ).all()
+
     if recentlyactive.count():
         oldsystem = request.user.locations.get(charactername=request.eve_charname).system
 
@@ -141,31 +143,41 @@ def checkin_igb_trusted(request, map):
     #in the same map (i.e 'oldsystem in map and currentsystem not in map' will be
     #False).
     if (
-      oldsystem in map
-      and currentsystem not in map
-      #Stop it from adding everyone's paths through k-space to the map
-      and not (oldsystem.is_kspace() and currentsystem.is_kspace())
-      and recentlyactive.count()
-      ):
-        context = { 'oldsystem' : map.systems.filter(system=oldsystem).all()[0],
-                    'newsystem' : currentsystem,
-                    'wormholes'  : utils.get_possible_wh_types(oldsystem, currentsystem),
-                  }
+        oldsystem in curMap
+        and currentsystem not in curMap
+        and not _is_moving_from_kspace_to_kspace(oldsystem, currentsystem)
+        and recentlyactive.count()
+    ):
+        context = {
+            'oldsystem': curMap.systems.filter(system=oldsystem).all()[0],
+            'newsystem': currentsystem,
+            'wormholes': utils.get_possible_wh_types(oldsystem, currentsystem),
+        }
+
         result = render_to_string('igb_system_add_dialog.html', context,
                                   context_instance=RequestContext(request))
 
     currentsystem.add_active_pilot(request.user, request.eve_charname,
-            request.eve_shipname, request.eve_shiptypename)
+                                   request.eve_shipname, request.eve_shiptypename)
     return result
+
+
+def _is_moving_from_kspace_to_kspace(oldsystem, currentsystem):
+    """
+    returns whether we are moving through kspace
+    :param oldsystem:
+    :param currentsystem:
+    :return:
+    """
+    return oldsystem.is_kspace() and currentsystem.is_kspace()
+
 
 def get_system_context(msID):
     mapsys = get_object_or_404(MapSystem, pk=msID)
-    currentmap = mapsys.map
 
-    #if mapsys represents a k-space system get the relevent KSystem object
+    #if mapsys represents a k-space system get the relevant KSystem object
     if mapsys.system.is_kspace():
         system = mapsys.system.ksystem
-    #otherwise get the relevant WSystem
     else:
         system = mapsys.system.wsystem
 
@@ -174,38 +186,38 @@ def get_system_context(msID):
     interestthreshold = datetime.now(pytz.utc) - timedelta(minutes=interest_offset)
 
     scanwarning = system.lastscanned < scanthreshold
-    if  interest_offset > 0:
+    if interest_offset > 0:
         interest = mapsys.interesttime and mapsys.interesttime > interestthreshold
     else:
         interest = mapsys.interesttime
-    # Include any SiteTracker fleets that are active
+        # Include any SiteTracker fleets that are active
     stfleets = mapsys.system.stfleets.filter(ended=None).all()
-    return { 'system' : system, 'mapsys' : mapsys,
-             'scanwarning' : scanwarning, 'isinterest' : interest,
-             'stfleets': stfleets}
+    return {'system': system, 'mapsys': mapsys,
+            'scanwarning': scanwarning, 'isinterest': interest,
+            'stfleets': stfleets}
 
 
 @login_required
 @require_map_permission(permission=2)
 def add_system(request, mapID):
     """
-    AJAX view to add a system to a map. Requires POST containing:
+    AJAX view to add a system to a curMap. Requires POST containing:
        topMsID: MapSystem ID of the parent MapSystem
        bottomSystem: Name of the new system
        topType: WormholeType name of the parent side
        bottomType: WormholeType name of the new side
-       timeStatus: Womrhole time status integer value
+       timeStatus: Wormhole time status integer value
        massStatus: Wormhole mass status integer value
        topBubbled: 1 if Parent side bubbled
        bottomBubbled: 1 if new side bubbled
        friendlyName: Friendly name for the new MapSystem
     """
     if not request.is_ajax():
-        print "Non-AJAX Request from %s." % (request.user.username)
+        print "Non-AJAX Request from %s." % request.user.username
         raise PermissionDenied
     try:
         # Prepare data
-        map = Map.objects.get(pk=mapID)
+        curMap = Map.objects.get(pk=mapID)
         topMS = MapSystem.objects.get(pk=request.POST.get('topMsID'))
         bottomSys = System.objects.get(name=request.POST.get('bottomSystem'))
         topType = WormholeType.objects.get(name=request.POST.get('topType'))
@@ -215,17 +227,20 @@ def add_system(request, mapID):
         topBubbled = "1" == request.POST.get('topBubbled')
         bottomBubbled = "1" == request.POST.get('bottomBubbled')
         # Add System
-        bottomMS = map.add_system(request.user, bottomSys,
-                request.POST.get('friendlyName'), topMS)
+        bottomMS = curMap.add_system(
+            request.user, bottomSys,
+            request.POST.get('friendlyName'), topMS
+        )
         # Add Wormhole
         bottomMS.connect_to(topMS, topType, bottomType, topBubbled,
-                bottomBubbled, timeStatus, massStatus)
+                            bottomBubbled, timeStatus, massStatus)
 
         return HttpResponse()
     except ObjectDoesNotExist:
         return HttpResponse(status=400)
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def remove_system(request, mapID, msID):
@@ -237,6 +252,7 @@ def remove_system(request, mapID, msID):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=1)
 def system_details(request, mapID, msID):
@@ -249,6 +265,8 @@ def system_details(request, mapID, msID):
 
     return render(request, 'system_details.html', get_system_context(msID))
 
+
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=1)
 def system_menu(request, mapID, msID):
@@ -260,6 +278,8 @@ def system_menu(request, mapID, msID):
 
     return render(request, 'system_menu.html', get_system_context(msID))
 
+
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=1)
 def system_tooltip(request, mapID, msID):
@@ -272,6 +292,7 @@ def system_tooltip(request, mapID, msID):
     return render(request, 'system_tooltip.html', get_system_context(msID))
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=1)
 def wormhole_tooltip(request, mapID, whID):
@@ -282,11 +303,12 @@ def wormhole_tooltip(request, mapID, whID):
     if request.is_ajax():
         wh = get_object_or_404(Wormhole, pk=whID)
         return HttpResponse(render_to_string("wormhole_tooltip.html",
-            {'wh': wh}, context_instance=RequestContext(request)))
+                                             {'wh': wh}, context_instance=RequestContext(request)))
     else:
         raise PermissionDenied
 
 
+# noinspection PyUnusedLocal
 @login_required()
 @require_map_permission(permission=2)
 def mark_scanned(request, mapID, msID):
@@ -303,6 +325,7 @@ def mark_scanned(request, mapID, msID):
         raise PermissionDenied
 
 
+# noinspection PyUnusedLocal
 @login_required()
 def manual_location(request, mapID, msID):
     """Takes a POST request form AJAX with a System ID and marks the user as
@@ -312,12 +335,13 @@ def manual_location(request, mapID, msID):
     if request.is_ajax():
         mapsystem = get_object_or_404(MapSystem, pk=msID)
         mapsystem.system.add_active_pilot(request.user, "OOG Browser",
-                "Unknown", "Uknown")
+                                          "Unknown", "Uknown")
         return HttpResponse()
     else:
         raise PermissionDenied
 
 
+# noinspection PyUnusedLocal
 @login_required()
 @require_map_permission(permission=2)
 def set_interest(request, mapID, msID):
@@ -327,7 +351,7 @@ def set_interest(request, mapID, msID):
 
     """
     if request.is_ajax():
-        action = request.POST.get("action","none")
+        action = request.POST.get("action", "none")
         if action == "none":
             raise Http404
         system = get_object_or_404(MapSystem, pk=msID)
@@ -339,10 +363,12 @@ def set_interest(request, mapID, msID):
             system.interesttime = None
             system.save()
             return HttpResponse()
-        return HttpResponse(staus=418)
+        return HttpResponse(status=418)
     else:
         raise PermissionDenied
 
+
+# noinspection PyUnusedLocal
 @login_required()
 @require_map_permission(permission=2)
 def add_signature(request, mapID, msID):
@@ -367,18 +393,19 @@ def add_signature(request, mapID, msID):
             mapsystem.system.save()
             newForm = SignatureForm()
             mapsystem.map.add_log(request.user, "Added signature %s to %s (%s)."
-                    % (newSig.sigid, mapsystem.system.name, mapsystem.friendlyname))
+                                                % (newSig.sigid, mapsystem.system.name, mapsystem.friendlyname))
             return TemplateResponse(request, "add_sig_form.html",
-                    {'form': newForm, 'system': mapsystem})
+                                    {'form': newForm, 'system': mapsystem})
         else:
             return TemplateResponse(request, "add_sig_form.html",
-                    {'form': form, 'system': mapsystem})
+                                    {'form': form, 'system': mapsystem})
     else:
         form = SignatureForm()
     return TemplateResponse(request, "add_sig_form.html",
-            {'form': form, 'system': mapsystem})
+                            {'form': form, 'system': mapsystem})
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def bulk_sig_import(request, mapID, msID):
@@ -391,28 +418,30 @@ def bulk_sig_import(request, mapID, msID):
     mapsystem = get_object_or_404(MapSystem, pk=msID)
     k = 0
     if request.method == 'POST':
-        reader = csv.reader(request.POST.get('paste', '').decode('utf-8').splitlines()
-                , delimiter="\t")
+        reader = csv.reader(request.POST.get('paste', '').decode('utf-8').splitlines(), delimiter="\t")
         for row in reader:
             if k < 75:
                 if not Signature.objects.filter(sigid=row[0],
-                        system=mapsystem.system).count():
+                                                system=mapsystem.system).count():
                     Signature(sigid=row[0], system=mapsystem.system, info=" ").save()
                     k += 1
         mapsystem.map.add_log(request.user,
-                "Imported %s signatures for %s(%s)." % (k, mapsystem.system.name,
-                    mapsystem.friendlyname), True)
+                              "Imported %s signatures for %s(%s)." % (k, mapsystem.system.name,
+                                                                      mapsystem.friendlyname), True)
         mapsystem.system.lastscanned = datetime.now(pytz.utc)
         mapsystem.system.save()
         return HttpResponse()
     else:
         return TemplateResponse(request, "bulk_sig_form.html", {'mapsys': mapsystem})
 
+
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def edit_signature(request, mapID, msID, sigID):
     """
-    GET gets a pre-filled edit signature form. POST updates the signature with the new information and returns a blank add form.
+    GET gets a pre-filled edit signature form.
+    POST updates the signature with the new information and returns a blank add form.
     """
     if not request.is_ajax():
         raise PermissionDenied
@@ -434,16 +463,18 @@ def edit_signature(request, mapID, msID, sigID):
             mapsys.system.lastscanned = datetime.now(pytz.utc)
             mapsys.system.save()
             mapsys.map.add_log(request.user, "Updated signature %s in %s (%s)" %
-                    (signature.sigid, mapsys.system.name, mapsys.friendlyname))
+                                             (signature.sigid, mapsys.system.name, mapsys.friendlyname))
             return TemplateResponse(request, "add_sig_form.html",
-                    {'form': SignatureForm(), 'system': mapsys})
+                                    {'form': SignatureForm(), 'system': mapsys})
         else:
             return TemplateResponse(request, "edit_sig_form.html",
-                    {'form': form, 'system': mapsys, 'sig': signature})
+                                    {'form': form, 'system': mapsys, 'sig': signature})
     else:
         return TemplateResponse(request, "edit_sig_form.html",
-                {'form': SignatureForm(instance=signature), 'system': mapsys, 'sig': signature})
+                                {'form': SignatureForm(instance=signature), 'system': mapsys, 'sig': signature})
 
+
+# noinspection PyUnusedLocal
 @login_required()
 @require_map_permission(permission=1)
 def get_signature_list(request, mapID, msID):
@@ -456,9 +487,10 @@ def get_signature_list(request, mapID, msID):
     system = get_object_or_404(MapSystem, pk=msID)
     escalation_downtimes = int(get_config("MAP_ESCALATION_BURN", request.user).value)
     return TemplateResponse(request, "system_signatures.html",
-            {'system': system, 'downtimes': escalation_downtimes})
+                            {'system': system, 'downtimes': escalation_downtimes})
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def mark_signature_cleared(request, mapID, msID, sigID):
@@ -472,6 +504,7 @@ def mark_signature_cleared(request, mapID, msID, sigID):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def escalate_site(request, mapID, msID, sigID):
@@ -485,6 +518,7 @@ def escalate_site(request, mapID, msID, sigID):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def activate_signature(request, mapID, msID, sigID):
@@ -498,6 +532,7 @@ def activate_signature(request, mapID, msID, sigID):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def delete_signature(request, mapID, msID, sigID):
@@ -510,10 +545,11 @@ def delete_signature(request, mapID, msID, sigID):
     sig = get_object_or_404(Signature, pk=sigID)
     sig.delete()
     mapsys.map.add_log(request.user, "Deleted signature %s in %s (%s)."
-            % (sig.sigid, mapsys.system.name, mapsys.friendlyname))
+                                     % (sig.sigid, mapsys.system.name, mapsys.friendlyname))
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def manual_add_system(request, mapID, msID):
@@ -525,9 +561,10 @@ def manual_add_system(request, mapID, msID):
     systems = System.objects.all()
     wormholes = WormholeType.objects.all()
     return render(request, 'add_system_box.html', {'topMs': topMS,
-        'sysList': systems, 'whList': wormholes})
+                                                   'sysList': systems, 'whList': wormholes})
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def edit_system(request, mapID, msID):
@@ -543,21 +580,22 @@ def edit_system(request, mapID, msID):
         occupied = mapSystem.system.occupied.replace("<br />", "\n")
         info = mapSystem.system.info.replace("<br />", "\n")
         return TemplateResponse(request, 'edit_system.html', {'mapsys': mapSystem,
-            'occupied': occupied, 'info': info})
+                                                              'occupied': occupied, 'info': info})
     if request.method == 'POST':
         mapSystem.friendlyname = request.POST.get('friendlyName', '')
-        if (mapSystem.system.info != request.POST.get('info','')) or (
-                mapSystem.system.occupied != request.POST.get('occupied','')):
+        if (mapSystem.system.info != request.POST.get('info', '')) or (
+                mapSystem.system.occupied != request.POST.get('occupied', '')):
             mapSystem.system.info = request.POST.get('info', '')
             mapSystem.system.occupied = request.POST.get('occupied', '')
             mapSystem.system.save()
         mapSystem.save()
         mapSystem.map.add_log(request.user, "Edited System: %s (%s)"
-                % (mapSystem.system.name, mapSystem.friendlyname))
+                                            % (mapSystem.system.name, mapSystem.friendlyname))
         return HttpResponse()
     raise PermissionDenied
 
 
+# noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
 def edit_wormhole(request, mapID, whID):
@@ -573,18 +611,18 @@ def edit_wormhole(request, mapID, whID):
     if request.method == 'GET':
         return TemplateResponse(request, 'edit_wormhole.html', {'wormhole': wormhole})
     if request.method == 'POST':
-        wormhole.mass_status = int(request.POST.get('massStatus',0))
-        wormhole.time_status = int(request.POST.get('timeStatus',0))
+        wormhole.mass_status = int(request.POST.get('massStatus', 0))
+        wormhole.time_status = int(request.POST.get('timeStatus', 0))
         wormhole.top_type = get_object_or_404(WormholeType,
-                name=request.POST.get('topType', 'K162'))
+                                              name=request.POST.get('topType', 'K162'))
         wormhole.bottom_type = get_object_or_404(WormholeType,
-                name=request.POST.get('bottomType', 'K162'))
+                                                 name=request.POST.get('bottomType', 'K162'))
         wormhole.top_bubbled = request.POST.get('topBubbled', '1') == '1'
         wormhole.bottom_bubbled = request.POST.get('bottomBubbled', '1') == '1'
         wormhole.save()
         wormhole.map.add_log(request.user, "Updated the wormhole between %s(%s) and %s(%s)."
-                % (wormhole.top.system.name, wormhole.top.friendlyname,
-                    wormhole.bottom.system.name, wormhole.bottom.friendlyname))
+                                           % (wormhole.top.system.name, wormhole.top.friendlyname,
+                                              wormhole.bottom.system.name, wormhole.bottom.friendlyname))
         return HttpResponse()
 
     raise PermissiondDenied
@@ -599,17 +637,18 @@ def create_map(request):
         form = MapForm(request.POST)
         if form.is_valid():
             newMap = form.save()
-            newMap.add_log(request.user, "Created the %s map." % (newMap.name))
+            newMap.add_log(request.user, "Created the %s map." % newMap.name)
             newMap.add_system(request.user, newMap.root, "Root", None)
             return HttpResponseRedirect(reverse('Map.views.get_map',
-                kwargs={'mapID': newMap.pk }))
+                                                kwargs={'mapID': newMap.pk}))
         else:
             return TemplateResponse(request, 'new_map.html', {'form': form})
     else:
         form = MapForm
-        return TemplateResponse(request, 'new_map.html', { 'form': form, })
+        return TemplateResponse(request, 'new_map.html', {'form': form, })
 
 
+# noinspection PyUnusedLocal
 @require_map_permission(permission=1)
 def destination_list(request, mapID, msID):
     """
@@ -625,9 +664,10 @@ def destination_list(request, mapID, msID):
     except:
         return HttpResponse()
     return render(request, 'system_destinations.html', {'system': system,
-        'destinations': destinations})
+                                                        'destinations': destinations})
 
 
+# noinspection PyUnusedLocal
 def site_spawns(request, mapID, msID, sigID):
     """
     Returns the spawns for a given signature and system.
@@ -636,13 +676,13 @@ def site_spawns(request, mapID, msID, sigID):
     spawns = SiteSpawn.objects.filter(sigtype=sig.sigtype).all()
     if spawns[0].sysclass != 0:
         spawns = SiteSpawn.objects.filter(sigtype=sig.sigtype,
-                sysclass=sig.system.sysclass).all()
+                                          sysclass=sig.system.sysclass).all()
     return render(request, 'site_spawns.html', {'spawns': spawns})
+
 
 #########################
 #Settings Views         #
 #########################
-
 @permission_required('Map.map_admin')
 def general_settings(request):
     """
@@ -666,9 +706,9 @@ def general_settings(request):
         escalation_burn.save()
         return HttpResponse()
     return TemplateResponse(request, 'general_settings.html',
-            {'npcthreshold': npcthreshold.value, 'pvpthreshold': pvpthreshold.value,
-                'scanwarn': scanthreshold.value, 'interesttimeout': interesttime.value,
-                'escdowntimes': escalation_burn.value})
+                            {'npcthreshold': npcthreshold.value, 'pvpthreshold': pvpthreshold.value,
+                             'scanwarn': scanthreshold.value, 'interesttimeout': interesttime.value,
+                             'escdowntimes': escalation_burn.value})
 
 
 @permission_required('Map.map_admin')
@@ -677,7 +717,7 @@ def sites_settings(request):
     Returns the site spawns section.
     """
     return TemplateResponse(request, 'spawns_settings.html',
-            {'spawns': SiteSpawn.objects.all()})
+                            {'spawns': SiteSpawn.objects.all()})
 
 
 @permission_required('Map.map_admin')
@@ -688,6 +728,7 @@ def add_spawns(request):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @permission_required('Map.map_admin')
 def delete_spawns(request, spawnID):
     """
@@ -696,6 +737,7 @@ def delete_spawns(request, spawnID):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @permission_required('Map.map_admin')
 def edit_spawns(request, spawnID):
     """
@@ -710,7 +752,7 @@ def destination_settings(request):
     Returns the destinations section.
     """
     return TemplateResponse(request, 'dest_settings.html',
-            {'destinations': Destination.objects.all()})
+                            {'destinations': Destination.objects.all()})
 
 
 @permission_required('Map.map_admin')
@@ -739,9 +781,10 @@ def sigtype_settings(request):
     Returns the signature types section.
     """
     return TemplateResponse(request, 'sigtype_settings.html',
-            {'sigtypes': SignatureType.objects.all()})
+                            {'sigtypes': SignatureType.objects.all()})
 
 
+# noinspection PyUnusedLocal
 @permission_required('Map.map_admin')
 def edit_sigtype(request, sigtypeID):
     """
@@ -758,6 +801,7 @@ def add_sigtype(request):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @permission_required('Map.map_admin')
 def delete_sigtype(request, sigtypeID):
     """
@@ -773,7 +817,7 @@ def map_settings(request, mapID):
     """
     subject = get_object_or_404(Map, pk=mapID)
     return TemplateResponse(request, 'map_settings_single.html',
-            {'map': subject})
+                            {'map': subject})
 
 
 @permission_required('Map.map_admin')
@@ -786,6 +830,7 @@ def delete_map(request, mapID):
     return HttpResponse()
 
 
+# noinspection PyUnusedLocal
 @permission_required('Map.map_admin')
 def edit_map(request, mapID):
     """
@@ -832,9 +877,9 @@ def global_permissions(request):
         return HttpResponse()
     for group in Group.objects.all():
         entry = {'group': group, 'admin': admin_perm in group.permissions.all(),
-                'unrestricted': unrestricted_perm in group.permissions.all(),
-                'add_map': add_map_perm in group.permissions.all()}
+                 'unrestricted': unrestricted_perm in group.permissions.all(),
+                 'add_map': add_map_perm in group.permissions.all()}
         group_list.append(entry)
 
     return TemplateResponse(request, 'global_perms.html',
-            {'groups': group_list})
+                            {'groups': group_list})
