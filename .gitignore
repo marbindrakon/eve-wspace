@@ -9,3 +9,4 @@ include
 local_settings.py
 .DS_Store
 doc/build/*
+.idea
