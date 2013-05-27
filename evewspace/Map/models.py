@@ -134,13 +134,13 @@ class KSystem(System):
         """
         Returns the number of gate jumps to the destination by shortest route.
         """
-        return utils.RouteFinder(self, destination).route_length()
+        return utils.RouteFinder().route_length(self, destination)
 
     def distance(self, destination):
         """
         Returns the light-year distance to the destination.
         """
-        return utils.RouteFinder(self, destination).ly_distance()
+        return utils.RouteFinder().ly_distance(self, destination)
 
 
 class WSystem(System):

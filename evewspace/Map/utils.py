@@ -232,70 +232,55 @@ class RouteFinder(object):
     for getting the shortest stargate jump route length, the light-year distance,
     and the shortest stargate route as a list of KSystem objects.
     """
-    def _get_ly_distance(self):
+    def _get_ly_distance(self, sys1, sys2):
         """
         Gets the distance in light years between two systems.
         """
-        x1 = self.sys1.x
-        y1 = self.sys1.y
-        z1 = self.sys1.z
-        x2 = self.sys2.x
-        y2 = self.sys2.y
-        z2 = self.sys2.z
+        x1 = sys1.x
+        y1 = sys1.y
+        z1 = sys1.z
+        x2 = sys2.x
+        y2 = sys2.y
+        z2 = sys2.z
 
         distance = sqrt(pow(x1 - x2 ,2) + pow(y1-y2,2) + pow(z1-z2,2)) / 9.4605284e+15
         return distance
 
-    def __init__(self, sys1, sys2):
-        self.sys1 = sys1
-        self.sys2 = sys2
+    def ly_distance(self, sys1, sys2):
+        return self._get_ly_distance(sys1, sys2)
 
-    def ly_distance(self):
-        return self._get_ly_distance()
+    def route_as_ids(self, sys1, sys2):
+        return self._find_route(sys1, sys2)
 
-    def route_as_ids(self):
-        return self._dijkstra_route()
-
-    def route(self):
+    def route(self, sys1, sys2):
         from Map.models import KSystem
-        return [KSystem.objects.get(pk=sysid) for sysid in self._dijkstra_route()]
+        return [KSystem.objects.get(pk=sysid) for sysid in self._find_route(sys1, sys2)]
 
-    def route_length(self):
-        return len(self._dijkstra_route())
+    def route_length(self, sys1, sys2):
+        return len(self._find_route(sys1, sys2))
 
-    def _cache_system_jumps(self):
+    def _cache_graph(self):
         from Map.models import KSystem
         from core.models import SystemJump
-        cache.set('sysJumps', 1)
-        for sys in KSystem.objects.all():
-            cache.set(sys.pk,
-                    [i.tosystem for i in SystemJump.objects.filter(fromsystem=sys.pk).all()])
+        from django.core.cache import cache
+        import cPickle
+        import networkx as nx
+        if not cache.get('route_graph'):
+            graph = nx.Graph()
+            for from_system in KSystem.objects.all():
+                for to_system in SystemJump.objects.filter(fromsystem=from_system.pk):
+                    graph.add_edge(from_system.pk, to_system.tosystem)
+            cache.set('route_graph', cPickle.dumps(graph).encode('zlib'), 0)
 
-    def _dijkstra_route(self):
+    def _find_route(self, sys1, sys2):
         """
-        Employs Dijkstra's algorithm to find the shortest route between two systems.
         Takes two system objects (can be KSystem or SystemData).
         Returns a list of system IDs that comprise the route.
         """
-        openList = OrderedDict()
-        visitedList = OrderedDict()
-        openList.update({self.sys1.pk: {'pk': self.sys1.pk, 'parent': None}})
-        # The cache should be populated by an asynch worker, but we check anyway
-        if cache.get('sysJumps') is not 1:
-            self._cache_system_jumps()
-        target = self.sys2.pk
-        while openList:
-            current = openList.popitem(last=False)[1]
-            if current['pk'] == target:
-                route = []
-                parent = current
-                while parent:
-                    route.append(parent['pk'])
-                    parent = parent['parent']
-                return route
-            for adjacentSystem in cache.get(current['pk']):
-                newNode = {adjacentSystem: {'pk': adjacentSystem, 'parent': current}}
-                if not adjacentSystem in visitedList:
-                    openList.update(newNode)
-                    visitedList.update(newNode)
-        return []
+        import networkx as nx
+        from django.core.cache import cache
+        import cPickle
+        if not cache.get('route_graph'):
+            self._cache_graph()
+        graph = cPickle.loads(cache.get('route_graph').decode('zlib'))
+        return nx.shortest_path(graph, source=sys1.pk, target=sys2.pk)

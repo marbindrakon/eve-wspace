@@ -720,20 +720,29 @@ def create_map(request):
 @require_map_permission(permission=1)
 def destination_list(request, map_id, ms_id):
     """
-    Returns the destinations of interest list for K-space systems and
+    Returns the destinations of interest tuple for K-space systems and
     a blank response for w-space systems.
     """
-    #if not request.is_ajax():
-    #    raise PermissionDenied
+    if not request.is_ajax():
+        raise PermissionDenied
     destinations = Destination.objects.filter(Q(user=None) |
                                               Q(user=request.user))
     map_system = get_object_or_404(MapSystem, pk=ms_id)
     try:
         system = KSystem.objects.get(pk=map_system.system.pk)
+        rf = utils.RouteFinder()
+        result = []
+        for destination in destinations:
+            result.append((destination.system,
+                           rf.route_length(system,
+                                           destination.system) - 1,
+                           round(rf.ly_distance(system,
+                                        destination.system), 3)
+                           ))
     except:
-        return HttpResponse()
+        raise
     return render(request, 'system_destinations.html',
-                  {'system': system, 'destinations': destinations})
+                  {'system': system, 'destinations': result})
 
 
 # noinspection PyUnusedLocal

@@ -8,12 +8,11 @@
         <th>Autopilot</th>
         {% endif %}
     </tr>
-    {% load routetags %}
-    {% for d in destinations %}
+    {% for dest, jumps, ly in destinations %}
         <tr>
-            <td>{{d.system.name}}</td>
-            <td>{% jumps system d.system %}</td>
-            <td>{% ly system d.system %}</td>
+            <td>{{dest.name}}</td>
+            <td>{{jumps}}</td>
+            <td>{{ly}}</td>
             {% if is_igb_trusted %}
             <td><button class='btn btn-mini btn-info' onclick="CCPEVE.setDestination({{d.system.pk}});">Set</button></td>
             {% endif %}

@@ -17,3 +17,4 @@ python-memcached==1.48
 pytz==2012j
 sleekxmpp==1.1.11
 wsgiref==0.1.2
+networkx==1.7
