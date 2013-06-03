@@ -496,9 +496,11 @@ def _update_sig_from_tsv(signature, row):
     if info and sig_type:
         updated = True
 
-    signature.sigtype = sig_type
-    signature.updated = updated
-    signature.info = info
+    if sig_type:
+        signature.sigtype = sig_type
+    signature.updated = updated or signature.updated
+    if info:
+        signature.info = info
 
     return signature
 
