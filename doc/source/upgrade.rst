@@ -17,7 +17,7 @@ Upgrade Requirements
 --------------------
 A new version may introduce new requirements. As root if you installed without a virtualenv, or with your virtualenv active:
 
-:command:`(eve-wspace) $ pip install ---upgrade --r requirements.txt`
+:command:`(eve-wspace) $ pip install --upgrade -r requirements.txt`
 
 Note: requirements.txt is located in the repository root
 
