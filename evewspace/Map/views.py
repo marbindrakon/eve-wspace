@@ -426,51 +426,6 @@ def set_interest(request, map_id, ms_id):
         raise PermissionDenied
 
 
-# noinspection PyUnusedLocal
-@login_required()
-@require_map_permission(permission=2)
-def add_signature(request, map_id, ms_id):
-    """
-    This function processes the Add Signature form. GET gets the form
-    and POST submits it and returns either a blank form or one with errors.
-    All requests should be AJAX.
-    """
-    if not request.is_ajax():
-        raise PermissionDenied
-    map_system = get_object_or_404(MapSystem, pk=ms_id)
-
-    if request.method == 'POST':
-        form = SignatureForm(request.POST)
-        if form.is_valid():
-            new_sig = form.save(commit=False)
-            new_sig.sigid = utils.convert_signature_id(new_sig.sigid)
-            if Signature.objects.filter(system=map_system.system,
-                    sigid=new_sig.sigid).exists():
-                old_sig = Signature.objects.get(system=map_system.system,
-                        sigid=new_sig.sigid)
-                edit_signature(request, map_id, ms_id, old_sig.pk)
-            else:
-                new_sig.system = map_system.system
-                new_sig.updated = True
-                new_sig.save()
-                map_system.system.lastscanned = datetime.now(pytz.utc)
-                map_system.system.save()
-                map_system.map.add_log(
-                    request.user, "Added signature %s to %s (%s)."
-                    % (new_sig.sigid, map_system.system.name,
-                       map_system.friendlyname)
-                )
-            new_form = SignatureForm()
-            return TemplateResponse(request, "add_sig_form.html",
-                                {'form': new_form, 'system': map_system})
-        else:
-            return TemplateResponse(request, "add_sig_form.html",
-                                    {'form': form, 'system': map_system})
-    else:
-        form = SignatureForm()
-    return TemplateResponse(request, "add_sig_form.html",
-                            {'form': form, 'system': map_system})
-
 
 def _update_sig_from_tsv(signature, row):
     COL_SIG = 0
@@ -534,19 +489,10 @@ def bulk_sig_import(request, map_id, ms_id):
                         status=400)
             if k < 75:
                 sig_id = utils.convert_signature_id(row[COL_SIG])
-                if not Signature.objects.filter(sigid=sig_id,
-                        system=map_system.system).exists():
-
-                    new_sig = Signature(sigid=sig_id,
-                                        system=map_system.system)
-                    updated_sig = _update_sig_from_tsv(new_sig, row)
-                    updated_sig.save()
-                else:
-                    old_sig = Signature.objects.get(
-                            sigid=sig_id,
-                            system=map_system.system)
-                    updated_sig = _update_sig_from_tsv(old_sig, row)
-                    updated_sig.save()
+                sig = Signature.objects.get_or_create(sigid=sig_id,
+                        system=map_system.system)[0]
+                sig = _update_sig_from_tsv(sig, row)
+                sig.save()
 
                 k += 1
         map_system.map.add_log(request.user,
@@ -564,7 +510,7 @@ def bulk_sig_import(request, map_id, ms_id):
 # noinspection PyUnusedLocal
 @login_required
 @require_map_permission(permission=2)
-def edit_signature(request, map_id, ms_id, sig_id):
+def edit_signature(request, map_id, ms_id, sig_id=None):
     """
     GET gets a pre-filled edit signature form.
     POST updates the signature with the new information and returns a
@@ -572,34 +518,47 @@ def edit_signature(request, map_id, ms_id, sig_id):
     """
     if not request.is_ajax():
         raise PermissionDenied
-    signature = get_object_or_404(Signature, pk=sig_id)
     map_system = get_object_or_404(MapSystem, pk=ms_id)
+    
+    if sig_id != None:
+        signature = get_object_or_404(Signature, pk=sig_id)
+        created = False
 
     if request.method == 'POST':
         form = SignatureForm(request.POST)
         if form.is_valid():
-            signature.sigid = request.POST['sigid'].upper()
+            ingame_id = utils.convert_signature_id(form.cleaned_data['sigid'])
+            if sig_id == None:
+                signature, created = Signature.objects.get_or_create(
+                            system=map_system.system, sigid=ingame_id)
+
+            signature.sigid = ingame_id
             signature.updated = True
-            signature.info = request.POST['info']
+            signature.info = form.cleaned_data['info']
             if request.POST['sigtype'] != '':
-                sigtype = SignatureType.objects.get(pk=request.POST['sigtype'])
+                sigtype = form.cleaned_data['sigtype']
             else:
                 sigtype = None
             signature.sigtype = sigtype
             signature.save()
             map_system.system.lastscanned = datetime.now(pytz.utc)
             map_system.system.save()
+            if created:
+                action = 'Created'
+            else:
+                action = 'Updated'
             map_system.map.add_log(request.user,
-                                   "Updated signature %s in %s (%s)" %
-                                   (signature.sigid, map_system.system.name,
+                                   "%s signature %s in %s (%s)" %
+                                   (action, signature.sigid, map_system.system.name,
                                     map_system.friendlyname))
-            return TemplateResponse(request, "add_sig_form.html",
-                                    {'form': SignatureForm(),
-                                    'system': map_system})
         else:
             return TemplateResponse(request, "edit_sig_form.html",
                                     {'form': form,
                                     'system': map_system, 'sig': signature})
+    form = SignatureForm()
+    if sig_id == None:
+        return TemplateResponse(request, "add_sig_form.html",
+                        {'form': form, 'system': map_system})
     else:
         return TemplateResponse(request, "edit_sig_form.html",
                                 {'form': SignatureForm(instance=signature),
