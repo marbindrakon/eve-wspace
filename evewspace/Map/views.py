@@ -758,6 +758,31 @@ def create_map(request):
         form = MapForm
         return TemplateResponse(request, 'new_map.html', {'form': form, })
 
+def sortDestinations(destinations):
+
+    """
+    Takes a list of destination tuples and returns the same list, sorted in order of the jumps.
+    """
+    results = []
+    onVal = 0
+
+    for dest in destinations:
+        if len(results) == 0:
+            results.append(dest)
+        else:
+            while onVal <= len(results):
+                if onVal == len(results):
+                    results.append(dest)
+                    onVal = 0
+                    break
+                else:
+                    if dest[1] > results[onVal][1]:
+                        onVal += 1
+                    else:
+                        results.insert(onVal, dest)
+                        onVal = 0
+                        break                    
+    return results
 
 # noinspection PyUnusedLocal
 @require_map_permission(permission=1)
@@ -785,7 +810,7 @@ def destination_list(request, map_id, ms_id):
     except ObjectDoesNotExist:
         return HttpResponse()
     return render(request, 'system_destinations.html',
-                  {'system': system, 'destinations': result})
+                  {'system': system, 'destinations': sortDestinations(result)})
 
 
 # noinspection PyUnusedLocal
