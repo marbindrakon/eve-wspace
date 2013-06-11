@@ -31,7 +31,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 
 from Map.models import *
-from Map import utils
+from Map import utils, signals
 from core.utils import get_config
 
 # Decorator to check map permissions. Takes request and map_id
@@ -493,6 +493,8 @@ def bulk_sig_import(request, map_id, ms_id):
                         system=map_system.system)[0]
                 sig = _update_sig_from_tsv(sig, row)
                 sig.save()
+                signals.signature_update.send_robust(sig, user=request.user,
+                                                 signal_strength=row[COL_STRENGTH])
 
                 k += 1
         map_system.map.add_log(request.user,
@@ -551,6 +553,7 @@ def edit_signature(request, map_id, ms_id, sig_id=None):
                                    "%s signature %s in %s (%s)" %
                                    (action, signature.sigid, map_system.system.name,
                                     map_system.friendlyname))
+            signals.signature_update.send_robust(signature, user=request.user)
         else:
             return TemplateResponse(request, "edit_sig_form.html",
                                     {'form': form,
