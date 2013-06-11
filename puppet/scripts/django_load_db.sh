@@ -1,8 +1,9 @@
 !#/bin/bash
 
-wget http://donbot.fcftw.org/mysql55-inferno12-extended.sql.bz2
-bunzip2 /home/vagrant/mysql55-inferno12-extended.sql.bz2
-mysql -u root -D djangotest < /home/vagrant/mysql55-inferno12-extended.sql
+curl -O http://www.fuzzwork.co.uk/dump/mysql55-retribution-1.1-84566.tbz2
+bunzip2 mysql55-retribution-1.1-84566.tbz2
+tar xvf mysql55-retribution-1.1-84566.tar
+mysql -u root -D djangotest < retribution-1.1-84566/mysql55-retribution-1.1-84566.sql
 rm /home/vagrant/mysql55-inferno12-extended.sql
 /vagrant/evewspace/manage.py syncdb --noinput
 /vagrant/evewspace/manage.py migrate
