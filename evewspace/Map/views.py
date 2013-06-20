@@ -311,8 +311,9 @@ def system_tooltips(request, map_id):
     """
     if not request.is_ajax():
         raise PermissionDenied
-    cur_map = get_object_or_404(Map, pk=map_id)
-    ms_list = cur_map.systems.all()
+    ms_list = MapSystem.objects.filter(map_id=map_id)\
+                    .select_related('parent_wormhole', 'system__region')\
+                    .iterator()
     return render(request, 'system_tooltip.html', {'map_systems': ms_list})
 
 
@@ -343,7 +344,7 @@ def collapse_system(request, map_id, ms_id):
         raise PermissionDenied
 
     map_sys = get_object_or_404(MapSystem, pk=ms_id)
-    parent_wh = map_sys.parent_wormholes.get()
+    parent_wh = map_sys.parent_wormhole
     parent_wh.collapsed = True
     parent_wh.save()
     return HttpResponse()
@@ -360,7 +361,7 @@ def resurrect_system(request, map_id, ms_id):
         raise PermissionDenied
 
     map_sys = get_object_or_404(MapSystem, pk=ms_id)
-    parent_wh = map_sys.parent_wormholes.get()
+    parent_wh = map_sys.parent_wormhole
     parent_wh.collapsed = False
     parent_wh.save()
     return HttpResponse()
@@ -483,7 +484,7 @@ def bulk_sig_import(request, map_id, ms_id):
             # To prevent pasting of POSes into the sig importer, make sure
             # the strength column is present
             try:
-                test_var =  row[COL_STRENGTH]
+                test_var = row[COL_STRENGTH]
             except IndexError:
                 return HttpResponse('A valid signature paste was not found',
                         status=400)

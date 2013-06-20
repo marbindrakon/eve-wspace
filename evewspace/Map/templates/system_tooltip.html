@@ -2,7 +2,7 @@
 <div id="sys{{mapsys.pk}}Tip" class="systemTooltip tip">
 <div class="mapSysInfo row">
    <div class="sysClassSpan span3">
-       <h4 class="sysFriendlySpan">{{mapsys.friendlyname}}{% if mapsys.parent_wormholes.get.collapsed %} - COLLAPSED{% endif %}</h4>
+       <h4 class="sysFriendlySpan">{{mapsys.friendlyname}}{% if mapsys.parent_wormhole.collapsed %} - COLLAPSED{% endif %}</h4>
         {% if mapsys.system.sysclass < 7 %}
         <div> 
             <strong>Class: {{mapsys.system.sysclass}}</strong>

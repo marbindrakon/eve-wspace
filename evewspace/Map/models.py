@@ -95,10 +95,10 @@ class System(SystemData):
         return self.sysclass < 7
 
     def get_spec(self):
-        if self.sysclass >= 7:
-            return KSystem.objects.get(pk=self.pk)
+        if self.sysclass < 7:
+            return self.wsystem
         else:
-            return WSystem.objects.get(pk=self.pk)
+            return self.ksystem
 
     def save(self, *args, **kwargs):
         # Make sure any new lines in info or occupied are replaced with <br />
@@ -299,7 +299,7 @@ class MapSystem(models.Model):
             raise ValueError("Cannot remove the root system.")
         if self.system.maps.count() == 1:
             self.system.signatures.all().delete()
-        self.parent_wormholes.all().delete()
+        self.parent_wormhole.delete()
         for system in self.childsystems.all():
             system.remove_system(user)
         self.map.add_log(user, "Removed system: %s (%s)" % (self.system.name,
@@ -317,7 +317,7 @@ class Wormhole(models.Model):
     top = models.ForeignKey(MapSystem, related_name='child_wormholes')
     top_type = models.ForeignKey(WormholeType, related_name='+')
     top_bubbled = models.NullBooleanField(null=True, blank=True)
-    bottom = models.ForeignKey(MapSystem, null=True, related_name='parent_wormholes')
+    bottom = models.OneToOneField(MapSystem, null=True, related_name='parent_wormhole')
     bottom_type = models.ForeignKey(WormholeType, related_name='+')
     bottom_bubbled = models.NullBooleanField(null=True, blank=True)
     time_status = models.IntegerField(choices = ((0, "Fine"), (1, "End of Life")))

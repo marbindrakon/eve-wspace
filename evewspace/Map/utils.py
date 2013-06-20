@@ -47,7 +47,7 @@ class MapJSONGenerator(object):
         parent = system
         while parent:
             systemlist.append(parent)
-            if parent.parentsystem and not parent.parent_wormholes.get().collapsed:
+            if parent.parentsystem and not parent.parent_wormhole.collapsed:
                 parent = parent.parentsystem
             else:
                 parent = None
@@ -101,7 +101,7 @@ class MapJSONGenerator(object):
         else:
             effect = None
         if system.parentsystem:
-            parentWH = system.parent_wormholes.get()
+            parentWH = system.parent_wormhole
             if parentWH.collapsed:
                 collapsed = True
             else:

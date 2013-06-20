@@ -12,9 +12,9 @@
         </ul>
     </div>
     {% endif %}
-    {% if mapsys.parent_wormholes.get.collapsed and mapsys.parent_wormholes.get %}
+    {% if mapsys.parent_wormhole.collapsed and mapsys.parent_wormhole %}
     <a class="btn btn-small" onclick="ResurrectSystem({{mapsys.pk}});">Resurrect System</a>
-    {% elif mapsys.parent_wormholes.get %}
+    {% elif mapsys.parent_wormhole %}
     <a class="btn btn-small" onclick="CollapseSystem({{mapsys.pk}});">Collapse System</a>
     {% endif %}
     {% if not is_igb %}
