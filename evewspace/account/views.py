@@ -69,3 +69,9 @@ def edit_profile(request):
         form.fields['email'].initial = request.user.email
     return TemplateResponse(request, "edit_profile_form.html",
             {'form': form})
+
+def password_reset_confirm(*args, **kwargs):
+    from django.contrib.auth import views
+    return views.password_reset_confirm(*args, post_reset_redirect=reverse('login'),
+            template_name='password_reset_confirm.html',
+            **kwargs)

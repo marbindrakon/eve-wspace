@@ -17,9 +17,18 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
-        url(r'^login/$', 'django.contrib.auth.views.login',
-            {'template_name': 'login.html'}, name='login'),
-        url(r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
-        url(r'^register/$', 'account.views.register', name='register'),
-        url(r'^profile/$', 'account.views.edit_profile'),
-        )
+    url(r'^login/$', 'django.contrib.auth.views.login',
+        {'template_name': 'login.html'}, name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
+    url(r'^register/$', 'account.views.register', name='register'),
+    url(r'^profile/$', 'account.views.edit_profile'),
+    url(r'^password/reset$', 'django.contrib.auth.views.password_reset',
+        {'template_name': 'password_reset.html',
+         'email_template_name': 'password_reset_email.html',
+         'subject_template_name': 'reset_subject.txt'}, name='password_reset'),
+    url(r'^password/reset/done$', 'django.contrib.auth.views.password_reset_done',
+        {'template_name': 'password_reset_done.html',}),
+    url(r'^password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)',
+        'account.views.password_reset_confirm',
+        name='password_reset_confirm'),
+)
