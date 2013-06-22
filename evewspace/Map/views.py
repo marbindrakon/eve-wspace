@@ -495,6 +495,7 @@ def bulk_sig_import(request, map_id, ms_id):
                 sig = _update_sig_from_tsv(sig, row)
                 sig.save()
                 signals.signature_update.send_robust(sig, user=request.user,
+                                                 map=map_system.map,
                                                  signal_strength=row[COL_STRENGTH])
 
                 k += 1
@@ -554,7 +555,8 @@ def edit_signature(request, map_id, ms_id, sig_id=None):
                                    "%s signature %s in %s (%s)" %
                                    (action, signature.sigid, map_system.system.name,
                                     map_system.friendlyname))
-            signals.signature_update.send_robust(signature, user=request.user)
+            signals.signature_update.send_robust(signature, user=request.user,
+                                                 map=map_system.map)
         else:
             return TemplateResponse(request, "edit_sig_form.html",
                                     {'form': form,

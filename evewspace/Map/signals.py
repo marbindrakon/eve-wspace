@@ -16,4 +16,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from django.dispatch import Signal
 
-signature_update = Signal(providing_args=['user', 'signal_strength'])
+signature_update = Signal(providing_args=['user', 'map', 'signal_strength'])
