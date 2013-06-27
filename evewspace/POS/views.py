@@ -25,7 +25,7 @@ from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta, time
 import pytz
 import eveapi
-from API import utils as handler
+from API import cache_handler as handler
 from core import tasks as core_tasks
 
 @login_required

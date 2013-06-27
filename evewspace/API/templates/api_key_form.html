@@ -1,0 +1,18 @@
+<form class="form-inline" id="apiKeyForm" action="/api/key/" method="POST">
+    {% csrf_token %}
+    Key ID: <input type="text" class="input-small" value="{{key.keyid}}" name="key_id"></input>
+    vCode: <input type="text" class="input" name="vcode" value="{{key.vcode}}"></input>
+    <input id="apiKeySubmit" type="submit" class="btn btn-success" value="Submit"></input>
+</form>
+<script type="text/javascript">
+    $('#apiKeyForm').submit(function(e){
+                e.preventDefault();
+                $("#apiKeySubmit").attr("disabled", "true");
+                {% if key %}
+                SaveAPIKey({{key.keyid}});
+                {% else %}
+                SaveNewAPIKey();
+                {% endif %}
+                return false;
+            });
+</script>

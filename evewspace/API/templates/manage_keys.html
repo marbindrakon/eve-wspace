@@ -1,0 +1,43 @@
+{% load humanize %}
+<div id="apiKeyEditDialog">
+    <div class="modal-header">
+        <h3>API Keys</h3>
+    </div>
+    <div class="modal-body">
+
+        <div id="apiKeyFormHolder">
+        </div>
+
+        <table class="table table-hover table-bordered">
+            <tr>
+                <th>Key ID</th>
+                <th>Access</th>
+                <th>Characters</th>
+                <th>Valid</th>
+                <th>Actions</th>
+            </tr>
+            {% for key in api_keys %}
+            <tr>
+                <td>{{key.keyid}}</td>
+                <td>{{key.access_mask}}</td>
+                <td>
+                    {% for character in key.characters.all %}
+                    {{character.name}},&nbsp
+                    {% empty %}
+                    None!
+                    {% endfor %}
+                </td>
+                <td><span title="{{key.validation_error}}">{% if key.valid %} Yes {% else %} No {% endif %}</span></td>
+                <td>
+                    <button class="btn-small btn-danger" onclick="APIDeleteKey({{key.keyid}});">Delete</button>
+                    <button class="btn-small btn-success" onclick="APIEditKey({{key.keyid}});">Edit</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>No Keys!</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>

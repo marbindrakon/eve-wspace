@@ -19,7 +19,7 @@ from Map.models import System, KSystem, Signature, ActivePilot
 from core.models import Faction, SystemJump
 from core.models import Alliance
 import eveapi
-from API import utils as handler
+from API import cache_handler as handler
 from django.core.cache import cache
 from datetime import datetime, timedelta
 import pytz

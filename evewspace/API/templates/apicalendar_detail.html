@@ -1,8 +1,7 @@
-<li>
-	<h3 class="calendarevent_head" style="position:relative">{% if event.importance == 1 %} ! {% endif %} From {% if event.ownerName != "" %} {{event.ownerName}}{% else %}CCP{% endif %} {{event.eventTitle}}</h3>
-	<div class="calendarevent_detail">
-		{% load apicalendar %}
-		<span class="calendarevent_time">Time: {% timestamp event.eventDate %}</span><br />
-		<span class="calendarevent_response">Response: {{event.response}}</span><br />
-		<span class="calendarevent_text">{% autoescape off %}Text: {{event.eventText}} {% endautoescape %}</span>
-	</div>
+<tr>
+    {% load apicalendar %}
+    <td>{% timestamp event.eventDate %}</td>
+    <td>
+        <p class="calendarevent_head">{% if event.importance == 1 %} ! {% endif %} {{event.eventTitle}}</p></td>
+    <td>{{event.response}}</td>
+</tr>

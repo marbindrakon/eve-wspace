@@ -1,13 +1,18 @@
-<ul>
+<table>
+    <tr>
+        <th>When</th>
+        <th>What</th>
+        <th>Response</th>
+    </tr>
 	{% if not error %}
 		{% load apicalendar %}
 		{% for e in events %}
 			{% eventdetail e %}
 		{% empty %}
-			<li>No events were found.</li>
+        <tr><td>No events were found.</td></tr>
 		{% endfor %}
 	{% else %}
-		<li>{{error}}</li>
+    <tr><td>{{error}}</td></tr>
 	{% endif %}
-			
-</ul>
+
+</table>

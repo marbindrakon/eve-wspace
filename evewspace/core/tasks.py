@@ -19,7 +19,7 @@ from django.core.cache import cache
 import urllib
 import json
 from models import Alliance, Corporation, NewsFeed
-from API import utils as handler
+from API import cache_handler as handler
 import eveapi
 import feedparser
 

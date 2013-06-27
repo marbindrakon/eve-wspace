@@ -44,4 +44,5 @@ urlpatterns = patterns('',
         url(r'^pos/', include('POS.urls')),
         url(r'^sitetracker/', include('SiteTracker.urls')),
         url(r'^alerts/', include('Alerts.urls')),
+        url(r'^api/', include('API.urls')),
 )
