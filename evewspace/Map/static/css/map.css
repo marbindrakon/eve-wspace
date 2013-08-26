@@ -104,6 +104,7 @@
 .signatureListDiv
 {
     text-align: left;
+    white-space: nowrap;
 }
 .sysSigsList
 {
