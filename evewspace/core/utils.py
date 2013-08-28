@@ -21,11 +21,7 @@ def get_config(name, user):
     Gets the correct config value for the given key name.
     Value with the given user has priority over any default value.
     """
-    if ConfigEntry.objects.filter(name=name, user=user).count() != 0:
+    try:
         return ConfigEntry.objects.get(name=name, user=user)
-
-    # No user value, look for global / default
-    if ConfigEntry.objects.filter(name=name, user=None).count() != 0:
+    except ConfigEntry.DoesNotExist:
         return ConfigEntry.objects.get(name=name, user=None)
-    else:
-        raise KeyError("No configuration entry with key %s was found." % name)

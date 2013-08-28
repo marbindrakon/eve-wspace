@@ -15,16 +15,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #from Map.models import *
-from django.conf import settings
-import json
-import datetime
-from datetime import timedelta
-import pytz
-from django.contrib.sites.models import Site
-from math import pow, sqrt
+from collections import OrderedDict, defaultdict
 from core.models import SystemJump, Type, Location
 from core.utils import get_config
+from datetime import timedelta
+from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.cache import cache
+from math import pow, sqrt
+import datetime
+import json
+import pytz
 
 class MapJSONGenerator(object):
     """
@@ -36,7 +37,31 @@ class MapJSONGenerator(object):
         self.map = map
         self.user = user
         self.levelY = 0
+        self.pvp_threshold = int(get_config("MAP_PVP_THRESHOLD", user).value)
+        self.npc_threshold = int(get_config("MAP_NPC_THRESHOLD", user).value)
+        self.interest_time = int(get_config("MAP_INTEREST_TIME", user).value)
 
+    def _get_interest_path(self):
+        """
+        Returns a list of MapSystems that are on the path to any system of
+        interest
+        """
+        try:
+            return self._interest_path
+        except AttributeError:
+            threshold = datetime.datetime.now(pytz.utc)\
+                        - timedelta(minutes=self.interest_time)
+            systems =[]
+            for system in self.map.systems.filter(
+                interesttime__gt=threshold).iterator():
+                systems.extend(self.get_path_to_map_system(system))
+            self._interest_path = systems
+            return systems
+
+    @staticmethod
+    def get_cache_key(map_inst):
+        return '%s_map' % map_inst.pk
+    
     def get_path_to_map_system(self, system):
         """
         Returns a list of MapSystems on the route between the map root and
@@ -57,13 +82,13 @@ class MapJSONGenerator(object):
         Takes a MapSystem and returns the appropriate icon to display on the map
         as a realative URL.
         """
-        pvp_threshold = int(get_config("MAP_PVP_THRESHOLD", self.user).value)
-        npc_threshold = int(get_config("MAP_NPC_THRESHOLD", self.user).value)
+        pvp_threshold = self.pvp_threshold
+        npc_threshold = self.npc_threshold
         staticPrefix = "%s" % (settings.STATIC_URL + "images/")
-        if system.system.active_pilots.filter(user=self.user).count():
+        if system.system.active_pilots.filter(user=self.user).exists():
             return staticPrefix + "mylocation.png"
 
-        if system.system.stfleets.filter(ended__isnull=True).count() != 0:
+        if system.system.stfleets.filter(ended__isnull=True).exists():
             return staticPrefix + "farm.png"
 
         if system.system.shipkills + system.system.podkills > pvp_threshold:
@@ -79,24 +104,17 @@ class MapJSONGenerator(object):
         Takes a MapSystem and X,Y data and returns the dict of information to be passed to
         the map JS as JSON.
         """
-        interesttime = int(get_config("MAP_INTEREST_TIME", self.user).value)
+        interesttime = self.interest_time
         threshold = datetime.datetime.now(pytz.utc) - timedelta(minutes=interesttime)
         if system.interesttime and system.interesttime > threshold:
             interest = True
         else:
             interest = False
-        if system.map.systems.filter(interesttime__gt=threshold).count() != 0:
-            path = False
-            for sys in system.map.systems.filter(interesttime__gt=threshold).all():
-                if system in self.get_path_to_map_system(sys):
-                    path = True
-        else:
-            path = False
-        activity_estimate = (system.system.podkills + system.system.npckills +
-                system.system.shipkills)
-        from Map.models import WSystem
+        path = False
+        if system in self._get_interest_path():
+            path = True
         if system.system.is_wspace():
-            effect = WSystem.objects.get(pk=system.system.pk).effect
+            effect = system.system.wsystem.effect
         else:
             effect = None
         if system.parentsystem:
@@ -106,7 +124,7 @@ class MapJSONGenerator(object):
             else:
                 collapsed = False
             result = {'sysID': system.system.pk, 'Name': system.system.name,
-                    'LevelX': levelX,'activity': activity_estimate,
+                    'LevelX': levelX,
                     'LevelY': self.levelY, 'SysClass': system.system.sysclass,
                     'Friendly': system.friendlyname, 'interest': interest,
                     'interestpath': path, 'ParentID': system.parentsystem.pk,
@@ -122,7 +140,7 @@ class MapJSONGenerator(object):
                     'effect': effect, 'collapsed': collapsed}
         else:
             result = {'sysID': system.system.pk, 'Name': system.system.name,
-                    'LevelX': levelX, 'activity': activity_estimate,
+                    'LevelX': levelX,
                     'LevelY': self.levelY, 'SysClass': system.system.sysclass,
                     'Friendly': system.friendlyname, 'interest': interest,
                     'interestpath': path, 'ParentID': None,
@@ -138,28 +156,36 @@ class MapJSONGenerator(object):
 
     def get_systems_json(self):
         """Returns a JSON string representing the systems in a map."""
-        syslist = []
-        root = self.map.systems.get(parentsystem__isnull=True)
-        syslist.append(self.system_to_dict(root, 0))
-        self.recursive_system_data_generator(root.childsystems.all(), syslist, 1)
-        return json.dumps(syslist, sort_keys=True)
+        cache_key = self.get_cache_key(self.map)
+        cached = cache.get(cache_key)
+        if cached == None:
+            self.systems = defaultdict(list)
+            for system in self.map.systems.all()\
+                    .select_related('system', 'parentsystem', 'parent_womrhole')\
+                    .iterator():
+                self.systems[system.parentsystem_id].append(system)
+            root = self.systems[None][0]
+            syslist = [self.system_to_dict(root, 0),]
+            self.recursive_system_data_generator(root, syslist, 1)
+            cached = json.dumps(syslist, sort_keys=True)
+            cache.set(cache_key, cached, 300)
+        return cached
 
-
-    def recursive_system_data_generator(self, mapSystems, syslist, levelX):
+    def recursive_system_data_generator(self, start_sys, syslist, levelX):
         """
         Prepares a list of MapSystem objects for conversion to JSON for map JS.
         Takes a queryset of MapSystems and the current list of systems prepared
         for JSON.
         """
         # We will need an index later, so let's enumerate the mapSystems
-        enumSystems = enumerate(mapSystems, start=0)
+        enumSystems = enumerate(self.systems[start_sys.pk], start=0)
         for item in enumSystems:
             i = item[0]
             system = item[1]
             if i > 0:
                 self.levelY +=1
             syslist.append(self.system_to_dict(system, levelX))
-            self.recursive_system_data_generator(system.childsystems.all(),
+            self.recursive_system_data_generator(system,
                     syslist, levelX + 1)
 
 

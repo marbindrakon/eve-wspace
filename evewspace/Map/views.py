@@ -66,7 +66,6 @@ def get_map(request, map_id):
     context = {
         'map': current_map,
         'access': current_map.get_permission(request.user),
-        'systemsJSON': current_map.as_json(request.user)
     }
     return TemplateResponse(request, 'map.html', context)
 
