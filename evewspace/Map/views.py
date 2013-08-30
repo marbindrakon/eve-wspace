@@ -78,12 +78,12 @@ def map_checkin(request, map_id):
     current_map = get_object_or_404(Map, pk=map_id)
 
     # AJAX requests should post a JSON datetime called loadtime
-    # back that we use to get recent logs.
+#     # back that we use to get recent logs.
     if 'loadtime' not in request.POST:
         return HttpResponse(json.dumps({'error': "No loadtime"}),
                             mimetype="application/json")
     time_string = request.POST['loadtime']
-
+ 
     load_time = datetime.strptime(time_string, "%Y-%m-%d %H:%M:%S.%f")
     load_time = load_time.replace(tzinfo=pytz.utc)
 
@@ -92,17 +92,9 @@ def map_checkin(request, map_id):
         if dialog_html is not None:
             json_values.update({'dialogHTML': dialog_html})
 
-    new_log_query = MapLog.objects.filter(timestamp__gt=load_time,
+    log_list = MapLog.objects.filter(timestamp__gt=load_time,
                                           visible=True,
                                           map=current_map)
-    log_list = []
-
-    for log in new_log_query:
-        #TODO (marbin): Move this to a template.
-        log_list.append(
-            "<strong>User:</strong> %s <strong>Action:</strong> %s"
-            % (log.user.username, log.action)
-        )
 
     log_string = render_to_string('log_div.html', {'logs': log_list})
     json_values.update({'logs': log_string})

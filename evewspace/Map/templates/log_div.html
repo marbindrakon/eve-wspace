@@ -1,7 +1,10 @@
 {% if logs %}
 <ul id="logList" class="logList">
     {% for log in logs %}
-    <li class="logEntry">{{log|safe}}</li>
+    <li class="logEntry">
+    	<strong>User: {{ log.user.username }}</strong>
+    	<strong>Action: {{ log.action }}</strong>
+    </li>
     {% endfor %}
 </ul>
 {% endif %}
