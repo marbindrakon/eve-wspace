@@ -359,6 +359,7 @@ class SignatureType(models.Model):
 class Signature(models.Model):
     """Stores the signatures active in all systems. Relates to System model."""
     system = models.ForeignKey(System, related_name="signatures")
+    user = models.ForeignKey(User, related_name="signatures")
     sigtype = models.ForeignKey(SignatureType, related_name="sigs", null=True, blank=True)
     sigid = models.CharField(max_length = 10)
     updated = models.BooleanField()
@@ -372,6 +373,7 @@ class Signature(models.Model):
     downtimes = models.IntegerField(null=True, blank=True)
     ratscleared = models.DateTimeField(null=True, blank=True)
     lastescalated = models.DateTimeField(null=True, blank=True)
+    lastmodification = models.DateTimeField(auto_now=True,null=True,blank=True)
 
     class Meta:
         ordering = ['sigid']
@@ -426,6 +428,24 @@ class Signature(models.Model):
         """Mark the signature as having been updated since DT."""
         self.updated = True
         self.save()
+
+    def time_since_modification(self):
+        """How much time since it was modified"""
+        str=""
+        seconds = (datetime.now(pytz.utc) - self.lastmodification).seconds
+        
+        if seconds/60/60 > 0:
+            str += "%dh" % (seconds/60/60)
+            seconds -= (seconds/60/60) * (60*60)
+
+        if seconds/60 > 0:
+            str += " %dm" % (seconds/60)
+            seconds -= (seconds/60) * 60
+            
+        if seconds > 0:
+            str += " %ds" % (seconds)
+
+        return str;
 
     def save(self, *args, **kwargs):
         """

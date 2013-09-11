@@ -7,6 +7,8 @@
     <th>Info</th>
     <th>Act. / Rats</th>
     <th>Escl.</th>
+    <th>ModAge</th>
+    <th>Who</th>
     </tr>
     {% for sig in system.system.signatures.all %}
     <tr>
@@ -58,6 +60,9 @@
                 {% endif %}    
                 {% endif %}
             </td>
+            <td><span class="editTime">{{sig.time_since_modification}}</span> </td>
+            <td><span class="editName">{{sig.user.username}}</span> </td>
+
         {% empty %}
         <tr><td>No Signatures!</td></tr>
     </tr>

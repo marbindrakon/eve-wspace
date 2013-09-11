@@ -481,7 +481,7 @@ def bulk_sig_import(request, map_id, ms_id):
                         status=400)
             if k < 75:
                 sig_id = utils.convert_signature_id(row[COL_SIG])
-                sig = Signature.objects.get_or_create(sigid=sig_id,
+                sig = Signature.objects.get_or_create(sigid=sig_id, user=request.user,
                         system=map_system.system)[0]
                 sig = _update_sig_from_tsv(sig, row)
                 sig.save()
@@ -535,6 +535,7 @@ def edit_signature(request, map_id, ms_id, sig_id=None):
             else:
                 sigtype = None
             signature.sigtype = sigtype
+            signature.user = request.user
             signature.save()
             map_system.system.lastscanned = datetime.now(pytz.utc)
             map_system.system.save()
