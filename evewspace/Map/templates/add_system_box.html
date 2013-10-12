@@ -6,7 +6,7 @@
     <form id="sysAddForm" action="system/new/" method="post">
         {% csrf_token %}
         <input type="hidden" class="sysAddInput" name="topMsID" value="{{topMs.pk}}">
-        System: &nbsp <input type="text" class="sysAddInput systemAuto" name="bottomSystem" id="sysNameBox" /> <br />
+        System: &nbsp <input type="text" class="sysAddInput systemAuto" name="bottomSystem" id="sysNameBox" value ="{{newsystem}}" /> <br />
             Friendly Name (Max 8 Char.): &nbsp
             <input type="text" class="sysAddInput" name="friendlyName" value=""> <br />
 

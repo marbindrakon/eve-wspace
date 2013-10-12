@@ -663,12 +663,16 @@ def manual_add_system(request, map_id, ms_id):
     A GET request gets a blank add system form with the provided MapSystem
     as top system. The form is then POSTed to the add_system view.
     """
+    try:
+        current_system = System.objects.get(name=request.eve_systemname)
+    except Exception:
+        current_system = " "
     top_map_system = get_object_or_404(MapSystem, pk=ms_id)
     systems = System.objects.all()
     wormholes = WormholeType.objects.all()
     return render(request, 'add_system_box.html',
                   {'topMs': top_map_system, 'sysList': systems,
-                   'whList': wormholes})
+                   'whList': wormholes,'newsystem': current_system})
 
 
 # noinspection PyUnusedLocal
