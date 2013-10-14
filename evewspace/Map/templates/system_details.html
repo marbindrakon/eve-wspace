@@ -61,6 +61,11 @@
     {% if system.occupied %}
     <p class="occupiedText label label-important"><span class="occupiedTitle">Occupied:</span> <br /> {{system.occupied|safe}}</p><br />
     {% endif %}
+    {% load poslist %}
+    <div id="systemPosWell" class="systemPosWell">
+        <div id="sys{{system.pk}}POSDiv">
+        </div>
+    </div>
     {% if system.info %}
     <p class="infoText label label-info"><span class="infoTitle">Info:</span> <br /> {{system.info|safe}} </p><br />
     {% endif %}
