@@ -1,0 +1,11 @@
+    <ul>
+    {% for x in clientlist %}
+        {% if x.client_nickname != "evewspace" %}
+            {% if x.client_away == 0 %}
+            <li>{{x.client_nickname}}</li>
+            {% else %}
+            <li>[AFK] {{x.client_nickname}}</li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </ul>
