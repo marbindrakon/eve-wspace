@@ -58,8 +58,33 @@
     {% load humanize %}
     <ul class="visited"><li>First Visit: {{system.first_visited|naturaltime}}</li><li> Last Visit: {{system.last_visited|naturaltime}}</li></ul>
     <div class="detailsLeft">
-    {% if system.occupied %}
-    <p class="occupiedText label label-important"><span class="occupiedTitle">Occupied:</span> <br /> {{system.occupied|safe}}</p><br />
+    {% if system.occupied or poses %}
+    <div class="occupiedDiv label label-important">
+        <span class="occupiedTitle">Occupied:</span> <br /> {{system.occupied|safe}}</p>
+        <ul>
+            {% for pos in poses %}
+            <li>P:{{pos.planet}} &nbspM: {{pos.moon}} - {{pos.towertype.name}} - {{pos.corporation.name}} - 
+                {% if pos.status == 0 %}
+	            <span class="label label-info">Status: UNANCHORED</span>
+	           	{% endif %}
+	            {% if pos.status == 1 %}
+	            <span class="label label-info">Status: ANCHORED</span>
+	            {% endif %}
+	            {% if pos.status == 2 %}
+	            <span class="label label-info">Status: ONLINING</span>
+	            {% endif %}
+	            {% if pos.status == 3 %}
+	            <span class="label label-important">Status: REINFORCED  Comes Out: {{pos.rftime|date:"Y-m-d H:i"}}</span>
+	            {% endif %}
+	            {% if pos.status == 4 %}
+	            <span class="label label-success">Status: ONLINE</span>
+	            {% endif %}
+            </li>
+            {% empty %}
+            <li>No Towers</li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
     {% if system.info %}
     <p class="infoText label label-info"><span class="infoTitle">Info:</span> <br /> {{system.info|safe}} </p><br />

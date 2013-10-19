@@ -33,6 +33,7 @@ from django.db.models import Q
 from Map.models import *
 from Map import utils, signals
 from core.utils import get_config
+from POS.models import POS
 
 # Decorator to check map permissions. Takes request and map_id
 # Permissions are 0 = None, 1 = View, 2 = Change
@@ -179,6 +180,7 @@ def _is_moving_from_kspace_to_kspace(old_system, current_system):
 
 def get_system_context(ms_id):
     map_system = get_object_or_404(MapSystem, pk=ms_id)
+    poses = POS.objects.filter(system=map_system.system).all()
 
     #If map_system represents a k-space system get the relevant KSystem object
     if map_system.system.is_kspace():
@@ -203,7 +205,7 @@ def get_system_context(ms_id):
     st_fleets = map_system.system.stfleets.filter(ended=None).all()
     return {'system': system, 'mapsys': map_system,
             'scanwarning': scan_warning, 'isinterest': interest,
-            'stfleets': st_fleets}
+            'stfleets': st_fleets, 'poses': poses}
 
 
 @login_required
