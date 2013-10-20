@@ -379,6 +379,7 @@ class Signature(models.Model):
 
     class Meta:
         ordering = ['sigid']
+        unique_together = ('system', 'sigid')
 
     def __unicode__(self):
         """Returns sig ID as unicode representation"""
