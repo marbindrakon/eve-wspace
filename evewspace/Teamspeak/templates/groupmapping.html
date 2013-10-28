@@ -1,0 +1,6 @@
+<table>
+    <tr><th>Hostname</th><th>Usergroup</th><th>TS Usergroup</th></tr>
+{% for tupel in groups %}
+    <tr><td>{{ tupel.tsserver.host }}</td><td>{{ tupel.usergroup }}</td><td>{{ tupel.tsgroup }}</td></tr>
+{% endfor %}
+</table>

@@ -20,5 +20,5 @@ from core.utils import get_config
 
 def load_defaults():
 
-    ts3 = TeamspeakServer.create("localhost", "baduser","badpass","10011", "9887")
+    ts3 = TeamspeakServer.create("localhost", "baduser","badpass","10011", "9987")
     ts3.save()
