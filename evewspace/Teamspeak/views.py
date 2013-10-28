@@ -20,7 +20,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
 import PyTS3
-from Teamspeak.models import TeamspeakServer
+from Teamspeak.models import TeamspeakServer,GroupMap
 from core.utils import get_config
 from django.http import HttpResponse
 
@@ -29,6 +29,7 @@ from django.http import HttpResponse
 
 @login_required
 def show_online(request):
+
     serversettings = TeamspeakServer.objects.get(id=1)
     try:
         server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
@@ -68,3 +69,8 @@ def general_settings(request):
          'QueryPort': serversettings.queryport,
          'saved': saved}
     )
+
+@login_required
+def show_groupmapping(request):
+    groups = GroupMap.objects.all()
+    return TemplateResponse(request,'groupmapping.html',{'groups': groups})
