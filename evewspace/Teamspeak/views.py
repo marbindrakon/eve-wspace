@@ -29,7 +29,6 @@ from django.http import HttpResponse
 
 @login_required
 def show_online(request):
-
     serversettings = TeamspeakServer.objects.get(id=1)
     try:
         server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
@@ -38,9 +37,9 @@ def show_online(request):
         server.command('use', {'port': str(serversettings.voiceport)})
         server.command('clientupdate', {'client_nickname': 'evewspace'})
         clientlist = server.command('clientlist -away')
-        return TemplateResponse(request, 'ts_userlist.html',{'clientlist': clientlist})
+        return TemplateResponse(request, 'ts_userlist.html', {'clientlist': clientlist})
     except Exception as e:
-        return HttpResponse('%s' % (e), content_type="text/plain")
+        return HttpResponse('%s' % e, content_type="text/plain")
 
 
 @login_required
@@ -73,4 +72,30 @@ def general_settings(request):
 @login_required
 def show_groupmapping(request):
     groups = GroupMap.objects.all()
-    return TemplateResponse(request,'groupmapping.html',{'groups': groups})
+    return TemplateResponse(request, 'groupmapping.html', {'groups': groups})
+
+@login_required
+def add_to_group(request):
+    #TODO:  find a place in the db for the global ts3 id
+    #       load django clientgroup from db
+    #       add support for multible groups per user
+    #globalid=request.user.globaltsid
+    globalid = request.POST['globalid']
+    clientusergroup = "statictestgroup"
+    aimedgroup = GroupMap.objects.get(usergroup=clientusergroup)
+    serversettings = TeamspeakServer.objects.get(id=1)
+    try:
+        server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
+        server.connect()
+        server.command('login', {'client_login_name': serversettings.queryuser, 'client_login_password': serversettings.querypass})
+        server.command('use', {'port': str(serversettings.voiceport)})
+        server.command('clientupdate', {'client_nickname': 'evewspace'})
+        aimedclient = server.command('clientdbfind', {'pattern': globalid}, 'uid')
+        servergrouplist = server.command('servergrouplist')
+        for group in servergrouplist:
+            if group['name'] == aimedgroup.tsgroup and group['type'] != 0:
+                server.command('servergroupaddclient', {'sgid': group['sgid'], 'cldbid': aimedclient['cldbid']})
+                return HttpResponse('Success', content_type="text/plain")
+
+    except Exception as e:
+        return HttpResponse('%s' % e, content_type="text/plain")
