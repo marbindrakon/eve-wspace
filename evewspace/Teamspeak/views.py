@@ -17,7 +17,7 @@
 # Create your views here.
 
 from django.template.response import TemplateResponse
-from django.shortcuts import redirect
+from account.models import UserProfile
 from django.contrib.auth.decorators import login_required, permission_required
 import PyTS3
 from Teamspeak.models import TeamspeakServer,GroupMap
@@ -76,9 +76,8 @@ def show_groupmapping(request):
 
 @login_required
 def add_to_group(request):
-    #TODO:  find a place in the db for the global ts3 id
-    #globalid=request.user.globaltsid
-    globalid = request.POST['gtsid']
+    profile = UserProfile.objects.get(user=request.user.id)
+    globalid = profile.tsglobalid
     for g in request.user.groups.all():
         try:
             aimedgroup = GroupMap.objects.get(usergroup=g.id)
