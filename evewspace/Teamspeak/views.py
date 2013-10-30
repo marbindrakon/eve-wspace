@@ -77,25 +77,27 @@ def show_groupmapping(request):
 @login_required
 def add_to_group(request):
     #TODO:  find a place in the db for the global ts3 id
-    #       load django clientgroup from db
-    #       add support for multible groups per user
     #globalid=request.user.globaltsid
-    globalid = request.POST['globalid']
-    clientusergroup = "statictestgroup"
-    aimedgroup = GroupMap.objects.get(usergroup=clientusergroup)
-    serversettings = TeamspeakServer.objects.get(id=1)
-    try:
-        server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
-        server.connect()
-        server.command('login', {'client_login_name': serversettings.queryuser, 'client_login_password': serversettings.querypass})
-        server.command('use', {'port': str(serversettings.voiceport)})
-        server.command('clientupdate', {'client_nickname': 'evewspace'})
-        aimedclient = server.command('clientdbfind', {'pattern': globalid}, 'uid')
-        servergrouplist = server.command('servergrouplist')
-        for group in servergrouplist:
-            if group['name'] == aimedgroup.tsgroup and group['type'] != 0:
-                server.command('servergroupaddclient', {'sgid': group['sgid'], 'cldbid': aimedclient['cldbid']})
-                return HttpResponse('Success', content_type="text/plain")
+    globalid = request.POST['gtsid']
+    for g in request.user.groups.all():
+        try:
+            aimedgroup = GroupMap.objects.get(usergroup=g.id)
+        except Exception as e:
+            return HttpResponse('%s' % str(e), content_type="text/plain")
 
-    except Exception as e:
-        return HttpResponse('%s' % e, content_type="text/plain")
+        serversettings = TeamspeakServer.objects.get(id=1)
+        try:
+            server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
+            server.connect()
+            server.command('login', {'client_login_name': serversettings.queryuser, 'client_login_password': serversettings.querypass})
+            server.command('use', {'port': str(serversettings.voiceport)})
+            server.command('clientupdate', {'client_nickname': 'evewspace'})
+            aimedclient = server.command('clientdbfind', {'pattern': globalid}, ['uid'])
+            servergrouplist = server.command('servergrouplist')
+            for group in servergrouplist:
+                if group['name'] == aimedgroup.tsgroup and group['type'] != 0:
+                    server.command('servergroupaddclient', {'sgid': group['sgid'], 'cldbid': aimedclient['cldbid']})
+
+        except Exception as e:
+            return HttpResponse('%s' % e, content_type="text/plain")
+    return HttpResponse('Success', content_type="text/plain")
