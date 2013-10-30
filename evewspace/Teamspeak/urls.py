@@ -23,5 +23,6 @@ settingspatterns = patterns('Teamspeak.views',
 urlpatterns = patterns('Teamspeak.views',
         url(r'show_online/$', 'show_online'),
         url(r'show_groupmapping/$', 'show_groupmapping'),
+        url(r'add_to_group/$', 'add_to_group'),
         url(r'^settings/', include(settingspatterns)),
         )
