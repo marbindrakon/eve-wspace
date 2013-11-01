@@ -17,6 +17,7 @@
 
 $(document).ready(function(){
     GetTSSettings();
+    GetTSGroupSettings();
 });
 
 function GetTSSettings(){
@@ -40,6 +41,28 @@ function SaveTSSettings(){
         success: function(data){
             $("#ts3generalsettings").html(data);             
         },
+        error: function(){alert("Invalid values, please make sure only integers are used.");}
+    });
+}
+function GetTSGroupSettings(){
+    $.ajax({
+       type: "GET",
+       url: "/teamspeak/show_groupmapping/",
+       success: function(data){
+           $("#show_ts_groups").html(data);
+       },
+       error: function(data){
+            alert("There was an error loading the general settings.");
+       }
+    });
+}
+
+function SaveTSGroupSettings(){
+    $.ajax({
+        type: "POST",
+        data: $('#ts3GroupSettingsForm').serialize(),
+        url: "/teamspeak/settings/addgroupmap/",
+        success: GetTSGroupSettings(),
         error: function(){alert("Invalid values, please make sure only integers are used.");}
     });
 }
