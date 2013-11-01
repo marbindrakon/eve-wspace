@@ -18,6 +18,7 @@ from django.conf.urls.defaults import patterns,include, url
 
 settingspatterns = patterns('Teamspeak.views',
         url(r'^general/$', 'general_settings'),
+        url(r'^addgroupmap/$', 'addgroupmap'),
         )
 
 urlpatterns = patterns('Teamspeak.views',

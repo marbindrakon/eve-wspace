@@ -47,3 +47,7 @@ class GroupMap(models.Model):
     usergroup = models.ForeignKey(Group, related_name="teamspeakgroups")
     tsgroup = models.CharField(max_length=100)
 
+    @classmethod
+    def create(cls,tsserver,usergroup,tsgroup):
+        group= cls(tsserver=tsserver,usergroup=usergroup,tsgroup=tsgroup)
+        return group

@@ -23,9 +23,11 @@ import PyTS3
 from Teamspeak.models import TeamspeakServer,GroupMap
 from core.utils import get_config
 from django.http import HttpResponse
+from django.contrib.auth.models import Group
 
-# TODO: Change login_required to the appropriate
-# permission_required when the permission UI is done
+# TODO: Change login_required to the appropriate permission_required when the permission UI is done
+# TODO: Fix addgroupmap
+# TODO: add remove groupmap
 
 @login_required
 def show_online(request):
@@ -49,6 +51,8 @@ def general_settings(request):
     """
     serversettings = TeamspeakServer.objects.get(id=1)
     saved = False
+    tsservers = TeamspeakServer.objects.all()
+    djangogroups = Group.objects.all()
     if request.method == "POST":
         serversettings.host = request.POST['ts3hostname']
         serversettings.voiceport = int(request.POST['Port'])
@@ -66,7 +70,9 @@ def general_settings(request):
          'QueryLoginUsername': serversettings.queryuser,
          'QueryLoginPasswort': serversettings.querypass,
          'QueryPort': serversettings.queryport,
-         'saved': saved}
+         'saved': saved,
+         'tsservers': tsservers,
+         'djangogroups': djangogroups}
     )
 
 @login_required
@@ -99,4 +105,12 @@ def add_to_group(request):
 
         except Exception as e:
             return HttpResponse('%s' % e, content_type="text/plain")
+    return HttpResponse('Success', content_type="text/plain")
+
+@login_required
+def addgroupmap(request):
+    tsserver = TeamspeakServer.objects.get(id=request.POST['ts3hostname'])
+    usergroup = Group.objects.get(id=request.POST['usergroup'])
+    groupmap = GroupMap.create(tsserver, usergroup, request.POST['tsgroup'])
+    groupmap.safe()
     return HttpResponse('Success', content_type="text/plain")
