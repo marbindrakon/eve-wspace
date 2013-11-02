@@ -110,7 +110,7 @@ def add_to_group(request):
 @login_required
 def addgroupmap(request):
     tsserver = TeamspeakServer.objects.get(id=request.POST['ts3hostname'])
-    usergroup = Group.objects.get(id=request.POST['usergroup'])
+    usergroup = Group.objects.get(id=request.POST['djangogroup'])
     groupmap = GroupMap.create(tsserver, usergroup, request.POST['tsgroup'])
-    groupmap.safe()
+    groupmap.save()
     return HttpResponse('Success', content_type="text/plain")
