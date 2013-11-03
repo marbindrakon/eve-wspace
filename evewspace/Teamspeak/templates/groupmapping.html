@@ -1,6 +1,6 @@
-<table>
-    <tr><th>Hostname</th><th>Usergroup</th><th>TS Usergroup</th></tr>
+<table class="table table-hover">
+    <tr><th>Hostname</th><th>Usergroup</th><th>TS Usergroup</th><th>Options</th></tr>
 {% for tupel in groups %}
-    <tr><td>{{ tupel.tsserver.host }}</td><td>{{ tupel.usergroup }}</td><td>{{ tupel.tsgroup }}</td></tr>
+    <tr><td>{{ tupel.tsserver.host }}</td><td>{{ tupel.usergroup }}</td><td>{{ tupel.tsgroup }}</td><td><input name="myBtn" type="button" onClick="deleteGroupMap('{{ tupel.id }}','{{ tupel.usergroup }}','{{ tupel.tsgroup }}')" value="Delete GroupMap"></td></tr>
 {% endfor %}
 </table>

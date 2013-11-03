@@ -26,7 +26,6 @@ from django.http import HttpResponse
 from django.contrib.auth.models import Group
 
 # TODO: Change login_required to the appropriate permission_required when the permission UI is done
-# TODO: Fix addgroupmap
 # TODO: add remove groupmap
 
 @login_required
@@ -113,4 +112,10 @@ def addgroupmap(request):
     usergroup = Group.objects.get(id=request.POST['djangogroup'])
     groupmap = GroupMap.create(tsserver, usergroup, request.POST['tsgroup'])
     groupmap.save()
+    return HttpResponse('Success', content_type="text/plain")
+
+@login_required
+def delgroupmap(request):
+    groupmap = GroupMap.objects.get(id=request.POST['groupmapid'])
+    groupmap.delete()
     return HttpResponse('Success', content_type="text/plain")

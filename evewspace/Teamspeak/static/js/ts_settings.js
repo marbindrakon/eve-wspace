@@ -63,6 +63,22 @@ function SaveTSGroupSettings(){
         data: $('#ts3GroupSettingsForm').serialize(),
         url: "/teamspeak/settings/addgroupmap/",
         success: GetTSGroupSettings(),
+        error: function(){alert("Error while adding Groupmap");}
+    });
+}
+
+function DeleteTSGroupMap(id){
+    $.ajax({
+        type: "POST",
+        data: { groupmapid: id },
+        url: "/teamspeak/settings/delgroupmap/",
+        success: GetTSGroupSettings(),
         error: function(){alert("Invalid values, please make sure only integers are used.");}
     });
+}
+function deleteGroupMap(id,djangogroup,tsgroup){
+    var conf = confirm("Are you sure you want to delete " + djangogroup + " <> " +tsgroup + " ?");
+    if(conf == true){
+         DeleteTSGroupMap(id);
+    }
 }
