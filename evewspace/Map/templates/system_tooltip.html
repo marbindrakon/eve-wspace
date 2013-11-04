@@ -41,7 +41,7 @@
     </span><br /> 
      <span class="statsText label label-inverse"> NPC: {{mapsys.system.npckills}} Ship: {{mapsys.system.shipkills}} Pod: {{mapsys.system.podkills}}{% if mapsys.system.sysclass > 6 %} Jumps: {{mapsys.system.get_spec.jumps}} {% endif %}</span> 
      <br /> 
-    <p class="statusText label label-success">SIG: {{mapsys.system.signatures.count}} POS: {{mapsys.system.poses.count}} Pilots: {{mapsys.system.active_pilots.count}}</p><br />
+     <p class="statusText label label-success">SIG: {{mapsys.system.signatures.count}} POS: {{mapsys.system.poses.count}} Pilots: {{mapsys.system.pilot_list|length}}</p><br />
     {% if mapsys.system.occupied %}
     <div class="occupiedTooltip label label-important"> Occupied: <br /> {{mapsys.system.occupied|safe}}</div>
     {% endif %}
@@ -49,22 +49,22 @@
     <div class="infoTooltip label label-info"> Info: <br /> {{mapsys.system.info|safe}} </div>
     {% endif %}
 </div>
-{% if mapsys.system.active_pilots.all %}
+{% if mapsys.system.pilot_list %}
     <div class="span3">
             <table>
                 <tr>
                     <th>Pilot</th>
                     <th>Ship Type</th>
                 </tr>
-            {% for p in mapsys.system.active_pilots.all %}
-                {% if p.charactername != "OOG Browser" %}
+            {% for charid, p in mapsys.system.pilot_list.items %}
+                {% if p.1 != "OOG Browser" %}
                 <tr>
-                    <td>{{p.charactername}}</td>
-                    <td>{{p.shiptype}}</td>
+                    <td>{{p.1}}</td>
+                    <td>{{p.3}}</td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td>{{p.user.username}}</td>
+                    <td>{{p.0}}</td>
                     <td>OOG Browser</td>
                 </tr>
                 {% endif%}

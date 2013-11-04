@@ -35,7 +35,7 @@
         {% if system.sysclass < 7 %}
         <li><a href="http://evemaps.dotlan.net/system/{{system.name}}" target="_blank">Dotlan</a></li>
         {% else %}
-        <li><a href="http://evemaps.dotlan.net/map/{{system.region.name}}/{{system.name}}" target="_blank">Dotlan</a></li>
+        <li><a href="http://evemaps.dotlan.net/map/{{system.region.name.split|join:"_"}}/{{system.name.split|join:"_"}}" target="_blank">Dotlan</a></li>
         {% endif %}
         <li><a href="http://www.zkillboard.com/system/{{system.pk}}" target="_blank">zKillboard</a></li>
         {% if system.sysclass < 7 %}

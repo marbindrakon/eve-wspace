@@ -29,6 +29,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group, Permission
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.views.decorators.cache import cache_page
 
 from Map.models import *
 from Map import utils, signals
@@ -79,7 +80,7 @@ def map_checkin(request, map_id):
     current_map = get_object_or_404(Map, pk=map_id)
 
     # AJAX requests should post a JSON datetime called loadtime
-#     # back that we use to get recent logs.
+    # back that we use to get recent logs.
     if 'loadtime' not in request.POST:
         return HttpResponse(json.dumps({'error': "No loadtime"}),
                             mimetype="application/json")
@@ -92,7 +93,6 @@ def map_checkin(request, map_id):
         dialog_html = _checkin_igb_trusted(request, current_map)
         if dialog_html is not None:
             json_values.update({'dialogHTML': dialog_html})
-
     log_list = MapLog.objects.filter(timestamp__gt=load_time,
                                           visible=True,
                                           map=current_map)
@@ -130,41 +130,51 @@ def _checkin_igb_trusted(request, current_map):
     containing the html for a system add dialog if we detect that a new system
     needs to be added
     """
-    current_system = System.objects.get(name=request.eve_systemname)
-    old_system = None
+    current_location = (request.eve_systemid, request.eve_charname,
+            request.eve_shipname, request.eve_shiptypename)
+    char_cache_key = 'char_%s_location' % request.eve_charid
+    old_location = cache.get(char_cache_key)
     result = None
-    threshold = datetime.now(pytz.utc) - timedelta(minutes=5)
-    recently_active = request.user.locations.filter(
-        timestamp__gt=threshold,
-        charactername=request.eve_charname
-    ).all()
+    print old_location
 
-    if recently_active.count():
-        old_system = request.user.locations.get(
-            charactername=request.eve_charname
-        ).system
-
+    if old_location != current_location:
+        if old_location:
+            old_system = get_object_or_404(System, pk=old_location[0])
+            old_system.remove_active_pilot(request.eve_charid)
+        current_system = get_object_or_404(System, pk=current_location[0])
+        current_system.add_active_pilot(request.user.username,
+                request.eve_charid, request.eve_charname, request.eve_shipname,
+                request.eve_shiptypename)
+        request.user.get_profile().update_location(current_system.pk,
+                request.eve_charid, request.eve_charname, request.eve_shipname,
+                request.eve_shiptypename)
+        cache.set(char_cache_key, current_location, 60 * 5)
     #Conditions for the system to be automagically added to the map.
-    if (
-        old_system in current_map
-        and current_system not in current_map
-        and not _is_moving_from_kspace_to_kspace(old_system, current_system)
-        and recently_active.count()
-    ):
-        context = {
-            'oldsystem': current_map.systems.filter(
-                system=old_system).all()[0],
-            'newsystem': current_system,
-            'wormholes': utils.get_possible_wh_types(old_system,
-                                                     current_system),
-        }
+        if (old_location and
+            old_system in current_map
+            and current_system not in current_map
+            and not _is_moving_from_kspace_to_kspace(old_system, current_system)
+        ):
+            context = {
+                'oldsystem': current_map.systems.filter(
+                    system=old_system).all()[0],
+                'newsystem': current_system,
+                'wormholes': utils.get_possible_wh_types(old_system,
+                                                         current_system),
+            }
 
-        result = render_to_string('igb_system_add_dialog.html', context,
-                                  context_instance=RequestContext(request))
+            if request.POST.get('silent', 'false') != 'true':
+                result = render_to_string('igb_system_add_dialog.html', context,
+                                      context_instance=RequestContext(request))
+            else:
+                new_ms = current_map.add_system(request.user, current_system, '',
+                        context['oldsystem'])
+                k162_type = WormholeType.objects.get(name="K162")
+                new_ms.connect_to(context['oldsystem'], k162_type, k162_type)
+                result = 'silent'
+    else:
+        cache.set(char_cache_key, current_location, 60 * 5)
 
-    current_system.add_active_pilot(request.user, request.eve_charname,
-                                    request.eve_shipname,
-                                    request.eve_shiptypename)
     return result
 
 
@@ -202,9 +212,12 @@ def get_system_context(ms_id):
         interest = map_system.interesttime
         # Include any SiteTracker fleets that are active
     st_fleets = map_system.system.stfleets.filter(ended=None).all()
+    locations = cache.get('sys_%s_locations' % map_system.system.pk)
+    if not locations:
+        locations = {}
     return {'system': system, 'mapsys': map_system,
             'scanwarning': scan_warning, 'isinterest': interest,
-            'stfleets': st_fleets}
+            'stfleets': st_fleets, 'locations': locations}
 
 
 @login_required
@@ -255,7 +268,7 @@ def add_system(request, map_id):
         # Add Wormhole
         bottom_ms.connect_to(top_ms, top_type, bottom_type, top_bubbled,
                              bottom_bubbled, time_status, mass_status)
-
+        current_map.clear_caches()
         return HttpResponse()
     except ObjectDoesNotExist:
         return HttpResponse(status=400)
@@ -309,11 +322,18 @@ def system_tooltips(request, map_id):
     """
     if not request.is_ajax():
         raise PermissionDenied
-    ms_list = MapSystem.objects.filter(map_id=map_id)\
-                    .select_related('parent_wormhole', 'system__region')\
-                    .iterator()
-    return render(request, 'system_tooltip.html', {'map_systems': ms_list})
-
+    cache_key = 'map_%s_sys_tooltip' % map_id
+    cached_tips = cache.get(cache_key)
+    if not cached_tips:
+        ms_list = MapSystem.objects.filter(map_id=map_id)\
+                        .select_related('parent_wormhole', 'system__region')\
+                        .iterator()
+        new_tips =  render_to_string('system_tooltip.html',
+                {'map_systems': ms_list}, RequestContext(request))
+        cache.set(cache_key, new_tips, 60)
+        return HttpResponse(new_tips)
+    else:
+        return HttpResponse(cached_tips)
 
 # noinspection PyUnusedLocal
 @login_required
@@ -325,10 +345,18 @@ def wormhole_tooltips(request, map_id):
     """
     if not request.is_ajax():
         raise PermissionDenied
-    cur_map = get_object_or_404(Map, pk=map_id)
-    ms_list = MapSystem.objects.filter(map=cur_map).all()
-    whs = Wormhole.objects.filter(top__in=ms_list).all()
-    return render(request, 'wormhole_tooltip.html', {'wormholes': whs})
+    cache_key = 'map_%s_wh_tooltip' % map_id
+    cached_tips = cache.get(cache_key)
+    if not cached_tips:
+        cur_map = get_object_or_404(Map, pk=map_id)
+        ms_list = MapSystem.objects.filter(map=cur_map).all()
+        whs = Wormhole.objects.filter(top__in=ms_list).all()
+        new_tips = render_to_string('wormhole_tooltip.html',
+                {'wormholes': whs}, RequestContext(request))
+        cache.set(cache_key, new_tips, 60)
+        return HttpResponse(new_tips)
+    else:
+        return HttpResponse(cached_tips)
 
 
 # noinspection PyUnusedLocal
@@ -389,13 +417,21 @@ def manual_location(request, map_id, ms_id):
     being active in that system.
 
     """
-    if request.is_ajax():
-        map_system = get_object_or_404(MapSystem, pk=ms_id)
-        map_system.system.add_active_pilot(request.user, "OOG Browser",
-                                           "Unknown", "Uknown")
-        return HttpResponse()
-    else:
+    if not request.is_ajax():
         raise PermissionDenied
+    user_locations = cache.get('user_%s_locations' % request.user.pk)
+    if user_locations:
+        old_location = user_locations.pop(request.user.pk, None)
+        if old_location:
+            old_sys = get_object_or_404(System, pk=old_location[0])
+            old_sys.remove_active_pilot(request.user.pk)
+    map_sys = get_object_or_404(MapSystem, pk=ms_id)
+    map_sys.system.add_active_pilot(request.user.username, request.user.pk,
+            'OOG Browser', 'Unknown', 'Unknown')
+    request.user.get_profile().update_location(map_sys.system.pk, request.user.pk,
+            'OOG Browser', 'Unknown', 'Unknown')
+    map_sys.map.clear_caches()
+    return HttpResponse()
 
 
 # noinspection PyUnusedLocal
@@ -420,6 +456,7 @@ def set_interest(request, map_id, ms_id):
             system.interesttime = None
             system.save()
             return HttpResponse()
+        system.map.clear_caches()
         return HttpResponse(status=418)
     else:
         raise PermissionDenied
@@ -589,6 +626,7 @@ def edit_signature(request, map_id, ms_id, sig_id=None):
 # noinspection PyUnusedLocal
 @login_required()
 @require_map_permission(permission=1)
+@cache_page(1)
 def get_signature_list(request, map_id, ms_id):
     """
     Determines the proper escalationThreshold time and renders
@@ -1076,3 +1114,15 @@ def global_permissions(request):
 
     return TemplateResponse(request, 'global_perms.html',
                             {'groups': group_list})
+
+
+@require_map_permission(permission=2)
+def purge_signatures(request, map_id, ms_id):
+    if not request.is_ajax():
+        raise PermissionDenied
+    mapsys = get_object_or_404(MapSystem, pk=ms_id)
+    if request.method == "POST":
+        mapsys.system.signatures.all().delete()
+        return HttpResponse()
+    else:
+        return HttpResponse(status=400)

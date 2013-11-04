@@ -2,8 +2,10 @@ Install: Ubuntu 12.04 LTS with MySQL and Apache
 ==============================================
 
 This guide will walk you through installing Eve W-Space on Ubuntu 12.04 LTS 
-using a local MySQL server and serving requests with Apache and mod_wsgi. It 
-assumes a clean install and root shell access.
+using a local MySQL server and serving requests with Apache and gunicorn through
+mod_proxy. It assumes a clean install and root shell access.
+
+Note: Ubuntu 13.10 untilizes Apache 2.4, it is recommended that you use Nginx instead.
 
 Requirements
 ------------

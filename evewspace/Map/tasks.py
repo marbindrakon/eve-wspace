@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from celery import task
-from Map.models import System, KSystem, Signature, ActivePilot
+from Map.models import System, KSystem, Signature
 from core.models import Faction, SystemJump
 from core.models import Alliance
 import eveapi
@@ -122,6 +122,5 @@ def clear_stale_records():
     This task will clear any user location records older than 15 minutes.
     """
     limit = datetime.now(pytz.utc) - timedelta(minutes=15)
-    ActivePilot.objects.filter(timestamp__lt=limit).delete()
     Signature.objects.filter(owned_time__isnull=False,
             owned_time__lt=limit).update(owned_time=None, owned_by=None)

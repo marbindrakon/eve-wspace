@@ -10,7 +10,7 @@ SECRET_KEY = 'alan_please_add_secret_key'
 # Set this to the directory you are service static files out of so that
 # manage.py collectstatic can put them in the right place
 
-STATIC_ROOT = "/home/evewspace/static/"
+STATIC_ROOT = "/home/maptool/static/"
 
 # Put your DB details here
 

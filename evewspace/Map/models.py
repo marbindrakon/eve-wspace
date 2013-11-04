@@ -19,8 +19,9 @@ from django.contrib.auth.models import User, Group
 from core.models import SystemData
 from django import forms
 from django.forms import ModelForm
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 import pytz
+import time
 from Map import utils
 from Map.utils import MapJSONGenerator
 from django.core.cache import cache
@@ -117,20 +118,54 @@ class System(SystemData):
 
         super(System, self).save(*args, **kwargs)
 
-    def add_active_pilot(self, user, charname, shipname, shiptype):
-        from Map.models import ActivePilot
-        from datetime import datetime, timedelta
-        import pytz
-        # Do nothing if there is a recent matching record
-        threshold = datetime.now(pytz.utc) - timedelta(minutes=30)
-        if ActivePilot.objects.filter(timestamp__gt=threshold, user=user,
-                charactername=charname, shipname=shipname,
-                shiptype=shiptype, system=self).count() == 0:
-            # Flush other records for this character and user
-            ActivePilot.objects.filter(charactername=charname, user=user).delete()
-            # Add new record
-            record = ActivePilot(system=self, user=user, charactername=charname,
-                    shipname=shipname, shiptype=shiptype).save()
+    def add_active_pilot(self, username, charid, charname,
+            shipname, shiptype):
+        sys_cache_key = 'sys_%s_locations' % self.pk
+        current_time = time.time()
+        time_threshold = current_time - (15 * 60)
+        sys_location_dict = cache.get(sys_cache_key)
+        location = (username, charname, shipname, shiptype, current_time)
+        if sys_location_dict:
+            sys_location_dict.pop(charid, None)
+            sys_location_dict[charid] = location
+        else:
+            sys_location_dict = {charid: location}
+
+        # Prune dict to prevent carrying over stale entries
+        for charid, location in sys_location_dict.items():
+            if location[4] < time_threshold:
+                sys_location_dict.pop(charid, None)
+
+        cache.set(sys_cache_key, sys_location_dict, 15 * 60)
+        return location
+
+    def remove_active_pilot(self, charid):
+        current_time = time.time()
+        time_threshold = current_time - (15 * 60)
+        sys_cache_key = 'sys_%s_locations' % self.pk
+        sys_location_dict = cache.get(sys_cache_key)
+        if sys_location_dict:
+            sys_location_dict.pop(charid, None)
+            # Prune dict to prevent carrying over stale entries
+            for charid, location in sys_location_dict.items():
+                if location[4] < time_threshold:
+                    sys_location_dict.pop(charid, None)
+            cache.set(sys_cache_key, sys_location_dict, 15 * 60)
+        return True
+
+    def _active_pilot_list(self):
+        sys_cache_key = 'sys_%s_locations' % self.pk
+        sys_location_dict = cache.get(sys_cache_key)
+        if sys_location_dict:
+            return sys_location_dict
+        else:
+            return {}
+
+    pilot_list = property(_active_pilot_list)
+
+    def clear_sig_cache(self):
+        cache.delete('sys_%s_sig_list' % self.pk)
+
 
 class KSystem(System):
     sov = models.CharField(max_length = 100)
@@ -257,6 +292,14 @@ class Map(models.Model):
         self.add_log(user, "Created Snapshot: %s" % (name))
         return result
 
+    def clear_caches(self):
+        """
+        Clears the tooltip and json caches for the map.
+        """
+        cache.delete('map_%s_wh_tooltip' % self.pk)
+        cache.delete('map_%s_sys_tooltip' % self.pk)
+        cache.delete(MapJSONGenerator.get_cache_key(self))
+
 class MapSystem(models.Model):
     """
     Stores information regarding which systems are active in which maps
@@ -289,8 +332,12 @@ class MapSystem(models.Model):
 
     def save(self, *args, **kwargs):
         self.friendlyname = self.friendlyname.upper()
-        cache.delete(MapJSONGenerator.get_cache_key(self.map))
+        self.map.clear_caches()
         super(MapSystem, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.map.clear_caches()
+        super(MapSystem, self).delete(*args, **kwargs)
 
     def remove_system(self, user):
         """
@@ -331,11 +378,15 @@ class Wormhole(models.Model):
     collapsed = models.NullBooleanField(null=True)
 
     def save(self, *args, **kwargs):
+        self.map.clear_caches()
         if self.time_status == 1 and not self.eol_time:
             self.eol_time = datetime.now(pytz.utc)
         elif self.time_status != 1:
             self.eol_time = None
-        cache.delete(MapJSONGenerator.get_cache_key(self.map))
+        super(Wormhole, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.map.clear_caches()
         super(Wormhole, self).save(*args, **kwargs)
 
 class SignatureType(models.Model):
@@ -446,7 +497,12 @@ class Signature(models.Model):
         """
         Ensure that Sig IDs are proper.
         """
+        self.system.clear_sig_cache()
         self.sigid = utils.convert_signature_id(self.sigid)
+        super(Signature, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.system.clear_sig_cache()
         super(Signature, self).save(*args, **kwargs)
 
 class MapPermission(models.Model):
@@ -485,16 +541,6 @@ class Snapshot(models.Model):
     user = models.ForeignKey(User, related_name='snapshots')
     json = models.TextField()
     description = models.CharField(max_length=255)
-
-
-class ActivePilot(models.Model):
-    """Represents the location of a tracked character."""
-    user = models.ForeignKey(User, related_name='locations')
-    charactername = models.CharField(max_length=72)
-    shipname = models.CharField(max_length=32)
-    shiptype = models.CharField(max_length=32)
-    system = models.ForeignKey(System, related_name='active_pilots')
-    timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class Destination(models.Model):

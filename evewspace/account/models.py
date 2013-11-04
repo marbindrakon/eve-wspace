@@ -18,10 +18,12 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
+from django.core.cache import cache
 from Map.models import Map, System
 from django.db.models.signals import post_save
 import pytz
 import datetime
+import time
 # Create your models here.
 
 class PlayTime(models.Model):
@@ -43,14 +45,27 @@ class UserProfile(models.Model):
     class Meta:
         permissions = (('account_admin', 'Administer users and groups'),)
 
-    def update_location(self, system):
+    def update_location(self, sys_id, charid, charname, shipname, shiptype):
         """
-        updates the current location and last active timestamp for this user
+        Updates the cached locations dict for this user.
         """
-        self.currentsystem = system
-        self.lastactive = datetime.datetime.now(pytz.utc)
-        self.save()
+        current_time = time.time()
+        user_cache_key = 'user_%s_locations' % self.user.pk
+        user_locations_dict = cache.get(user_cache_key)
+        time_threshold = current_time - (60 * 15)
+        location_tuple = (sys_id, charname, shipname, shiptype, current_time)
+        if user_locations_dict:
+            user_locations_dict.pop(charid, None)
+            user_locations_dict[charid] = location_tuple
+        else:
+            user_locations_dict = {charid: location_tuple}
+        # Prune dict to ensure we're not carrying over stale entries
+        for charid, location in user_locations_dict.items():
+            if location[4] < time_threshold:
+                user_locations_dict.pop(charid, None)
 
+        cache.set(user_cache_key, user_locations_dict, 60 * 15)
+        return user_locations_dict
 
 class GroupProfile(models.Model):
     """GroupProfile defines custom fields tied to each Group record."""

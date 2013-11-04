@@ -3,7 +3,7 @@
 <ul class="nav nav-pills" id="sysInfoTab">
     <li class="active"><a href="#sysDetails" data-toggle="tab">Details</a></li>
     <li><a href="#sigsPanel" data-toggle="tab">Signatures ({{mapsys.system.signatures.count}})</a></li>
-    <li><a href="#activePlayerPanel" data-toggle="tab">Pilots ({{mapsys.system.active_pilots.count}})</a></li>
+    <li><a href="#activePlayerPanel" data-toggle="tab">Pilots ({{locations|length}})</a></li>
     <li><a href="#systemPosPanel" data-toggle="tab">Starbases ({{mapsys.system.poses.count}})</a></li>
 </ul>
 <div id="sysTabHolder" class="tab-content well">
@@ -119,6 +119,14 @@
                 <div style="margin-bottom: 10px; text-align: center;">
                     <h4>Signatures: {{system.name}}</h4>
                     <button class="btn" onclick="GetBulkImport({{mapsys.pk}});"><i class="icon-download"></i> Bulk Import</button>
+                    <button id="btnPurgeSigs" class="btn btn-danger">Purge Signatures</button>
+                    <button id="btnReallyPurgeSigs" class="btn btn-warning" style="display: none;"  onclick="PurgeSignatures({{mapsys.pk}});">Really Purge?</button>
+                    <script type="text/javascript">
+                        $('#btnPurgeSigs').click(function(){
+                                $('#btnReallyPurgeSigs').show();
+                                $('#btnPurgeSigs').hide();
+                                });
+                    </script>
                 </div>
                 <div id="sys{{mapsys.pk}}SigAddForm">
                 </div>
@@ -136,12 +144,12 @@
                     <th>Ship Type</th>
                     <th>Ship Name</th>
                 </tr>
-                {% for pilot in system.active_pilots.all %}
+                {% for charid,location in locations.items %}
                 <tr>
-                    <td>{{pilot.user.username}}</td>
-                    <td>{{pilot.charactername}}</td>
-                    <td>{{pilot.shiptype}}</td>
-                    <td>{{pilot.shipname}}</td>
+                    <td>{{location.0}}</td>
+                    <td>{{location.1}}</td>
+                    <td>{{location.3}}</td>
+                    <td>{{location.2}}</td>
                 </tr>
                 {% endfor %}
             </table>

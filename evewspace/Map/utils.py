@@ -61,7 +61,7 @@ class MapJSONGenerator(object):
     @staticmethod
     def get_cache_key(map_inst):
         return '%s_map' % map_inst.pk
-    
+
     def get_path_to_map_system(self, system):
         """
         Returns a list of MapSystems on the route between the map root and
@@ -85,8 +85,6 @@ class MapJSONGenerator(object):
         pvp_threshold = self.pvp_threshold
         npc_threshold = self.npc_threshold
         staticPrefix = "%s" % (settings.STATIC_URL + "images/")
-        if system.system.active_pilots.filter(user=self.user).exists():
-            return staticPrefix + "mylocation.png"
 
         if system.system.stfleets.filter(ended__isnull=True).exists():
             return staticPrefix + "farm.png"
@@ -128,7 +126,7 @@ class MapJSONGenerator(object):
                     'LevelY': self.levelY, 'SysClass': system.system.sysclass,
                     'Friendly': system.friendlyname, 'interest': interest,
                     'interestpath': path, 'ParentID': system.parentsystem.pk,
-                    'activePilots': system.system.active_pilots.count(),
+                    'activePilots': len(system.system.pilot_list),
                     'WhToParent': parentWH.bottom_type.name,
                     'WhFromParent': parentWH.top_type.name,
                     'WhMassStatus': parentWH.mass_status,
@@ -143,8 +141,8 @@ class MapJSONGenerator(object):
                     'LevelX': levelX,
                     'LevelY': self.levelY, 'SysClass': system.system.sysclass,
                     'Friendly': system.friendlyname, 'interest': interest,
+                    'activePilots': len(system.system.pilot_list),
                     'interestpath': path, 'ParentID': None,
-                    'activePilots': system.system.active_pilots.count(),
                     'WhToParent': "", 'WhFromParent': "",
                     'WhMassStatus': None, 'WhTimeStatus': None,
                     'WhToParentBubbled': None, 'WhFromParentBubbled': None,
@@ -167,9 +165,17 @@ class MapJSONGenerator(object):
             root = self.systems[None][0]
             syslist = [self.system_to_dict(root, 0),]
             self.recursive_system_data_generator(root, syslist, 1)
-            cached = json.dumps(syslist, sort_keys=True)
+            cached = syslist
             cache.set(cache_key, cached, 15)
-        return cached
+
+        user_locations_dict = cache.get('user_%s_locations' % self.user.pk)
+        if user_locations_dict:
+            user_img = "%s/images/mylocation.png" % (settings.STATIC_URL)
+            user_locations = [i[1][0] for i in user_locations_dict.items()]
+            for system in cached:
+                if system['sysID'] in user_locations and system['imageURL'] == None:
+                    system['imageURL'] = user_img
+        return json.dumps(cached, sort_keys=True)
 
     def recursive_system_data_generator(self, start_sys, syslist, levelX):
         """

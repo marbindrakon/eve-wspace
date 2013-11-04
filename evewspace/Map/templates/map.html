@@ -13,8 +13,12 @@
     <script type="text/javascript">var ajax_image = "<img src= '{{STATIC_URL}}images/loading.gif'></img>"; </script>
 {% endblock %}
 {% block contentheader %}
-<div class="reload_hover">
-    <img title="Refresh Map" height=32 width=32 src={{STATIC_URL}}images/reload.png onclick="RefreshMap();" />
+<div class="btn-toolbar">
+    <button class='btn btn-mini' onclick="RefreshMap();"><i class="icon-refresh"></i> Refresh</button>
+    <button id="btnRefreshToggle" class="btn btn-mini btn-info" onclick="ToggleAutoRefresh();">Auto Refresh: ON</button>
+    {% if is_igb %}
+    <button id="btnSilentAdd" class="btn btn-mini btn-info" onclick="ToggleSilentAdd();">Silent IGB Mapping: OFF</button>
+    {% endif %}
 </div>
 <div id="mapDiv" class="mapDiv">
 </div>

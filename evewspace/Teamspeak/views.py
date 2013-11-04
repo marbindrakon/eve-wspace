@@ -26,8 +26,6 @@ from django.http import HttpResponse
 from django.contrib.auth.models import Group
 
 # TODO: Change login_required to the appropriate permission_required when the permission UI is done
-# TODO: Fix addgroupmap
-# TODO: add remove groupmap
 
 @login_required
 def show_online(request):
@@ -110,7 +108,41 @@ def add_to_group(request):
 @login_required
 def addgroupmap(request):
     tsserver = TeamspeakServer.objects.get(id=request.POST['ts3hostname'])
-    usergroup = Group.objects.get(id=request.POST['usergroup'])
+    usergroup = Group.objects.get(id=request.POST['djangogroup'])
     groupmap = GroupMap.create(tsserver, usergroup, request.POST['tsgroup'])
-    groupmap.safe()
+    groupmap.save()
+    return HttpResponse('Success', content_type="text/plain")
+
+@login_required
+def delgroupmap(request):
+    groupmap = GroupMap.objects.get(id=request.POST['groupmapid'])
+    groupmap.delete()
+    return HttpResponse('Success', content_type="text/plain")
+
+@login_required
+def remove_from_group(request):
+    #not tested
+    profile = UserProfile.objects.get(user=request.user.id)
+    globalid = profile.tsglobalid
+    for g in request.user.groups.all():
+        try:
+            aimedgroup = GroupMap.objects.get(usergroup=g.id)
+        except Exception as e:
+            return HttpResponse('%s' % str(e), content_type="text/plain")
+
+        serversettings = TeamspeakServer.objects.get(id=1)
+        try:
+            server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
+            server.connect()
+            server.command('login', {'client_login_name': serversettings.queryuser, 'client_login_password': serversettings.querypass})
+            server.command('use', {'port': str(serversettings.voiceport)})
+            server.command('clientupdate', {'client_nickname': 'evewspace'})
+            aimedclient = server.command('clientdbfind', {'pattern': globalid}, ['uid'])
+            servergrouplist = server.command('servergrouplist')
+            for group in servergrouplist:
+                if group['name'] == aimedgroup.tsgroup and group['type'] != 0:
+                    server.command('servergroupdelclient', {'sgid': group['sgid'], 'cldbid': aimedclient['cldbid']})
+
+        except Exception as e:
+            return HttpResponse('%s' % e, content_type="text/plain")
     return HttpResponse('Success', content_type="text/plain")

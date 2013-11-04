@@ -68,10 +68,10 @@
 </div>
     <div class="modal-footer">
         <a href="#" id="sysCloseButton" class="btn" data-dismiss="modal">Close</a>
-            <a href="#" id="sysAddSubmit" class="btn btn-primary">Add System</a>
+            <a href="#" id="sysAddSubmit" onclick="$('#sysAddForm').submit();" class="btn btn-primary">Add System</a>
     </div>
         <script type="text/javascript">
-           $('#sysAddSubmit').click(function(e){
+           $('#sysAddForm').submit(function(e){
                         e.preventDefault();
                         AddSystem();
                         $('#modalHolder').modal('hide');
