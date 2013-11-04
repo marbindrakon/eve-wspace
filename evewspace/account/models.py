@@ -40,7 +40,6 @@ class UserProfile(models.Model):
     playtimes = models.ManyToManyField(PlayTime)
     currentsystem = models.ForeignKey(System, related_name="activepilots", blank=True, null=True)
     lastactive = models.DateTimeField()
-    tsglobalid = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
         permissions = (('account_admin', 'Administer users and groups'),)
