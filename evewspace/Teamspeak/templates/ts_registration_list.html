@@ -1,0 +1,7 @@
+<table class="table table-hover">
+    <tr><th>Hostname</th><th>Status</th><th>Action</th></tr>
+{% for tupel in tsregs %}
+
+    <tr><td>{{ tupel.tsserver.host }}</td><td>{{ tupel.usergroup }}</td><td>none</td></tr>
+{% endfor %}
+</table>

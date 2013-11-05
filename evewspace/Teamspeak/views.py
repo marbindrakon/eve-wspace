@@ -192,3 +192,11 @@ def link_ews_users(request):
         unlinked_user.save()
         return HttpResponse('%s' % ret['cldbid'], content_type="text/plain")
     return HttpResponse('Success', content_type="text/plain")
+
+@login_required
+def user_profile(request):
+    tsregs = TeamspeakUserMap.objects.filter(user=request.user.id)
+    return TemplateResponse(
+        request, 'ts_registration_list.html',
+        {'tsregs': tsregs}
+    )
