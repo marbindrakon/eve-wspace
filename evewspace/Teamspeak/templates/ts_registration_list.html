@@ -1,7 +1,17 @@
 <table class="table table-hover">
-    <tr><th>Hostname</th><th>Status</th><th>Action</th></tr>
+    <tr><th>Hostname</th><th>Status / Reg Code</th><th>Action</th></tr>
 {% for tupel in tsregs %}
 
-    <tr><td>{{ tupel.tsserver.host }}</td><td>{{ tupel.usergroup }}</td><td>none</td></tr>
+    <tr><td>{{ tupel.tsserver.host }}:{{ tupel.tsserver.voiceport }}</td><td>
+        {% if tupel.tsdbid > 0 %}
+            Registration Complete
+        {% else %}
+            {{ tupel.token }}
+        {% endif %}
+    </td><td>none</td></tr>
+{% endfor %}
+{% for tupel in tsservers %}
+
+    <tr><td>{{ tupel.tsserver.host }}:{{ tupel.tsserver.voiceport }}</td><td>Not registered</td><td><input name="myBtn" type="button" onClick="RequestToken('{{ tupel.tsserver.id }}')" value="Generate Registration Code"></td></tr>
 {% endfor %}
 </table>

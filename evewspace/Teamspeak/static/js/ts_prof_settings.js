@@ -12,13 +12,11 @@ function GetTSProfSettingsForm(){
     });
 }
 
-function SubmitTSProfSettingsForm(){
+function RequestToken(tsserverid){
     $.ajax({
         type: "POST",
-        data: $('#TSProfSettingsForm').serialize(),
-        url: "/teamspeak/user_profile/",
-        success: function(data){
-            $('#TSProfSettingsHolder').html(data);
-        }
+        data: { serverid: tsserverid },
+        url: "/teamspeak/settings/generate_token/",
+        success: window.location.href = "/settings/"
     });
 }

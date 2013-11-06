@@ -145,7 +145,8 @@ def remove_from_group(request):
 
 @login_required
 def generate_token(request):
-    serversettings = TeamspeakServer.objects.get(id=1)
+
+    serversettings = TeamspeakServer.objects.get(id=request.POST['serverid'])
     user = User.objects.get(id=request.user.id)
     #prevent generation of more than one token per server
     if TeamspeakUserMap.objects.filter(tsserver=serversettings, user=user).exists():
@@ -195,8 +196,10 @@ def link_ews_users(request):
 
 @login_required
 def user_profile(request):
-    tsregs = TeamspeakUserMap.objects.filter(user=request.user.id)
+    tsregs = TeamspeakUserMap.objects.filter(user=request.user)
+    ids_to_exclude = [o.tsserver_id for o in tsregs]
+    left_tsservers = GroupMap.objects.exclude(tsserver__in=ids_to_exclude)
     return TemplateResponse(
         request, 'ts_registration_list.html',
-        {'tsregs': tsregs}
+        {'tsregs': tsregs,'tsservers':left_tsservers}
     )

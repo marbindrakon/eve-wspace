@@ -62,7 +62,7 @@ function SaveTSGroupSettings(){
         type: "POST",
         data: $('#ts3GroupSettingsForm').serialize(),
         url: "/teamspeak/settings/addgroupmap/",
-        success: GetTSGroupSettings(),
+        success: window.location.href = "/settings/",
         error: function(){alert("Error while adding Groupmap");}
     });
 }
@@ -72,7 +72,7 @@ function DeleteTSGroupMap(id){
         type: "POST",
         data: { groupmapid: id },
         url: "/teamspeak/settings/delgroupmap/",
-        success: GetTSGroupSettings(),
+        success: window.location.href = "/settings/",
         error: function(){alert("Invalid values, please make sure only integers are used.");}
     });
 }
