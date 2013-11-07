@@ -21,7 +21,6 @@ settingspatterns = patterns('Teamspeak.views',
         url(r'^addgroupmap/$', 'addgroupmap'),
         url(r'^delgroupmap/$', 'delgroupmap'),
         url(r'^generate_token/$', 'generate_token'),
-        url(r'^link_ews_users/$', 'link_ews_users'),
         )
 
 urlpatterns = patterns('Teamspeak.views',

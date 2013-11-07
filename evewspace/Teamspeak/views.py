@@ -20,11 +20,8 @@ from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required, permission_required
 import PyTS3
 from Teamspeak.models import TeamspeakServer,GroupMap,TeamspeakUserMap
-from core.utils import get_config
 from django.http import HttpResponse
 from django.contrib.auth.models import Group, User
-
-# TODO: Change login_required to the appropriate permission_required when the permission UI is done
 
 @login_required
 def show_online(request):
@@ -42,6 +39,7 @@ def show_online(request):
 
 
 @login_required
+@permission_required('Teamspeak.ts_admin')
 def general_settings(request):
     """
     Returns and processes the general settings section.
@@ -73,11 +71,13 @@ def general_settings(request):
     )
 
 @login_required
+@permission_required('Teamspeak.ts_admin')
 def show_groupmapping(request):
     groups = GroupMap.objects.all()
     return TemplateResponse(request, 'groupmapping.html', {'groups': groups})
 
 @login_required
+@permission_required('Teamspeak.ts_admin')
 def add_to_group(request):
     serversettings = TeamspeakServer.objects.get(id=1)
     aimedclient = TeamspeakUserMap.objects.get(user=request.user.id,tsserver=serversettings)
@@ -102,6 +102,7 @@ def add_to_group(request):
     return HttpResponse('Success', content_type="text/plain")
 
 @login_required
+@permission_required('Teamspeak.ts_admin')
 def addgroupmap(request):
     tsserver = TeamspeakServer.objects.get(id=request.POST['ts3hostname'])
     usergroup = Group.objects.get(id=request.POST['djangogroup'])
@@ -113,6 +114,7 @@ def addgroupmap(request):
     return HttpResponse('Success', content_type="text/plain")
 
 @login_required
+@permission_required('Teamspeak.ts_admin')
 def delgroupmap(request):
     groupmap = GroupMap.objects.get(id=request.POST['groupmapid'])
     groupmap.delete()
@@ -176,23 +178,6 @@ def generate_token(request):
         except Exception as e:
             return HttpResponse('%s' % e, content_type="text/plain")
     return HttpResponse('no groups assigned to the user', content_type="text/plain")
-
-@login_required
-def link_ews_users(request):
-    serversettings = TeamspeakServer.objects.get(id=1)
-    unlinked_users = TeamspeakUserMap.objects.filter(token__isnull=False)
-    for unlinked_user in unlinked_users:
-        server = PyTS3.ServerQuery(serversettings.host, serversettings.queryport)
-        server.connect()
-        server.command('login', {'client_login_name': serversettings.queryuser, 'client_login_password': serversettings.querypass})
-        server.command('use', {'port': str(serversettings.voiceport)})
-        server.command('clientupdate', {'client_nickname': 'evewspace'})
-        ret=server.command('customsearch', {'ident': 'ews_user', 'pattern': str(unlinked_user.user.id)})
-        unlinked_user.tsdbid = ret['cldbid']
-        unlinked_user.token = None
-        unlinked_user.save()
-        return HttpResponse('%s' % ret['cldbid'], content_type="text/plain")
-    return HttpResponse('Success', content_type="text/plain")
 
 @login_required
 def user_profile(request):
