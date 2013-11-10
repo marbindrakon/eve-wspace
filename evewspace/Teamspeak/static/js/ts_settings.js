@@ -41,7 +41,7 @@ function SaveTSSettings(){
         success: function(data){
             $("#ts3generalsettings").html(data);             
         },
-        error: function(){alert("Invalid values, please make sure only integers are used.");}
+        error: function(){alert("Error while saving the settings. Are you shure that these settings are right and the TS Server is running?");}
     });
 }
 function GetTSGroupSettings(){
@@ -73,7 +73,7 @@ function DeleteTSGroupMap(id){
         data: { groupmapid: id },
         url: "/teamspeak/settings/delgroupmap/",
         success: window.location.href = "/settings/",
-        error: function(){alert("Invalid values, please make sure only integers are used.");}
+        error: function(){alert("Error while removing Groupmap");}
     });
 }
 function deleteGroupMap(id,djangogroup,tsgroup){

@@ -57,12 +57,6 @@
         <div id="tsGroups" class="accordion-body collapse">
             <div class="accordion-inner">
                 <div id="show_ts_groups"></div>
-                {% if saved %}
-                <div class="alert alert-success" style="max-width: 600px;">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>TS Settings Saved</strong>
-                </div>
-                {% endif %}
                 <form id="ts3GroupSettingsForm" action="/teamspeak/settings/addgroupmap/" method="post">
                     {% csrf_token %}
                     <table>

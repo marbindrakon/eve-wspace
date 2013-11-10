@@ -24,7 +24,6 @@ def link_ews_users():
     """
     Link the Teamspeakusers back to EWS
     """
-    #serversettings = TeamspeakServer.objects.get(id=1)
     unlinked_users = TeamspeakUserMap.objects.filter(token__isnull=False)
     for unlinked_user in unlinked_users:
         serversettings = unlinked_user.tsserver
