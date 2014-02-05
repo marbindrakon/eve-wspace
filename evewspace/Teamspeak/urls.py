@@ -18,9 +18,15 @@ from django.conf.urls import patterns,include, url
 
 settingspatterns = patterns('Teamspeak.views',
         url(r'^general/$', 'general_settings'),
+        url(r'^addgroupmap/$', 'addgroupmap'),
+        url(r'^delgroupmap/$', 'delgroupmap'),
+        url(r'^generate_token/$', 'generate_token'),
         )
 
 urlpatterns = patterns('Teamspeak.views',
         url(r'show_online/$', 'show_online'),
+        url(r'show_groupmapping/$', 'show_groupmapping'),
+        url(r'add_to_group/$', 'add_to_group'),
+        url(r'user_profile/$', 'user_profile'),
         url(r'^settings/', include(settingspatterns)),
         )

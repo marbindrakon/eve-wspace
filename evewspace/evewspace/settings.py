@@ -60,6 +60,11 @@ CELERYBEAT_SCHEDULE = {
                 'schedule': timedelta(minutes=30),
                 'args': ()
             },
+        'ts_ews_bridge':{
+                'task': 'Teamspeak.tasks.link_ews_users',
+                'schedule': timedelta(minutes=5),
+                'args': ()
+            },
         }
 
 

@@ -14,11 +14,9 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from core.models import ConfigEntry
 from Teamspeak.models import TeamspeakServer
-from core.utils import get_config
 
 def load_defaults():
 
-    ts3 = TeamspeakServer.create("localhost", "baduser","badpass","10011", "9887")
+    ts3 = TeamspeakServer.create("localhost", "baduser","badpass","10011", "9987")
     ts3.save()

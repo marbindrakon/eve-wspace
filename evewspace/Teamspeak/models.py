@@ -47,3 +47,19 @@ class GroupMap(models.Model):
     usergroup = models.ForeignKey(Group, related_name="teamspeakgroups")
     tsgroup = models.CharField(max_length=100)
 
+    @classmethod
+    def create(cls,tsserver,usergroup,tsgroup):
+        group= cls(tsserver=tsserver,usergroup=usergroup,tsgroup=tsgroup)
+        return group
+
+class TeamspeakUserMap(models.Model):
+    """Maps Django users to Teamspeak users."""
+    tsserver = models.ForeignKey(TeamspeakServer, related_name="tsserver")
+    user = models.ForeignKey(User, related_name="ewsuser")
+    tsdbid = models.IntegerField(null=True)
+    token = models.CharField(max_length=100, null=True)
+
+    @classmethod
+    def create(cls,tsserver,user):
+        tsmap= cls(tsserver=tsserver,user=user)
+        return tsmap
