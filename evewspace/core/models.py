@@ -87,7 +87,7 @@ class Type(models.Model):
     volume = models.FloatField(blank=True, null=True)
     marketgroup = models.ForeignKey(MarketGroup, null=True, blank=True, related_name="types",
             db_column='marketGroupID')
-    published = models.IntegerField()
+    published = models.BooleanField()
 
     def __unicode__(self):
         return self.name
