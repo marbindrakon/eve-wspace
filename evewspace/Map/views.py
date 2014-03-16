@@ -756,20 +756,16 @@ def edit_system(request, map_id, ms_id):
                                 )
     if request.method == 'POST':
         map_system.friendlyname = request.POST.get('friendlyName', '')
-        if (
-                (map_system.system.info != request.POST.get('info', '')) or
-                (map_system.system.occupied !=
-                 request.POST.get('occupied', ''))
-        ):
-            map_system.system.info = request.POST.get('info', '')
-            map_system.system.occupied = request.POST.get('occupied', '')
-            map_system.system.save()
+        map_system.system.info = request.POST.get('info', '')
+        map_system.system.occupied = request.POST.get('occupied', '')
+        map_system.system.importance = request.POST.get('importance', '0')
+        map_system.system.save()
         map_system.save()
         map_system.map.add_log(request.user, "Edited System: %s (%s)"
                                % (map_system.system.name,
                                   map_system.friendlyname))
         return HttpResponse()
-    raise PermissionDenied
+    raise PermissionDenied 
 
 
 # noinspection PyUnusedLocal

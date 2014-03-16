@@ -133,8 +133,9 @@ class MapJSONGenerator(object):
                     'WhTimeStatus': parentWH.time_status,
                     'WhToParentBubbled': parentWH.bottom_bubbled,
                     'WhFromParentBubbled': parentWH.top_bubbled,
-                    'imageURL': self.get_system_icon(system),
+                    'iconImageURL': self.get_system_icon(system),
                     'whID': parentWH.pk, 'msID': system.pk,
+                    'backgroundImageURL': self.get_system_background(system),
                     'effect': effect, 'collapsed': collapsed}
         else:
             result = {'sysID': system.system.pk, 'Name': system.system.name,
@@ -146,10 +147,26 @@ class MapJSONGenerator(object):
                     'WhToParent': "", 'WhFromParent': "",
                     'WhMassStatus': None, 'WhTimeStatus': None,
                     'WhToParentBubbled': None, 'WhFromParentBubbled': None,
-                    'imageURL': self.get_system_icon(system),
+                    'iconImageURL': self.get_system_icon(system),
                     'whID': None, 'msID': system.pk,
+                    'backgroundImageURL': self.get_system_background(system),
                     'effect': effect, 'collapsed': False}
         return result
+
+    def get_system_background(self, system):
+        """
+        Takes a MapSystem and returns the appropriate background icon
+        as a relative URL or None.
+        """
+        staticPrefix = "%s" % (settings.STATIC_URL + "images/")
+
+        if system.system.importance == 0:
+            return None
+        if system.system.importance == 1:
+            return staticPrefix + "skull.png"
+        if system.system.importance == 2:
+            return staticPrefix + "mark.png"
+        raise ValueError                                       
 
 
     def get_systems_json(self):
@@ -173,8 +190,8 @@ class MapJSONGenerator(object):
             user_img = "%s/images/mylocation.png" % (settings.STATIC_URL)
             user_locations = [i[1][0] for i in user_locations_dict.items()]
             for system in cached:
-                if system['sysID'] in user_locations and system['imageURL'] == None:
-                    system['imageURL'] = user_img
+                if system['sysID'] in user_locations and system['iconImageURL'] == None:
+                    system['iconImageURL'] = user_img
         return json.dumps(cached, sort_keys=True)
 
     def recursive_system_data_generator(self, start_sys, syslist, levelX):

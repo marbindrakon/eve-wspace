@@ -888,6 +888,12 @@ function DrawSystem(system) {
         childSys.WhFromParentBubbled = system.WhFromParentBubbled;
         childSys.WhToParentBubbled = system.WhToParentBubbled;
         childSys.click(onSysClick);
+
+        // Dont even get me started...
+        if (system.backgroundImageURL) {
+            paper.image(system.backgroundImageURL, childSys.attr("cx") - 28, childSys.attr("cy") - 28, 55, 55);
+        }
+
         sysText = paper.text(sysX, sysY, sysName);
         sysText.msID = system.msID;
         sysText.sysID = system.sysID;
@@ -1076,8 +1082,8 @@ function ColorSystem(system, ellipseSystem, textSysName) {
         }
     iconX = ellipseSystem.attr("cx")+40;
     iconY = ellipseSystem.attr("cy")-35;
-    if (system.imageURL){
-        paper.image(system.imageURL, iconX, iconY, 25, 25);
+    if (system.iconImageURL) {
+        paper.image(system.iconImageURL, iconX, iconY, 25, 25);
     }
     ellipseSystem.attr({ fill: sysColor, stroke: sysStroke, "stroke-width": sysStrokeWidth, cursor: "pointer", "stroke-dasharray": sysStrokeDashArray });
     textSysName.attr({ fill: textColor, "font-size": textFontSize, cursor: "pointer" });

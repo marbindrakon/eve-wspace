@@ -77,6 +77,12 @@ class System(SystemData):
     sysclass_choices = ((1, "C1"), (2, "C2"), (3, "C3"), (4, "C4"), (5, "C5"),
             (6, "C6"), (7, "High Sec"), (8, "Low Sec"), (9, "Null Sec"))
     sysclass = models.IntegerField(choices = sysclass_choices)
+    importance_choices = ((0, "Regular"),
+                     (1, "Hostile homesystem"),
+                     (2, "Important system"))
+    importance = models.IntegerField(choices = importance_choices, default = 0)
+    occupied = models.TextField(blank = True)
+
     occupied = models.TextField(blank = True)
     info = models.TextField(blank = True)
     lastscanned = models.DateTimeField()

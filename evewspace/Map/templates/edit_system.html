@@ -11,6 +11,10 @@
         <textarea name="info" style="color: #000000;" id="infoField" rows=8 cols=50>{{info}}</textarea> 
         <h4>Occupied: </h4>
         <textarea name="occupied" style="color: #000000;" id="occupiedField" rows=8 cols=50 >{{occupied}}</textarea><br />
+        Type: &nbsp
+        <input type="radio" class="editWormholeInput" name="importance" value="0" {% if mapsys.system.importance == 0 %} checked="checked" {% endif %}> Regular System&nbsp
+        <input type="radio" class="editWormholeInput" name="importance" value="1" {% if mapsys.system.importance == 1 %} checked="checked" {% endif %}> Hostile Homesystem &nbsp
+        <input type="radio" class="editWormholeInput" name="importance" value="2" {% if mapsys.system.importance == 2 %} checked="checked" {% endif %}> Important System
         <br />
         <input type="submit" style="display: none;">
     </form>
