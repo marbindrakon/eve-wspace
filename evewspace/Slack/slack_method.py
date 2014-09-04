@@ -27,10 +27,7 @@ class SlackAlertMethod(AlertMethodBase):
         """
         Returns True if there is a SlackChannel for the given group.
         """
-        if SlackChannel.objects.filter(group=group).count():
-            return True
-        else:
-            return False
+        bool(SlackChannel.objects.filter(group=group).count())
 
     def description(self):
         """
