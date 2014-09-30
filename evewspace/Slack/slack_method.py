@@ -1,6 +1,6 @@
 from Alerts.method_base import AlertMethodBase
 from core.utils import get_config
-from models import SlackChannel
+from Slack.models import SlackChannel
 import json
 import requests
 
