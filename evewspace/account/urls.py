@@ -61,7 +61,7 @@ urlpatterns = patterns('',
          'subject_template_name': 'reset_subject.txt'}, name='password_reset'),
     url(r'^password/reset/done$', 'django.contrib.auth.views.password_reset_done',
         {'template_name': 'password_reset_done.html'}, name='password_reset_done'),
-    url(r'^password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)',
+    url(r'^password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)',
         'account.views.password_reset_confirm',
         name='password_reset_confirm'),
 )
