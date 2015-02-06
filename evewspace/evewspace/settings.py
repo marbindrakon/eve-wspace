@@ -48,7 +48,7 @@ CELERYBEAT_SCHEDULE = {
             },
         'cache_reddit':{
                 'task': 'core.tasks.cache_eve_reddit',
-                'schedule': timedelta(seconds=45),
+                'schedule': timedelta(minutes=45),
                 'args': ()
             },
         'cache_feeds':{

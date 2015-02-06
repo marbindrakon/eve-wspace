@@ -3,6 +3,9 @@
 <div class="mapSysInfo row">
    <div class="sysClassSpan span3">
        <h4 class="sysFriendlySpan">{{mapsys.friendlyname}}{% if mapsys.parent_wormhole.collapsed %} - COLLAPSED{% endif %}</h4>
+        <div> 
+            <strong>Name: {{mapsys.system.name}} </strong>
+        </div>
         {% if mapsys.system.is_wspace %}
         <div> 
             <strong>Class: {{mapsys.system.class_string}} </strong>

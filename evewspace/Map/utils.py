@@ -130,6 +130,7 @@ class MapJSONGenerator(object):
                     'Friendly': system.friendlyname, 'interest': interest,
                     'interestpath': path, 'ParentID': system.parentsystem.pk,
                     'activePilots': len(system.system.pilot_list),
+                    'pilot_list': [x[1][1] for x in system.system.pilot_list.items() if x[1][1] != "OOG Browser" ] ,
                     'WhToParent': parentWH.bottom_type.name,
                     'WhFromParent': parentWH.top_type.name,
                     'WhMassStatus': parentWH.mass_status,
@@ -141,7 +142,7 @@ class MapJSONGenerator(object):
                     'iconImageURL': self.get_system_icon(system),
                     'whID': parentWH.pk, 'msID': system.pk,
                     'backgroundImageURL': self.get_system_background(system),
-                    'effect': effect, 'collapsed': collapsed,
+                    'effect': effect, 'collapsed': collapsed,'importance': system.system.importance,
                     'shattered': shattered}
         else:
             result = {'sysID': system.system.pk, 'Name': system.system.name,
@@ -149,6 +150,7 @@ class MapJSONGenerator(object):
                     'LevelY': self.levelY, 'SysClass': system.system.sysclass,
                     'Friendly': system.friendlyname, 'interest': interest,
                     'activePilots': len(system.system.pilot_list),
+                    'pilot_list': [x[1][1] for x in system.system.pilot_list.items() if x[1][1] != "OOG Browser" ] ,
                     'interestpath': path, 'ParentID': None,
                     'WhToParent': "", 'WhFromParent': "",
                     'WhTotalMass': None, 'WhJumpMass': None,
@@ -157,7 +159,7 @@ class MapJSONGenerator(object):
                     'iconImageURL': self.get_system_icon(system),
                     'whID': None, 'msID': system.pk,
                     'backgroundImageURL': self.get_system_background(system),
-                    'effect': effect, 'collapsed': False,
+                    'effect': effect, 'collapsed': False,'importance': system.system.importance,
                     'shattered': shattered}
         return result
 
@@ -184,7 +186,7 @@ class MapJSONGenerator(object):
         if cached == None:
             self.systems = defaultdict(list)
             for system in self.map.systems.all()\
-                    .select_related('system', 'parentsystem', 'parent_womrhole')\
+                    .select_related('system', 'parentsystem', 'parent_wormhole')\
                     .iterator():
                 self.systems[system.parentsystem_id].append(system)
             root = self.systems[None][0]

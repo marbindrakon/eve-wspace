@@ -37,9 +37,15 @@
     width: 200px;
     display: none;
 }
-.systemStatsList
-{
+.systemStatsList {
+    display: inline;
     list-style: none;
+}
+.systemStatItem {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-right: 1px #555 dotted;
 }
 .popover
 {
@@ -211,4 +217,71 @@ textarea
   left: -12px;
   top: 21px;
   content: '';
+}
+#sysInfoDiv {
+    margin-left: 15px;
+}
+#sysInfoDiv h4 {
+    border-top: 1px solid #ccc;
+    clear: both;
+    display: block;
+    margin-top: 20px;
+}
+.sigWH {
+    color: #63a5ff;
+}
+.sigRELIC {
+    color: #ff63f2;
+}
+.sigDATA {
+    color: #9139f3;
+}
+.sigGAS {
+    color: #f3b839;
+}
+
+#scrollmenu {
+    position: fixed;
+    left: 2;
+    top: 40%;
+    width: 24px;
+    margin: 0px;
+    padding: 0px;
+    z-index: 100;
+}
+#backtotop {
+    background: url(../images/back_to_top.png);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    cursor: pointer;
+    padding-bottom: 3px;
+}
+#tobuttons {
+    background: url(../images/to_buttons.png);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    cursor: pointer;
+}
+
+label {
+    display: inline;
+}
+#editWormholeDialog label[for=timeStatusEol],#editWormholeDialog label[for=massStatusReduced], #editSystemDialog label[for=sysTypeImportant] {
+    font-weight: bold;
+    color: #fffc00;
+}
+#editWormholeDialog label[for=timeStatusNormal], #editWormholeDialog label[for=massStatusNormal] #editSystemDialog label[for=sysTypeRegular] {
+    font-weight: bold;
+    color: #00ff00;
+}
+#editWormholeDialog label[for=massStatusCritical], #editSystemDialog label[for=sysTypeDangerous] {
+    font-weight: bold;
+    color: #ff0000;
+}
+#legendDiv ul.inline {
+    display: inline;
 }

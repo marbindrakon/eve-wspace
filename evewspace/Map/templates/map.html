@@ -13,6 +13,10 @@
     <script type="text/javascript">var ajax_image = "<img src= '{{STATIC_URL}}images/loading.gif'></img>"; </script>
 {% endblock %}
 {% block contentheader %}
+<div id="scrollmenu">
+<div id="backtotop" onclick="scroll(0,0);"></div>
+<div id="tobuttons" onclick="window.location.href = '#sysInfoDiv';"></div>
+</div>
 <div class="btn-toolbar">
     <button class='btn btn-mini' onclick="RefreshMap();"><i class="icon-refresh"></i> Refresh</button>
     <button id="btnRefreshToggle" class="btn btn-mini btn-info" onclick="ToggleAutoRefresh();">Auto Refresh: ON</button>
@@ -20,23 +24,36 @@
     <button id="btnSilentAdd" class="btn btn-mini btn-info" onclick="ToggleSilentAdd();">Silent IGB Mapping: OFF</button>
     <button id='btnKspaceIGB' class='btn btn-mini btn-info' onclick='ToggleKspaceMapping();'>Map K-Space Connections: OFF</button>
     {% endif %}
+    <button id='btnPilotList' class='btn btn-mini btn-info' onclick="togglepilotlist()">Pilot List</button>
     <button id='btnExportMap' class='btn btn-mini btn-info' onclick='GetExportMap();'>Export</button>
+    <br />
+    <button id='btnZen' class='btn btn-mini btn-info' onclick="togglezen()">Zen</button>
+    <button class='btn btn-mini btn-info' onclick="scale(0.25)">25%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(0.5)">50%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(0.6)">60%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(0.7)">70%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(0.8)">80%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(0.9)">90%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(1)">100%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(1.1)">110%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(1.25)">125%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(1.5)">150%</button>
+    <button class='btn btn-mini btn-info' onclick="scale(2)">200%</button>
 </div>
 <div id="mapDiv" class="mapDiv">
 </div>
 <div id="systemTooltipHolder">
 </div>
 <div id="legendDiv">
-    <p class="text-info">
-        <em>Legend:</em> &nbsp
-        <ul class="inline">
-            <li><img src='{{STATIC_URL}}images/pvp.png' height='32' width='32'></img>  PVP Activity </li>
-            <li> <img src='{{STATIC_URL}}images/carebears.png' height='32' width='32'></img>  NPC Kills </li>
-            <li> <img src='{{STATIC_URL}}images/mylocation.png' height='32' width='32'></img>  You are here! </li>
-        {% if perms.SiteTracker.can_sitetracker %}
+    <em>Legend:</em>&nbsp;
+    <ul class="inline">
+        <li><img src='{{STATIC_URL}}images/pvp.png' height='32' width='32'></img>  PVP Activity </li>
+        <li> <img src='{{STATIC_URL}}images/carebears.png' height='32' width='32'></img>  NPC Kills </li>
+        <li> <img src='{{STATIC_URL}}images/mylocation.png' height='32' width='32'></img>  You are here! </li>
+    {% if perms.SiteTracker.can_sitetracker %}
         <li><img src='{{STATIC_URL}}images/farm.png' height='32' width='32'></img>  SiteTracker Up! </li>
-        {% endif %}
-    </p>
+    {% endif %}
+    </ul>
 </div>
 <div id="logDiv" class="logDiv">
 </div>

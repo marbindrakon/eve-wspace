@@ -6,15 +6,15 @@
     <form id="editSystemForm" class="editSystemForm" method="post" action="system/{{mapsys.pk}}/edit/">
         {% csrf_token %}
         <h4>Friendly Name:</h4> 
-        <input type="text" id="friendlyField" name="friendlyName" value="{{mapsys.friendlyname}}">
+        <input type="text" id="friendlyField" name="friendlyName" style="width: 80%;" value="{{mapsys.friendlyname}}">
         <h4>Info: </h4>
-        <textarea name="info" style="color: #000000;" id="infoField" rows=8 cols=50>{{info}}</textarea> 
+        <textarea name="info" style="color: #000000; width: 80%;" id="infoField" rows=4>{{info}}</textarea> 
         <h4>Occupied: </h4>
-        <textarea name="occupied" style="color: #000000;" id="occupiedField" rows=8 cols=50 >{{occupied}}</textarea><br />
-        Type: &nbsp
-        <input type="radio" class="editWormholeInput" name="importance" value="0" {% if mapsys.system.importance == 0 %} checked="checked" {% endif %}> Regular System&nbsp
-        <input type="radio" class="editWormholeInput" name="importance" value="1" {% if mapsys.system.importance == 1 %} checked="checked" {% endif %}> Dangerous System &nbsp
-        <input type="radio" class="editWormholeInput" name="importance" value="2" {% if mapsys.system.importance == 2 %} checked="checked" {% endif %}> Important System
+        <textarea name="occupied" style="color: #000000; width:80%;" id="occupiedField" rows=4 >{{occupied}}</textarea><br />
+        Type: &nbsp;
+        <label for="sysTypeRegular"><input type="radio" id="sysTypeRegular" class="editWormholeInput" name="importance" value="0" {% if mapsys.system.importance == 0 %} checked="checked" {% endif %}> Regular System </label>&nbsp;
+        <label for="sysTypeDangerous"><input type="radio" id="sysTypeDangerous" class="editWormholeInput" name="importance" value="1" {% if mapsys.system.importance == 1 %} checked="checked" {% endif %}> Dangerous System </label>&nbsp;
+        <label for="sysTypeImportant"><input type="radio" id="sysTypeImportant" class="editWormholeInput" name="importance" value="2" {% if mapsys.system.importance == 2 %} checked="checked" {% endif %}> Important System </label>
         <br />
         <input type="submit" style="display: none;">
     </form>

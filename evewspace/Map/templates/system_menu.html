@@ -56,7 +56,11 @@
             <a class="btn btn-small" onclick="RemoveInterest({{mapsys.pk}});" >Remove Interest </a>
             {% else %}
             <a class="btn btn-small" onclick="SetInterest({{mapsys.pk}});" >Set Interest</a>
-
+            {% endif %}
+            {% if mapsys.system.importance != 1 %}
+            <a class="btn btn-small" onclick="SetImportance({{mapsys.pk}}, {{mapsys.system.pk}}, 1);">Set Danger</a>
+            {% else %}
+            <a class="btn btn-small" onclick="SetImportance({{mapsys.pk}}, {{mapsys.system.pk}}, 0);">Unset Danger</a>
             {% endif %}
             <a class="btn btn-small" onclick="MarkScanned({{mapsys.pk}}, false, {{mapsys.system.pk}});">Mark Scanned</a>
         <div id="deleteButton" class="btn-group dropdown">

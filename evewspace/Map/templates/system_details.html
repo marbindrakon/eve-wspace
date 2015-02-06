@@ -1,12 +1,13 @@
 {% load humanize %}
 {% include 'system_menu.html' %}
 <ul class="nav nav-pills" id="sysInfoTab">
-    <li class="active"><a href="#sysDetails" data-toggle="tab">Details</a></li>
-    <li><a href="#sigsPanel" data-toggle="tab">Signatures ({{mapsys.system.signatures.count}})</a></li>
-    <li><a href="#activePlayerPanel" data-toggle="tab">Pilots ({{locations|length}})</a></li>
-    <li><a href="#systemPosPanel" data-toggle="tab">Starbases ({{mapsys.system.poses.count}})</a></li>
+    <li class="active"><a href="#sysDetails">Details</a></li>
+    <li><a href="#sigsPanel">Signatures ({{mapsys.system.signatures.count}})</a></li>
+    <li><a href="#activePlayerPanel">Pilots ({{locations|length}})</a></li>
+    <li><a href="#systemPosPanel">Starbases ({{mapsys.system.poses.count}})</a></li>
 </ul>
-<div id="sysTabHolder" class="tab-content well">
+<div id="sysTabHolder" class="well"> <!-- removed tab-content , no tabbing -->
+<a name="sysDetails"></a>
 <div id="sysDetails" class="tab-pane active">
 <div id="sysPanelHeader" class="systemPanelHeader row">
     <h4>{% if can_edit %}<i title="Edit Info" class="icon-pencil" onclick="GetEditSystemDialog({{mapsys.pk}});"></i>{% endif %}System Details: {{mapsys.system.name}} </h4>
@@ -49,6 +50,9 @@
         {% if system.sysclass = 9 %}
         Null Sec
         {% endif %}
+        {% if system.is_kspace %}
+        <button class='btn btn-mini btn-info' onclick="CCPEVE.setDestination({{system.pk}});">Set destination</button>
+        {% endif %}
         {% if system.sov %}
         <br />
         Sov: {{system.sov}}
@@ -61,7 +65,7 @@
 </div>
     <div class="row span6">
     {% load humanize %}
-    <ul class="visited"><li>First Visit: {{system.first_visited|naturaltime}}</li><li> Last Visit: {{system.last_visited|naturaltime}}</li></ul>
+    <div class="visited">First Visit: {{system.first_visited|naturaltime}} &bull; Last Visit: {{system.last_visited|naturaltime}}</div>
     <div class="detailsLeft">
     {% if system.occupied or system.poses.all %}
     <div class="occupiedDiv label label-important">
@@ -102,8 +106,8 @@
 <div class="sysDetailsFooter row">
     {% if system.is_kspace %}
     <div id="systemStatsPanel" class="systemStatsPanel">
-         <h6>System Statistics <br /> (Last Hour) </h6>
-         <ul class="systemStatsList">
+         <h6>System Statistics (Last Hour) </h6>
+            <ul class="systemStatsList">
                 <li class="systemStatItem">NPC Kills: {{system.npckills}}</li>
                 <li class="systemStatItem">Ship Kills: {{system.shipkills}}</li>
                 <li class="systemStatItem">Pod Kills: {{system.podkills}}</li>
@@ -117,12 +121,16 @@
      
 </div>
 </div>
+  <a name="sigsPanel"></a>
   <div id="sigsPanel" class="sigsPanel tab-pane">
             <div id="sigAddPanel" class"sigAddPanel">
                 <div style="margin-bottom: 10px; text-align: center;">
                     <h4>Signatures: {{system.name}}</h4>
                     {% if can_edit %}
-                    <button class="btn" onclick="GetBulkImport({{mapsys.pk}});"><i class="icon-download"></i> Bulk Import</button>
+                    <form id="bulkSigForm" class="bulkSigForm" method="post" action="system/{{mapsys.pk}}/signatures/bulkadd/">
+                        <textarea id="pasteField" rows="4" name="paste"></textarea>
+                        <a href="#" id="btnImport" class="btn"><i class="icon-download"></i> Bulk Import</a>
+                    </form>
                     <button id="btnPurgeSigs" class="btn btn-danger">Purge Signatures</button>
                     <button id="btnReallyPurgeSigs" class="btn btn-warning" style="display: none;"  onclick="PurgeSignatures({{mapsys.pk}});">Really Purge?</button>
                     <script type="text/javascript">
@@ -140,6 +148,7 @@
             <div id="sys{{mapsys.pk}}Signatures" class="signatureListDiv">
             </div>
     </div>
+    <a name="activePlayerPanel"></a>
     <div id="activePlayerPanel" class="activePlayerPanel tab-pane">
         <div id="activePlayerList" class="activePlayerList">
             <h4 style="margin-left: 120px;">Active Pilots: {{system.name}}</h4>
@@ -162,6 +171,7 @@
         </div>
     </div>
         {% load poslist %}    
+    <a name="systemPosPanel"></a>
     <div id="systemPosPanel" class="systemPosPanel tab-pane">
         <div style="text-align: center; margin-bottom: 10px;">
             <h4>Starbases: {{system.name}}</h4>
@@ -173,3 +183,4 @@
         </div>
     </div>
 </div>
+</script>

@@ -20,8 +20,8 @@
             <i class="icon-star-empty" title="Not Owned (Click to Own)" onclick="OwnSignature({{system.pk}}, {{sig.pk}});"></i>
             {% endif %}
         </td>
-            <td><span class="signatureID">{{sig.sigid}}</span> </td>
-            <td><span class="signatureType" onclick="GetSiteSpawns({{system.pk}}, {{sig.pk}});" title="{{sig.sigtype.longname}}">{{sig.sigtype.shortname}}</span></td>
+            <td><span class="signatureID sig{{sig.sigtype.shortname}}">{{sig.sigid}}</span></td>
+            <td><span class="signatureType sig{{sig.sigtype.shortname}}" onclick="GetSiteSpawns({{system.pk}}, {{sig.pk}});" title="{{sig.sigtype.longname}}" >{{sig.sigtype.shortname}}</span></td>
             <td><span class="signatureInfo">{{sig.info}}</span></td>
             <td>
             {% if sig.activated %}

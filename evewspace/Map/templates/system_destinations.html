@@ -13,7 +13,7 @@
             <td>{{jumps}}</td>
             <td>{{ly}}</td>
             {% if is_igb_trusted %}
-            <td><button class='btn btn-mini btn-info' onclick="CCPEVE.setDestination({{dest.pk}});">D</button>&nbsp<button class='btn btn-mini btn-info' onclick="CCPEVE.addWaypoint({{dest.pk}});">W</button></td>
+            <td width="10%"><button class='btn btn-mini btn-info' onclick="CCPEVE.setDestination({{dest.pk}});">D</button></td>
             {% endif %}
         </tr>
     {% endfor %}
