@@ -3,8 +3,10 @@
 {% block scripts %}
     <script type="text/javascript" src="{{STATIC_URL}}js/raphael-min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/map_functions.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-slider.js"></script>
     <link rel="stylesheet" href="{{STATIC_URL}}css/map.css" type="text/css" />
     <link rel="stylesheet" href="{{STATIC_URL}}css/map-slate.css" type="text/css" />
+    <link rel="stylesheet" href="{{STATIC_URL}}css/slider.css" type="text/css" />
     {% if is_igb %}
     <script type="text/javascript">var is_igb = true;</script>
     {% else %}
@@ -13,6 +15,10 @@
     <script type="text/javascript">var ajax_image = "<img src= '{{STATIC_URL}}images/loading.gif'></img>"; </script>
 {% endblock %}
 {% block contentheader %}
+<div id="scrollmenu">
+<div id="backtotop" onclick="scroll(0,0);"></div>
+<div id="tobuttons" onclick="window.location.href = '#sysInfoDiv';"></div>
+</div>
 <div class="btn-toolbar">
     <button class='btn btn-mini' onclick="RefreshMap();"><i class="icon-refresh"></i> Refresh</button>
     <button id="btnRefreshToggle" class="btn btn-mini btn-info" onclick="ToggleAutoRefresh();">Auto Refresh: ON</button>
@@ -20,23 +26,26 @@
     <button id="btnSilentAdd" class="btn btn-mini btn-info" onclick="ToggleSilentAdd();">Silent IGB Mapping: OFF</button>
     <button id='btnKspaceIGB' class='btn btn-mini btn-info' onclick='ToggleKspaceMapping();'>Map K-Space Connections: OFF</button>
     {% endif %}
+    <button id='btnPilotList' class='btn btn-mini btn-info' onclick="togglepilotlist()">Pilot List</button>
     <button id='btnExportMap' class='btn btn-mini btn-info' onclick='GetExportMap();'>Export</button>
+    <button id='btnZen' class='btn btn-mini btn-info' onclick="togglezen()">Zen</button> 
+    <span style="margin-right: 5px; margin-left: 5px;"></span>
+    <input id='scaleSlider' type="text" class="slider" value="" data-slider-min=".1" data-slider-max="2" data-slider-step=".1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
 </div>
 <div id="mapDiv" class="mapDiv">
 </div>
 <div id="systemTooltipHolder">
 </div>
 <div id="legendDiv">
-    <p class="text-info">
-        <em>Legend:</em> &nbsp
-        <ul class="inline">
-            <li><img src='{{STATIC_URL}}images/pvp.png' height='32' width='32'></img>  PVP Activity </li>
-            <li> <img src='{{STATIC_URL}}images/carebears.png' height='32' width='32'></img>  NPC Kills </li>
-            <li> <img src='{{STATIC_URL}}images/mylocation.png' height='32' width='32'></img>  You are here! </li>
-        {% if perms.SiteTracker.can_sitetracker %}
+    <em>Legend:</em>&nbsp;
+    <ul class="inline">
+        <li><img src='{{STATIC_URL}}images/pvp.png' height='32' width='32'></img>  PVP Activity </li>
+        <li> <img src='{{STATIC_URL}}images/carebears.png' height='32' width='32'></img>  NPC Kills </li>
+        <li> <img src='{{STATIC_URL}}images/mylocation.png' height='32' width='32'></img>  You are here! </li>
+    {% if perms.SiteTracker.can_sitetracker %}
         <li><img src='{{STATIC_URL}}images/farm.png' height='32' width='32'></img>  SiteTracker Up! </li>
-        {% endif %}
-    </p>
+    {% endif %}
+    </ul>
 </div>
 <div id="logDiv" class="logDiv">
 </div>

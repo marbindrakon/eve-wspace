@@ -15,6 +15,7 @@
 //  
 //  Portions Copyright (c) 2011 Georgi Kolev (arcanis@wiadvice.com). Licensed under the Apache 2.0 license.
 
+
 var loadtime = null;
 var paper = null;
 var objSystems = [];
@@ -24,26 +25,77 @@ var updateTimerID;
 var refreshTimerID;
 var systemsJSON;
 var activityLimit = 100;
-var textFontSize = 12; // The base font size
+var scalingFactor = 1; //scale the interface
+var textFontSize = 11; // The base font size
 var indentX = 150; // The amount of space (in px) between system ellipses on the X axis. Should be between 120 and 180
 var indentY = 70; // The amount of space (in px) between system ellipses on the Y axis.
 var strokeWidth = 3; // The width in px of the line connecting wormholes
 var interestWidth = 3; // The width in px of the line connecting wormholes when interest is on
 var renderWormholeTags = true; // Determines whether wormhole types are shown on the map
 var sliceLastChars = false; // Friendly name should show last 8 chars if over 8, shows first 8 if false
-var highlightActivePilots = true; // Draw a notification ring around systems with active pilots.
+var showPilotList = true; // Show pilot names under systems
+var highlightActivePilots = false; // Draw a notification ring around systems with active pilots.
 var goodColor = "#00FF00"; // Color of good status connections
+var goodColor_zen = "#999"; // Color of good status connections
 var badColor = "#FF0000"; // Color of first shrink connections
 var bubbledColor = "#FF0000"; // Color of first shrink connections
 var clearWhColor = "#BBFFBB"; // Color of good status connections
 var warningColor = "#FF00FF"; // Color of mass critical connections
-var frigWhColor = "#00FFFF"; // Color of Hyperion Frigate Hole
+var eolColor = "#F0FF00"; //color for eol
+var sysColor_zen = "#222"; //color for eol
+var frigWhColor = "#FFFFFF"; // Color of Hyperion Frigate Hole
+var frigWhColor_zen = "#71cbff"; // Color of Hyperion Frigate Hole
+var textColorSelect = "#FFF"; //selected system text colour
+var textColorSelect_zen = "#FFFC00"; //selected system text colour (zen mode)
+var effectColorWolfRayet = "#ff5500";
+var effectColorPulsar = "0000ff";
+var effectColorMagnetar = "#ff0000";
+var effectColorRedGiant = "#ff00ff";
+var effectColorCataclysmic = "#5555ff";
+var effectColorBlackHole = "#000";
+var borderColorSelect = "#FFFC00"; //selected system
+var borderColorSelect_zen = "#FFFC00"; //selected system
+var shatteredBorderColor = "#FFA500";
+var colorNullSec = "#CC0000";
+var colorHighSec = "#009F00";
+var colorLowSec = "#93841E";
+var colorC6 = "#0022FF";
+var colorC5 = "#0044FF";
+var colorC4 = "#0066FF";
+var colorC3 = "#0088FF";
+var colorC2 = "#00AAFF";
+var colorC1 = "#00CDFF";
+var colorThera = "#800080";
+var colorSmallShipHole = "#FFA500";
+var borderColorNullSec = "#990000"; //(border colours not used in zen mode. In zen mode, the above colours are used for border instead.), border colours are overridden by wormhole effects
+var borderColorLowSec = "#60510A";
+var borderColorHighSec = "#006B00";
+var borderColorC6 = "#0000FF";
+var borderColorC5 = "#0000FF";
+var borderColorC4 = "#0022FF";
+var borderColorC3 = "#0044FF";
+var borderColorC2 = "#0066FF";
+var borderColorC1 = "#0088FF";
+var borderColorThera = "#7F3939";
+var borderColorSmallShipHole = "#7f5200";
+var systemTextColor = "#fff";
+var pilotColor = "#fff";
 var renderCollapsedConnections = false; // Are collapsed connections shown?
 var autoRefresh = true; // Does map automatically refresh every 15s?
-var silentSystem = false; // Are systems added automatically wihthout a pop-up?
+var silentSystem = true; // Are systems added automatically wihthout a pop-up?
 var kspaceIGBMapping = false; // Do we map K<>K connections from the IGB?
+var zenMode = false;
+
+
+
+function s(n) { //apply scaling factor, short function name so it's quick to type
+    return Math.ceil(n * scalingFactor)
+}
 
 $(document).ready(function () {
+    $('.slider').slider().on('slide', function(ev) {
+        scale(ev.value);
+    });
     updateTimerID = setInterval(doMapAjaxCheckin, 5000);
     if (autoRefresh === true) {
         refreshTimerID = setInterval(RefreshMap, 15000);
@@ -56,12 +108,23 @@ $(document).ready(function () {
     } else {
         $('#btnKspaceIGB').text('Map K-Space Connections: OFF');
     }
+    if (zenMode) {
+        $('#btnZen').text("Zen: ON");
+    } else {
+        $('#btnZen').text("Zen: OFF");
+    }
+    if (showPilotList) {
+        $('#btnPilotList').text("Pilot List: ON");
+    } else {
+        $('#btnPilotList').text("Pilot List: OFF");
+    }
 });
 
 $(document).ready(function () {
     $('#mapDiv').html(ajax_image);
     RefreshMap();
 });
+
 
 //Make sure timers stop when unloading the page
 $(document).ready(function () {
@@ -152,11 +215,15 @@ function DisplaySystemDetails(msID, sysID) {
                 url: "system/" + msID + "/signatures/new/",
                 success: function (data) {
                     $('#sys' + msID + 'SigAddForm').empty().html(data);
-                    $('#id_sigid').focus();
+                    $('#sysInfoDiv').focus();
                 }
             });
             GetPOSList(sysID);
             GetDestinations(msID);
+            $('#btnImport').off();
+            $('#btnImport').click(function(e){
+                BulkImport(msID);
+            });
             focusMS = msID;
             StartDrawing();
         }
@@ -216,18 +283,32 @@ function GetExportMap(mapID) {
     });
 }
 
-function MarkScanned(msID, fromPanel, sysID) {
-    var address = "system/" + msID + "/scanned/";
+function MarkScanned(msid, frompanel, sysid) {
+    var address = "system/" + msid + "/scanned/";
     $.ajax({
-        type: "POST",
+        type: "post",
         url: address,
         async: false,
         data: {},
         success: function (data) {
-            GetSystemTooltips();
-            if (fromPanel) {
-                LoadSignatures(msID, false);
+            getsystemtooltips();
+            if (frompanel) {
+                loadsignatures(msid, false);
             }
+        }
+    });
+}
+
+function SetImportance(msid, sysid,importance) {
+    var address = "system/" + msid + "/importance/";
+    $.ajax({
+        type: "post",
+        url: address,
+        async: false,
+        data: {'importance':importance},
+        success: function (data) {
+            DisplaySystemMenu(msid);
+            RefreshMap();
         }
     });
 }
@@ -306,6 +387,19 @@ function GetSystemTooltips() {
         url: address,
         success: function (data) {
             $('#systemTooltipHolder').html(data);
+            $('#systemTooltipHolder>div').off();
+            //clicking the tooltip acts as clicking the system 
+            //(IG browser can be sloppy)
+            $('#systemTooltipHolder>div').click(function(){
+                var msID = parseInt(this.id.substr(3,this.id.length -6));
+                var sysID = GetSysID(msID);
+                DisplaySystemDetails(msID, sysID);
+                var div = $('#sys' + msID + "Tip").hide();
+
+                if (div[0]) {
+                    div.hide();
+                }
+            });
         }
     });
 }
@@ -742,6 +836,15 @@ function StartDrawing() {
     }
 }
 
+
+function GetSysID(msID) {
+    //get systemID from msID
+    for (var i = 0; i < systemsJSON.length; i++) {
+        if (systemsJSON[i].msID == msID) return systemsJSON[i].sysID;
+    }
+    return null;
+}
+
 function ConnectSystems(obj1, obj2, line, bg, interest, dasharray) {
     var systemTo = obj2;
     if (obj1.line && obj1.from && obj1.to) {
@@ -805,7 +908,7 @@ function ConnectSystems(obj1, obj2, line, bg, interest, dasharray) {
                 stroke: color,
                 fill: "none",
                 "stroke-dasharray": dasharray,
-                "stroke-width": interestWidth
+                "stroke-width": interestWidth,
             });
         } else {
             lineObj = paper.path(path).attr({
@@ -841,8 +944,8 @@ function InitializeRaphael() {
             maxLevelY = stellarSystem.LevelY;
         }
     }
-    var holderHeight = 90 + maxLevelY * indentY;
-    var holderWidth = 170 + maxLevelX * (indentX + 20);
+    var holderHeight = s(90) + maxLevelY * indentY;
+    var holderWidth = s(170) + maxLevelX * (indentX + s(20));
     if (paper) {
         paper.clear();
         paper.remove();
@@ -855,7 +958,7 @@ function InitializeRaphael() {
 
 function GetSystemX(system) {
     if (system) {
-        var startX = 70;
+        var startX = s(70);
         return startX + indentX * system.LevelX;
     } else {
         alert("GetSystemX: System is null or undefined");
@@ -864,7 +967,7 @@ function GetSystemX(system) {
 
 function GetSystemY(system) {
     if (system) {
-        var startY = 40;
+        var startY = s(40);
         return startY + indentY * system.LevelY;
     } else {
         alert("GetSystemY: System is null or undefined.");
@@ -898,25 +1001,75 @@ function DrawSystem(system) {
             classString = "C" + system.SysClass;
             break;
     }
+    var effectString;
+    switch (system.effect) {
+        case "Wolf-Rayet Star":
+            effectString = "+W"
+            break;
+        case "Pulsar":
+            effectString = "+P"
+            break;
+        case "Magnetar":
+            effectString = "+M"
+            break;
+        case "Red Giant":
+            effectString = "+R"
+            break;
+        case "Cataclysmic Variable":
+            effectString = "+C"
+            break;
+        case "Black Hole":
+            effectString = "+B"
+            break;
+        default:
+            effectString = "";
+            break;
+    }
     var friendly = "";
     if (system.Friendly) {
-        if (system.Friendly.length > 8) {
-            if (sliceLastChars == true) {
-                system.Friendly = ".." + system.Friendly.slice(-8);
+        if (system.Friendly.length > 6) {
+            if ((sliceLastChars == true) || (zenMode)) {
+                system.Friendly = "." + system.Friendly.slice(-6);
             } else {
-                system.Friendly = system.Friendly.slice(0, 8) + "..";
+                system.Friendly = system.Friendly.slice(0, 6) + ".";
             }
         }
         friendly = system.Friendly + "\n";
     }
-    var sysName = friendly + system.Name;
-    sysName += "\n(" + classString + "+" + system.activePilots + "P)";
+    var sysName = friendly + system.Name + "\n" + classString + effectString + "(" + system.activePilots + ")";
+    if (zenMode) {
+        if ((classString == "H") || (classString == "N") || (classString == "L") || (classString == "T")) {
+            sysName = friendly + system.Name.substr(0,6);
+        } else {
+            sysName = friendly + classString;
+        }
+    }
+    var pilotText = "";
+    var pilotsadded = 0;
+    if (system.activePilots) {
+        if (system.activePilots == 1) {
+            pilotText += system.pilot_list[0];
+        } else {
+            for (var i = 0; i < system.pilot_list.length; i++) {
+                var pilot = system.pilot_list[i].substr(0,5);
+                pilotsadded++;
+                if (pilotText != "") pilotText += ",";
+                pilotText += pilot;
+                if (pilotText.length > 18) {
+                    if  (system.pilot_list_length > pilotsadded) {
+                        pilotText += "+" + (system.pilot_list.length - pilotsadded);
+                    }
+                    break;
+                }
+            }
+        }
+    }
     var sysText;
     if (system.LevelX != null && system.LevelX > 0) {
-        var childSys = paper.ellipse(sysX, sysY, 40, 28);
+        var childSys = paper.ellipse(sysX, sysY, s(40), s(28));
         if (system.activePilots > 0 && highlightActivePilots === true) {
-            var notificationRing = paper.ellipse(sysX, sysY, 45, 33);
-            notificationRing.attr({'stroke-dasharray': '--', 'stroke-width': 2, 'stroke': '#ADFF2F'});
+            var notificationRing = paper.ellipse(sysX, sysY, s(45), s(33));
+            notificationRing.attr({'stroke-dasharray': '--', 'stroke-width': s(1), 'stroke': '#ffffff'});
         }
         childSys.msID = system.msID;
         childSys.whID = system.whID;
@@ -927,9 +1080,10 @@ function DrawSystem(system) {
 
         // Don't even get me started...
         if (system.backgroundImageURL) {
-            paper.image(system.backgroundImageURL, childSys.attr("cx") - 28, childSys.attr("cy") - 28, 55, 55);
+            paper.image(system.backgroundImageURL, childSys.attr("cx") - s(28), childSys.attr("cy") - s(28), s(55), s(55));
         }
         sysText = paper.text(sysX, sysY, sysName);
+        sysText.attr({"font-weight": 'bold'}); 
         sysText.msID = system.msID;
         sysText.sysID = system.sysID;
         sysText.click(onSysClick);
@@ -937,7 +1091,15 @@ function DrawSystem(system) {
             childSys.dblclick(onSysDblClick);
             sysText.dblclick(onSysDblClick);
         }
-        ColorSystem(system, childSys, sysText);
+        if (showPilotList) {
+            pilotText = paper.text(sysX, sysY+s(32), pilotText);
+            pilotText.msID = system.msID;
+            pilotText.sysID = system.sysID;
+            pilotText.click(onSysClick);
+        } else {
+            pilotText = null;
+        }
+        ColorSystem(system, childSys, sysText, pilotText);
         childSys.collapsed = system.collapsed;
         objSystems.push(childSys);
         var parentIndex = GetSystemIndex(system.ParentID);
@@ -960,15 +1122,16 @@ function DrawSystem(system) {
             alert("Error processing system " + system.Name);
         }
     } else {
-        var rootSys = paper.ellipse(sysX, sysY, 40, 30);
+        var rootSys = paper.ellipse(sysX, sysY, s(40), s(30));
         rootSys.msID = system.msID;
         rootSys.sysID = system.sysID;
         // Don't even get me started...
         if (system.backgroundImageURL) {
-            paper.image(system.backgroundImageURL, rootSys.attr("cx") - 28, rootSys.attr("cy") - 28, 55, 55);
+            paper.image(system.backgroundImageURL, rootSys.attr("cx") - s(28), rootSys.attr("cy") - s(28), s(55), s(55));
         }
         rootSys.click(onSysClick);
         sysText = paper.text(sysX, sysY, sysName);
+        sysText.attr({"font-weight": 'bold'}); 
         sysText.msID = system.msID;
         sysText.sysID = system.sysID;
         sysText.click(onSysClick);
@@ -976,7 +1139,15 @@ function DrawSystem(system) {
             rootSys.dblclick(onSysDblClick);
             sysText.dblclick(onSysDblClick);
         }
-        ColorSystem(system, rootSys, sysText);
+        if (showPilotList) {
+            pilotText = paper.text(sysX, sysY+s(35), pilotText);
+            pilotText.msID = system.msID;
+            pilotText.sysID = system.sysID;
+            pilotText.click(onSysClick);
+        } else {
+            pilotText = null;
+        }
+        ColorSystem(system, rootSys, sysText, pilotText);
         objSystems.push(rootSys);
     }
 }
@@ -1014,12 +1185,23 @@ function GetConnectionColor(system) {
     if (warningFlag == true) {
         return warningColor;
     }
+    if (system.WhTimeStatus == 1) {
+        return eolColor;
+    }
     // If jump mass is not 0 (K162 / Gate), but less than 10M,
     // we have a Hyperion frigate-sized hole
     if (0 < system.WhJumpMass && system.WhJumpMass < 10000000) {
-        return frigWhColor;
+        if (zenMode) {
+            return frigWhColor_zen;
+        } else {
+            return frigWhColor;
+        }
     }
-    return goodColor;
+    if (zenMode) {
+        return goodColor_zen;
+    } else {
+        return goodColor;
+    }
 }
 
 function GetWormholeColor(system) {
@@ -1038,7 +1220,7 @@ function GetWormholeColor(system) {
     }
 }
 
-function ColorSystem(system, ellipseSystem, textSysName) {
+function ColorSystem(system, ellipseSystem, textSysName, textPilot) {
     if (!system) {
         alert("system is null or undefined");
         return;
@@ -1046,18 +1228,19 @@ function ColorSystem(system, ellipseSystem, textSysName) {
     var selected = false;
     var sysColor = "#f00";
     var sysStroke = "#fff";
-    var sysStrokeWidth = 2;
+    var sysStrokeWidth = s(2);
     var sysStrokeDashArray = "none";
     var textColor = "#000";
     if (system.interest == true) {
-        sysStrokeWidth = 7;
+        sysStrokeWidth = s(7);
         sysStrokeDashArray = "--";
     }
     if (system.msID === focusMS) {
+        textColor = "#f0ff00";
         if (system.interest) {
-            sysStrokeWidth = 7;
+            sysStrokeWidth = s(7);
         } else {
-            sysStrokeWidth = 4;
+            sysStrokeWidth = s(4);
         }
         sysStrokeDashArray = "- ";
     }
@@ -1066,78 +1249,105 @@ function ColorSystem(system, ellipseSystem, textSysName) {
     switch (system.SysClass) {
         // Null
         case 9:
-            sysColor = "#CC0000";
-            sysStroke = "#990000";
-            textColor = "#fff";
+            sysColor = colorNullSec; 
+            sysStroke = borderColorNullSec; 
+            textColor = systemTextColor;
             break;
         // Low
         case 8:
-            sysColor = "#93841E";
-            sysStroke = "#60510A";
-            textColor = "#fff";
+            sysColor = colorLowSec ;
+            sysStroke = borderColorLowSec; 
+            textColor = systemTextColor;
             break;
         // High
         case 7:
-            sysColor = "#009F00";
-            sysStroke = "#006B00";
-            textColor = "#fff";
+            sysColor = colorHighSec; 
+            sysStroke = borderColorHighSec; 
+            textColor = systemTextColor;
             break;
          case 6:
-            sysColor = "#0022FF";
-            sysStroke = "#0000FF";
-            textColor = "#FFF";
+            sysColor = colorC6; 
+            sysStroke = WormholeEffectColor(system,borderColorC6);
+            if ((sysStroke != borderColorC6) && (!zenMode)) sysStrokeWidth = s(4);
+            textColor = systemTextColor;
             break;
          case 5:
-            sysColor = "#0044FF";
-            sysStroke = "#0000FF";
-            textColor = "#FFF";
+            sysColor = colorC5; 
+            sysStroke = WormholeEffectColor(system,borderColorC5);
+            if ((sysStroke != borderColorC5) && (!zenMode)) sysStrokeWidth = s(4);
+            textColor = systemTextColor;
             break; 
         case 4:
-            sysColor = "#0066FF";
-            sysStroke = "#0022FF";
-            textColor = "#FFF";
+            sysColor = colorC4; 
+            sysStroke = WormholeEffectColor(system,borderColorC4);
+            if ((sysStroke != borderColorC4) && (!zenMode)) sysStrokeWidth = s(4);
+            textColor = systemTextColor;
             break;
         case 3:
-            sysColor = "#0088FF";
-            sysStroke = "#0044FF";
-            textColor = "#FFF";
+            sysColor = colorC3;
+            sysStroke = WormholeEffectColor(system,borderColorC3);
+            if ((sysStroke != borderColorC3) && (!zenMode)) sysStrokeWidth = s(4);
+            textColor = systemTextColor;
             break;
          case 2:
-            sysColor = "#00AAFF";
-            sysStroke = "#0066FF";
-            textColor = "#FFF";
+            sysColor = colorC2;
+            sysStroke = WormholeEffectColor(system,borderColorC2);
+            if ((sysStroke != borderColorC2) && (!zenMode)) sysStrokeWidth = s(4);
+            textColor = systemTextColor;
             break;
          case 1:
-            sysColor = "#00CDFF";
-            sysStroke = "#0088FF";
-            textColor = "#FFF"; 
+            sysColor = colorC1; 
+            sysStroke = WormholeEffectColor(system,borderColorC1);
+            if ((sysStroke != borderColorC1) && (!zenMode)) sysStrokeWidth = s(4);
+            textColor = systemTextColor; 
             break;
          // Thera
          case 12:
-            sysColor = "#800080";
-            sysStroke = "#7F3939";
-            textColor = "#FFF";
+            sysColor = colorThera; 
+            sysStroke = borderColorThera;
+            textColor = systemTextColor;
             break;
          // Small Ship Hole
          case 13:
-            sysColor = "#FFA500";
-            sysStroke = "#7f5200";
-            textColor = "#000";
+            sysColor = colorSmallShipHole; 
+            sysStroke = borderColorSmallShipHole; 
+            textColor = systemTextColor;
             break;
         default:
-            sysColor = "#F2F4FF";
-            sysStroke = "#0657B9";
-            textColor = "#0974EA";
+            sysColor = "#000";
+            sysStroke = "#fff";
+            textColor = systemTextColor;
             break;
     }
+
+
     if (system.shattered) {
-        sysStroke = "#FFA500";
-        if (sysStrokeWidth < 3) {
-            sysStrokeWidth = 3;
+        if (shatteredBorderColor != null) {
+            sysStroke = shatteredBorderColor; 
         }
+        if (sysStrokeWidth < s(3)) {
+            sysStrokeWidth = s(3);
+        }
+        sysStrokeDashArray = "- ";
     }
-    var iconX = ellipseSystem.attr("cx")+40;
-    var iconY = ellipseSystem.attr("cy")-35;
+    var labelFontSize = textFontSize;
+    if (zenMode) {
+        textColor = sysColor;
+        sysColor = sysColor_zen;
+        labelFontSize = s(16);
+    }
+    if (system.msID === focusMS) {
+        if (zenMode) {
+            textColor = textColorSelect_zen; 
+            sysStroke = borderColorSelect_zen;
+        } else {
+            textColor = textColorSelect;
+            sysStroke = borderColorSelect;
+        }
+        sysStrokeDashArray = "--"
+    }
+    var iconX = ellipseSystem.attr("cx")+s(40);
+    var iconY = ellipseSystem.attr("cy")-s(35);
     if (system.iconImageURL) {
         paper.image(system.iconImageURL, iconX, iconY, 25, 25);
     }
@@ -1148,7 +1358,10 @@ function ColorSystem(system, ellipseSystem, textSysName) {
         cursor: "pointer",
         "stroke-dasharray": sysStrokeDashArray
     });
-    textSysName.attr({fill: textColor, "font-size": textFontSize, cursor: "pointer"});
+    textSysName.attr({fill: textColor, "font-size": labelFontSize, cursor: "pointer"});
+    if (textPilot != null) textPilot.attr({fill: pilotColor, "font-size": textFontSize-s(1), cursor: "pointer"});
+
+
 
     if (selected == false) {
         ellipseSystem.sysInfoPnlID = 0;
@@ -1157,32 +1370,31 @@ function ColorSystem(system, ellipseSystem, textSysName) {
         ellipseSystem.hover(onSysOver, onSysOut);
         textSysName.ellipseIndex = objSystems.length;
         textSysName.hover(onSysOver, onSysOut);
-
     }
 }
 
-/* Currently unused, needs implementation.
+/*
  * Colors wormhole systems by effect.
  */
 function WormholeEffectColor(system, defaultcolor) {
     switch (system.effect) {
         case "Wolf-Rayet Star":
-            return "#FF5500";
+            return effectColorWolfRayet;
             break;
         case "Pulsar":
-            return "#0000FF";
+            return effectColorPulsar;
             break;
         case "Magnetar":
-            return "#FF0000";
+            return effectColorMagnetar;
             break;
         case "Red Giant":
-            return "#FF00FF";
+            return effectColorRedGiant;
             break;
         case "Cataclysmic Variable":
-            return "#5555FF";
+            return effectColorCataclysmic;
             break;
         case "Black Hole":
-            return "#000000";
+            return effectColorBlackHole;
             break;
         default:
             return defaultcolor;
@@ -1219,7 +1431,7 @@ function DrawWormholes(systemFrom, systemTo, textColor) {
     var changePos = ChangeSysWormholePosition(systemTo, systemFrom);
 
     var textCenterX = (sysX1 + sysX2) / 2;
-    textCenterX = textCenterX + 10;
+    textCenterX = textCenterX + s(10);
     var textCenterY = (sysY1 + sysY2) / 2;
 
     var whFromSysX = textCenterX;
@@ -1229,80 +1441,82 @@ function DrawWormholes(systemFrom, systemTo, textColor) {
     var whToSysY = textCenterY;
 
     if (sysY1 != sysY2) {
-        textCenterX = textCenterX - 10;
-        whFromSysX = textCenterX + 23;
-        whToSysX = textCenterX - 23;
+        textCenterX = textCenterX - s(10);
+        whFromSysX = textCenterX + s(23);
+        whToSysX = textCenterX - s(23);
     } else {
-        whFromSysY = textCenterY - 10;
-        whToSysY = textCenterY + 10;
+        whFromSysY = textCenterY - s(10);
+        whToSysY = textCenterY + s(10);
     }
 
     // draws labels near systemTo ellipse if previous same Level X system's levelY = systemTo.levelY - 1
-    if (changePos == true) {
+    if (!zenMode) {
+        if (changePos == true) {
 
-        textCenterX = sysX2 - 73;
-        textCenterY = sysY2 - 30;
-        if (renderWormholeTags) {
-            whFromSysX = textCenterX + 23;
-            whToSysX = textCenterX - 23;
-        } else {
-            whFromSysX = textCenterX + 35;
-            whToSysX = textCenterX - 10;
-        }
-        whFromSysY = textCenterY;
-        whToSysY = textCenterY;
-    }
-
-    var whFromSys = null;
-    var whToSys = null;
-    var whFromColor = null;
-    var whToColor = null;
-    var decoration = null;
-
-    if (systemTo.WhFromParentBubbled == true) {
-        whFromColor = bubbledColor;
-        decoration = "bold";
-    } else {
-        whFromColor = clearWhColor;
-    }
-
-    if (systemTo.WhToParentBubbled == true) {
-        whToColor = bubbledColor;
-        decoration = "bold";
-    } else {
-        whToColor = clearWhColor;
-    }
-
-    if (systemTo.WhFromParent) {
-        var whFromText, whToText;
-        if (!renderWormholeTags) {
-            whFromText = ">";
-            whToText = "<";
-        } else {
-            whFromText = systemTo.WhFromParent + " >";
-            whToText = "< " + systemTo.WhToParent;
+            textCenterX = sysX2 - s(73);
+            textCenterY = sysY2 - s(30);
+            if (renderWormholeTags) {
+                whFromSysX = textCenterX + s(23);
+                whToSysX = textCenterX - s(23);
+            } else {
+                whFromSysX = textCenterX + s(35);
+                whToSysX = textCenterX - s(10);
+            }
+            whFromSysY = textCenterY;
+            whToSysY = textCenterY;
         }
 
-        whFromSys = paper.text(whFromSysX, whFromSysY, whFromText);
-        whFromSys.attr({fill: whFromColor, cursor: "pointer", "font-size": 11, "font-weight": decoration});  //stroke: "#fff"
-        whFromSys.click(function () {
-            GetEditWormholeDialog(systemTo.whID);
-        });
-        whFromSys.whID = systemTo.whID;
-        whFromSys.mouseover(onWhOver);
-        whFromSys.mouseout(onWhOut);
-    }
+        var whFromSys = null;
+        var whToSys = null;
+        var whFromColor = null;
+        var whToColor = null;
+        var decoration = null;
 
-    if (systemTo.WhToParent) {
-        whToSys = paper.text(whToSysX, whToSysY, whToText);
-        whToSys.attr({fill: whToColor, cursor: "pointer", "font-size": 11, "font-weight": decoration});
+        if (systemTo.WhFromParentBubbled == true) {
+            whFromColor = bubbledColor;
+            decoration = "bold";
+        } else {
+            whFromColor = clearWhColor;
+        }
 
-        whToSys.whID = systemTo.whID;
-        whToSys.click(function () {
-            GetEditWormholeDialog(systemTo.whID);
-        });
-        whToSys.mouseover(onWhOver);
-        whToSys.mouseout(onWhOut);
+        if (systemTo.WhToParentBubbled == true) {
+            whToColor = bubbledColor;
+            decoration = "bold";
+        } else {
+            whToColor = clearWhColor;
+        }
+
+        if (systemTo.WhFromParent) {
+            var whFromText, whToText;
+            if (!renderWormholeTags) {
+                whFromText = ">";
+                whToText = "<";
+            } else {
+                whFromText = systemTo.WhFromParent + " >";
+                whToText = "< " + systemTo.WhToParent;
+            }
+
+            whFromSys = paper.text(whFromSysX, whFromSysY, whFromText);
+            whFromSys.attr({fill: whFromColor, cursor: "pointer", "font-size": s(11), "font-weight": decoration});  //stroke: "#fff"
+            whFromSys.click(function () {
+                GetEditWormholeDialog(systemTo.whID);
+            });
+            whFromSys.whID = systemTo.whID;
+            whFromSys.mouseover(onWhOver);
+            whFromSys.mouseout(onWhOut);
+        }
+
+        if (systemTo.WhToParent) {
+            whToSys = paper.text(whToSysX, whToSysY, whToText);
+            whToSys.attr({fill: whToColor, cursor: "pointer", "font-size": s(11), "font-weight": decoration});
+
+            whToSys.whID = systemTo.whID;
+            whToSys.click(function () {
+                GetEditWormholeDialog(systemTo.whID);
+            });
+            whToSys.mouseover(onWhOver);
+            whToSys.mouseout(onWhOut);
+        }
     }
 }
 
@@ -1384,7 +1598,7 @@ function onWhOver(e) {
         var mouseX = e.clientX + getScrollX();
         var mouseY = e.clientY + getScrollY();
 
-        div.css({position: "absolute", top: mouseY + "px", left: mouseX + 10 + "px"});
+        div.css({position: "absolute", top: mouseY + 20 + "px", left: mouseX + 20 + "px"});
         div.show();
     }
 }
@@ -1403,7 +1617,7 @@ function onSysOver(e) {
         var mouseX = e.clientX + getScrollX();
         var mouseY = e.clientY + getScrollY();
 
-        div.css({position: "absolute", top: mouseY + "px", left: mouseX + "px"});
+        div.css({position: "absolute", top: mouseY + 20 + "px", left: mouseX + 20 + "px"});
         div.show();
     }
 }
@@ -1414,4 +1628,38 @@ function onSysOut() {
     if (div[0]){
         div.hide();
     }
+}
+
+function scale(factor) {
+    scalingFactor = factor;
+    textFontSize = s(11); // The base font size
+    indentX = s(150); // The amount of space (in px) between system ellipses on the X axis. Should be between 120 and 180
+    indentY = s(70); // The amount of space (in px) between system ellipses on the Y axis.
+    strokeWidth = s(3); // The width in px of the line connecting wormholes
+    interestWidth = s(3); // The width in px of the line connecting wormholes when interest is on
+    RefreshMap();
+}
+
+function togglezen() {
+    if (zenMode == true) {
+        zenMode = false;
+        $('#btnZen').text("Zen: OFF");
+    } else {
+        zenMode = true;
+        $('#btnZen').text("Zen: ON");
+    }
+    RefreshMap();
+}
+
+function togglepilotlist() {
+    if (showPilotList == true) {
+        showPilotList = false;
+        highlightActivePilots = true;
+        $('#btnPilotList').text("Pilot List: OFF");
+    } else {
+        showPilotList = true;
+        highlightActivePilots = false;
+        $('#btnPilotList').text("Pilot List: ON");
+    }
+    RefreshMap();
 }
