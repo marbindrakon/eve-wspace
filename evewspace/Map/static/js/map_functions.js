@@ -715,6 +715,7 @@ function BulkImport(msID) {
         data: $('#bulkSigForm').serialize(),
         success: function (data) {
             LoadSignatures(msID, false);
+            $('#bulkSigForm').removeAttr('value');
         },
         error: function (data) {
             alert(data.responseText);
