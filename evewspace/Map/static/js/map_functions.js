@@ -1028,7 +1028,7 @@ function DrawSystem(system) {
     var friendly = "";
     if (system.Friendly) {
         if (system.Friendly.length > 6) {
-            if ((sliceLastChars == true) || (zenMode)) {
+            if (sliceLastChars == true) {
                 system.Friendly = "." + system.Friendly.slice(-6);
             } else {
                 system.Friendly = system.Friendly.slice(0, 6) + ".";
