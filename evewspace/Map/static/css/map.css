@@ -146,10 +146,6 @@
 {
     text-align: center;
 }
-.activePlayerPanel
-{
-    margin-left: 46px;
-}
 .sysLSdiv
 {
     text-align: center;
@@ -249,7 +245,7 @@ textarea
 
 #scrollmenu {
     position: fixed;
-    left: 2;
+    left: 2px;
     top: 40%;
     width: 24px;
     margin: 0px;
@@ -291,4 +287,23 @@ label[for=massStatusCritical], label[for=sysTypeDangerous] {
 }
 #legendDiv ul.inline {
     display: inline;
+}
+
+div.activePlayerList {
+    text-align: center;
+}
+table.activePilotsTable {
+    border: 1px solid black;
+    margin: auto;
+}
+table.activePilotsTable tr:nth-child(2n) {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+table.activePilotsTable td,
+table.activePilotsTable th {
+    padding: 0.1em 0.5em;
+}
+table.activePilotsTable td {
+    border-top: 1px solid black;
+    text-align: left;
 }
