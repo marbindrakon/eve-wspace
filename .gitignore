@@ -12,3 +12,5 @@ doc/build/*
 .idea
 
 *.sublime-project
+
+*.sublime-workspace
