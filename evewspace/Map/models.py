@@ -308,6 +308,7 @@ class Map(models.Model):
         log = MapLog(user=user, map=self, action=action,
                      timestamp=datetime.now(pytz.utc),
                      visible=visible)
+        print str(log)
         log.save()
 
     def get_permission(self, user):
@@ -559,6 +560,16 @@ class MapSystem(models.Model):
             return False
         return parent_sys.childsystems.count() > 1
 
+    def distance_from_root(self):
+        distance = 0
+        parent_sys = self.parentsystem
+        while parent_sys != None:
+            parent_sys = parent_sys.parentsystem
+            distance +=1
+            if parent_sys == None or distance > 100:
+                break
+        return distance
+
 
 class Wormhole(models.Model):
     """An instance of a wormhole in a  map.
@@ -723,6 +734,79 @@ class Signature(models.Model):
         self.updated = True
         self.save()
 
+    def update_from_tsv(self, user, wascreated, row, map_system):
+        """Takes a line of copied data, converts it into a signature and checks if the
+        import updated an existing signature on the map, and whether or not the update 
+        includes new scan data (for logging purposes).
+
+        """
+        # map columns
+        COL_SIG = 0
+        COL_SIG_TYPE = 3
+        COL_SIG_GROUP = 2
+        COL_SIG_SCAN_GROUP = 1
+        COL_SIG_STRENGTH = 4
+        COL_DISTANCE = 5
+        info = row[COL_SIG_TYPE]
+        sig_type = None
+        updated = None
+        action = "None"
+
+        if wascreated is True:
+            # new sig
+            updated = False
+            action = "Created"
+        
+        # Is there a valid signature type from pasted data - is it valid?
+        scan_group = self._translate_client_string(row[COL_SIG_SCAN_GROUP])
+        if scan_group == "Cosmic Signature" or scan_group == "Cosmic Anomaly":
+            try:
+                # translate names such as Ore Site, Gas Site, from
+                # localized clients
+                sig_type_name = self._translate_client_string(
+                    row[COL_SIG_GROUP])
+                sig_type = SignatureType.objects.get(
+                    longname=sig_type_name)
+            except:
+                sig_type = None
+        else:
+            sig_type = None
+
+        if sig_type:
+            # if there is a valid sig type, set and mark as updated
+            self.sigtype = sig_type
+            updated = True
+            self.updated = updated or self.updated
+        if info:
+            # if there is a signature info (site name) field, mark as scanned
+            if self.info != info:
+                self.info = info
+                if action != "Created":
+                    action = "Updated"
+                if scan_group == "Cosmic Signature":
+                    # only record new scanning activity for signatures
+                    action = "Scanned"
+                    self.log_sig(user, action, map_system)
+
+        # is this still necessary?
+        if self.info is None:
+            self.info = ''
+
+        # debug
+        print "%s signature %s from TSV." %(action, self.sigid)
+
+        return self, action
+
+
+    def log_sig(self, user, action, map_system):
+        """Log the fact that the signature was scanned."""
+        
+        map_system.map.add_log(
+            user, 
+            "%s signature %s in %s (%s), %s jumps out from root system."
+            %(action, self.sigid, map_system.system.name, 
+              map_system.friendlyname, map_system.distance_from_root()))
+
     def toggle_ownership(self, user):
         """Toggles ownership."""
         if self.owned_by:
@@ -744,6 +828,78 @@ class Signature(models.Model):
     def delete(self, *args, **kwargs):
         self.system.clear_sig_cache()
         super(Signature, self).delete(*args, **kwargs)
+
+    def _translate_client_string(self, client_text):
+        """Translate text strings from EVE client.
+
+        """
+        TRANSLATE_DICT = {
+            'Cosmic Signature': 'Cosmic Signature',
+            'Cosmic Anomaly': 'Cosmic Anomaly',
+            'Ore Site': 'Ore Site',
+            'Gas Site': 'Gas Site',
+            'Data Site': 'Data Site',
+            'Relic Site': 'Relic Site',
+            'Wormhole': 'Wormhole',
+            'Combat Site': 'Combat Site',
+            # Russian
+            '\xd0\x98\xd1\x81\xd1\x82\xd0\xbe\xd1\x87\xd0\xbd\xd0\xb8\xd0\xba\xd0'
+            '\xb8 \xd1\x81\xd0\xb8\xd0\xb3\xd0\xbd\xd0\xb0\xd0\xbb\xd0\xbe\xd0'
+            '\xb2': 'Cosmic Signature',
+            '\xd0\x9a\xd0\xbe\xd1\x81\xd0\xbc\xd0\xb8\xd1\x87\xd0\xb5\xd1\x81\xd0'
+            '\xba\xd0\xb0\xd1\x8f \xd0\xb0\xd0\xbd\xd0\xbe\xd0\xbc\xd0\xb0\xd0\xbb'
+            '\xd0\xb8\xd1\x8f': 'Cosmic Anomaly',
+            '\xd0\xa0\xd0\xa3\xd0\x94\xd0\x90: \xd1\x80\xd0\xb0\xd0\xb9\xd0\xbe'
+            '\xd0\xbd \xd0\xb4\xd0\xbe\xd0\xb1\xd1\x8b\xd1\x87\xd0\xb8 \xd1\x80'
+            '\xd1\x83\xd0\xb4\xd1\x8b': 'Ore Site',
+            '\xd0\x93\xd0\x90\xd0\x97: \xd1\x80\xd0\xb0\xd0\xb9\xd0\xbe\xd0\xbd '
+            '\xd0\xb4\xd0\xbe\xd0\xb1\xd1\x8b\xd1\x87\xd0\xb8 \xd0\xb3\xd0\xb0'
+            '\xd0\xb7\xd0\xb0': 'Gas Site',
+            '\xd0\x94\xd0\x90\xd0\x9d\xd0\x9d\xd0\xab\xd0\x95: \xd1\x80\xd0\xb0'
+            '\xd0\xb9\xd0\xbe\xd0\xbd \xd1\x81\xd0\xb1\xd0\xbe\xd1\x80\xd0\xb0 '
+            '\xd0\xb4\xd0\xb0\xd0\xbd\xd0\xbd\xd1\x8b\xd1\x85': 'Data Site',
+            '\xd0\x90\xd0\xa0\xd0\xa2\xd0\x95\xd0\xa4\xd0\x90\xd0\x9a\xd0\xa2\xd0'
+            '\xab: \xd1\x80\xd0\xb0\xd0\xb9\xd0\xbe\xd0\xbd \xd0\xbf\xd0\xbe\xd0'
+            '\xb8\xd1\x81\xd0\xba\xd0\xb0 \xd0\xb0\xd1\x80\xd1\x82\xd0\xb5\xd1'
+            '\x84\xd0\xb0\xd0\xba\xd1\x82\xd0\xbe\xd0\xb2': 'Relic Site',
+            '\xd0\xa7\xd0\xb5\xd1\x80\xd0\xb2\xd0\xbe\xd1\x82\xd0\xbe\xd1\x87\xd0'
+            '\xb8\xd0\xbd\xd0\xb0': 'Wormhole',
+            '\xd0\x9e\xd0\x9f\xd0\x90\xd0\xa1\xd0\x9d\xd0\x9e: \xd1\x80\xd0\xb0'
+            '\xd0\xb9\xd0\xbe\xd0\xbd \xd0\xbf\xd0\xbe\xd0\xb2\xd1\x8b\xd1\x88'
+            '\xd0\xb5\xd0\xbd\xd0\xbd\xd0\xbe\xd0\xb9 \xd0\xbe\xd0\xbf\xd0\xb0'
+            '\xd1\x81\xd0\xbd\xd0\xbe\xd1\x81\xd1\x82\xd0\xb8': 'Combat Site',
+            # German
+            u'Kosmische Signatur': 'Cosmic Signature',
+            u'Kosmische Anomalie': 'Cosmic Anomaly',
+            u'Mineraliengebiet': 'Ore Site',
+            u'Gasgebiet': 'Gas Site',
+            u'Datengebiet': 'Data Site',
+            u'Reliktgebiet': 'Relic Site',
+            u'Wurmloch': 'Wormhole',
+            u'Kampfgebiet': 'Combat Site',
+            # Japanese
+            '\xe5\xae\x87\xe5\xae\x99\xe3\x81\xae\xe3\x82\xb7\xe3\x82\xb0\xe3\x83'
+            '\x8d\xe3\x83\x81\xe3\x83\xa3': 'Cosmic Signature',
+            '\xe5\xae\x87\xe5\xae\x99\xe3\x81\xae\xe7\x89\xb9\xe7\x95\xb0\xe7\x82'
+            '\xb9': 'Cosmic Anomaly',
+            '\xe9\x89\xb1\xe7\x9f\xb3\xe3\x82\xb5\xe3\x82\xa4\xe3\x83\x88':
+                'Ore Site',
+            '\xe3\x82\xac\xe3\x82\xb9\xe3\x82\xb5\xe3\x82\xa4\xe3\x83\x88':
+                'Gas Site',
+            '\xe3\x83\x87\xe3\x83\xbc\xe3\x82\xbf\xe3\x82\xb5\xe3\x82\xa4\xe3'
+            '\x83\x88': 'Data Site',
+            '\xe9\x81\xba\xe7\x89\xa9\xe3\x82\xb5\xe3\x82\xa4\xe3\x83\x88':
+                'Relic Site',
+            '\xe3\x83\xaf\xe3\x83\xbc\xe3\x83\xa0\xe3\x83\x9b\xe3\x83\xbc\xe3\x83'
+            '\xab': 'Wormhole',
+            '\xe6\x88\xa6\xe9\x97\x98\xe3\x82\xb5\xe3\x82\xa4\xe3\x83\x88':
+                'Combat Site',
+        }
+        try:
+            text = TRANSLATE_DICT[client_text]
+            return text
+        except KeyError:
+            return None
 
 
 class MapPermission(models.Model):
@@ -773,7 +929,7 @@ class MapLog(models.Model):
     visible = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return ("Map: %s  User: %s  Action: %s  Time: %s" %
+        return ("Map: %s | User: %s | Action: %s | Time: %s" %
                 (self.map.name, self.user.username,
                  self.action, self.timestamp))
 
