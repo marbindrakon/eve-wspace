@@ -773,27 +773,28 @@ class Signature(models.Model):
             sig_type = None
 
         if sig_type:
+            if action != "Created" and self.sigtype != sig_type:
+                action = "Updated"
             # if there is a valid sig type, set and mark as updated
             self.sigtype = sig_type
-            updated = True
-            self.updated = updated or self.updated
+
         if info:
             # if there is a signature info (site name) field, mark as scanned
             if self.info != info:
                 self.info = info
                 if action != "Created":
-                    action = "Updated"
-                if scan_group == "Cosmic Signature":
-                    # only record new scanning activity for signatures
-                    action = "Scanned"
-                    self.log_sig(user, action, map_system)
+                    action = "Updated"                    
+                    if scan_group == "Cosmic Signature":
+                        # only record new scanning activity for signatures
+                        action = "Scanned"                        
+        if action != "None":
+            self.log_sig(user, action, map_system)
+
+        self.update()
 
         # is this still necessary?
         if self.info is None:
             self.info = ''
-
-        # debug
-        print "%s signature %s from TSV." %(action, self.sigid)
 
         return self, action
 
@@ -825,7 +826,8 @@ class Signature(models.Model):
         self.sigid = utils.convert_signature_id(self.sigid)
         super(Signature, self).save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
+    def delete(self, user, mapsys, *args, **kwargs):
+        self.log_sig(user, "Deleted", mapsys)
         self.system.clear_sig_cache()
         super(Signature, self).delete(*args, **kwargs)
 

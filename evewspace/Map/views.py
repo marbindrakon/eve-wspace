@@ -651,8 +651,8 @@ def edit_signature(request, map_id, ms_id, sig_id=None):
             signature.sigtype = sigtype
             # Update signature
             signature.modified_by = request.user
-            signature.updated = True
-            signature.save()
+            signature.update()
+            
             map_system.system.lastscanned = datetime.now(pytz.utc)
             map_system.system.save()
 
@@ -663,11 +663,10 @@ def edit_signature(request, map_id, ms_id, sig_id=None):
                 action = 'Scanned'
             else:
                 action = 'Updated'
-
+            signature.log_sig(request.user, action, map_system)
+            
             if signature.owned_by:
                 signature.toggle_ownership(request.user)
-
-            signature.log_sig(request.user, action, map_system)
 
             signals.signature_update.send_robust(signature, user=request.user,
                                                  map=map_system.map)
@@ -758,10 +757,8 @@ def delete_signature(request, map_id, ms_id, sig_id):
         raise PermissionDenied
     map_system = get_object_or_404(MapSystem, pk=ms_id)
     sig = get_object_or_404(Signature, pk=sig_id)
-    sig.delete()
-    map_system.map.add_log(request.user, "Deleted signature %s in %s (%s)." %
-                           (sig.sigid, map_system.system.name,
-                            map_system.friendlyname))
+    sig.delete(request.user, map_system)
+
     return HttpResponse()
 
 
@@ -1311,7 +1308,9 @@ def purge_signatures(request, map_id, ms_id):
         raise PermissionDenied
     mapsys = get_object_or_404(MapSystem, pk=ms_id)
     if request.method == "POST":
-        mapsys.system.signatures.all().delete()
+        siglist = mapsys.system.signatures.all()
+        for sig in siglist:
+            sig.delete(request.user, mapsys)
         return HttpResponse()
     else:
         return HttpResponse(status=400)
