@@ -31,7 +31,7 @@ var indentX = 150; // The amount of space (in px) between system ellipses on the
 var indentY = 70; // The amount of space (in px) between system ellipses on the Y axis.
 var strokeWidth = 3; // The width in px of the line connecting wormholes
 var interestWidth = 3; // The width in px of the line connecting wormholes when interest is on
-var renderWormholeTags = true; // Determines whether wormhole types are shown on the map
+var renderWormholeTags = true; // Determines whether wormhole types are shown on the map. If false only show ">" or "<".
 var sliceLastChars = false; // Friendly name should show last 8 chars if over 8, shows first 8 if false
 var showPilotList = true; // Show pilot names under systems
 var highlightActivePilots = false; // Draw a notification ring around systems with active pilots.
@@ -1489,13 +1489,15 @@ function DrawWormholes(systemFrom, systemTo, textColor) {
         }
 
         if (systemTo.WhFromParent) {
-            var whFromText, whToText;
-            if (!renderWormholeTags) {
-                whFromText = ">";
-                whToText = "<";
+            var whFromText;
+            if (renderWormholeTags === true) {
+                if (systemTo.WhFromParent !== "K162") {
+                    whFromText = systemTo.WhFromParent + " >";
+                } else {
+                    whFromText = "??? >";
+                }
             } else {
-                whFromText = systemTo.WhFromParent + " >";
-                whToText = "< " + systemTo.WhToParent;
+                whFromText = ">";
             }
 
             whFromSys = paper.text(whFromSysX, whFromSysY, whFromText);
@@ -1509,6 +1511,17 @@ function DrawWormholes(systemFrom, systemTo, textColor) {
         }
 
         if (systemTo.WhToParent) {
+            var whToText;
+            if (renderWormholeTags === true) {
+                if (systemTo.WhToParent !== "K162") {
+                    whToText = "< " + systemTo.WhToParent;
+                } else {
+                    whToText = " < ???";
+                }
+            } else {
+                whToText = "<";
+            }
+
             whToSys = paper.text(whToSysX, whToSysY, whToText);
             whToSys.attr({fill: whToColor, cursor: "pointer", "font-size": s(11), "font-weight": decoration});
 
