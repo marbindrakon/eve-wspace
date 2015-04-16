@@ -58,6 +58,10 @@ def remove_pos(request, sysID,  posID):
 
 @login_required
 def get_pos_list(request, sysID):
+    
+    # LYNDEBUG
+    print "***GET POS LIST VIEW CODE ACTIVE***"
+    
     if not request.is_ajax():
         raise PermissionDenied
     system = get_object_or_404(System, pk=sysID)
@@ -71,6 +75,10 @@ def edit_pos(request, sysID, posID):
     """
     GET gets the edit POS dialog, POST processes it.
     """
+    
+    # LYNDEBUG
+    print "***GET POS LIST VIEW CODE ACTIVE***"
+    
     if not request.is_ajax():
         raise PermissionDenied
     system = get_object_or_404(System, pk=sysID)
@@ -126,10 +134,14 @@ def edit_pos(request, sysID, posID):
 
 
 @login_required
-def add_pos(request, sysID):
+def add_pos(request, msID, sysID):
     """
     GET gets the add POS dialog, POST processes it.
     """
+    
+    # LYNDEBUG
+    print "*** ADD POS CODE FINALLY TRIGGERED!! ***"
+
     if not request.is_ajax():
         raise PermissionDenied
     system = get_object_or_404(System, pk=sysID)

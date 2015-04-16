@@ -171,7 +171,7 @@
     <div id="systemPosPanel" class="systemPosPanel tab-pane">
         <div style="text-align: center; margin-bottom: 10px;">
             <h4>Starbases: {{system.name}}</h4>
-            {% if can_edit %}<button class="btn" onclick="GetAddPOSDialog({{mapsys.system.pk}});"><img height=32 width=32 title="Add POS" src='{{STATIC_URL}}images/plus.png'/>Add POS</button>{% endif %}
+            {% if can_edit %}<button class="btn" onclick="GetAddPOSDialog({{mapsys.pk}},{{mapsys.system.pk}});"><img height=32 width=32 title="Add POS" src='{{STATIC_URL}}images/plus.png'/>Add POS</button>{% endif %}
         </div>
         <div id="systemPosWell" class="systemPosWell">
             <div id="sys{{system.pk}}POSDiv">

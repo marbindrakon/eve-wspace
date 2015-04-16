@@ -403,8 +403,11 @@ function GetSystemTooltips() {
     });
 }
 
-function GetAddPOSDialog(sysID) {
-    var address = "/pos/" + sysID + "/add/";
+function GetAddPOSDialog(msID, sysID) {
+    var address = "/pos/add/" + msID + "/" + sysID + "/";
+    // LYN DEBUG
+    //var address = "/pos/" + sysID + "/add/";
+    alert("Loading " + address);
     $.ajax({
         url: address,
         type: "GET",
@@ -431,9 +434,10 @@ function GetSiteSpawns(msID, sigID) {
     });
 }
 
-function AddPOS(sysID) {
+function AddPOS(msID, sysID) {
     //This function adds a system using the information in a form named #sysAddForm
-    var address = "/pos/" + sysID + "/add/";
+    var address = "/pos/" + msID + "/" + sysID + "/add/";
+    alert(address);
     var btnAddPOS = $('#btnAddPOS');
     var pos_message = $('#pos_message');
     pos_message.hide();
