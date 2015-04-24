@@ -930,7 +930,7 @@ class MapLog(models.Model):
     visible = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return ("Map: %s | User: %s | Action: %s | Time: %s" %
+        return ("Map: %s User: %s Action: %s Time: %s" %
                 (self.map.name, self.user.username,
                  self.action, self.timestamp))
 

@@ -154,7 +154,7 @@ def add_pos(request, msID):
                         names=corp_name).characters[0].characterID
             except:
                 # Error while talking to the EVE API
-                return HttpResponse('Could not check Corp name (the EVE API did not respond). Please try again later.', status=404)
+                return HttpResponse('Could not verify Corp name. Please try again later.', status=404)
             try:
                 corp = core_tasks.update_corporation(corpID, True)
             except AttributeError:
