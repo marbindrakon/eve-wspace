@@ -14,7 +14,7 @@
          <div class="alert alert-error" id="pos_message" style="display: none;">
             <p id="pos_error"></p>
          </div>
-   <form id="editPOSForm" action="/pos/{{system.pk}}/{{pos.id}}/edit/" method="POST">
+   <form id="editPOSForm" action="/pos/{{mapsystem.pk}}/{{pos.id}}/edit/" method="POST">
         {% csrf_token %}
         Full Corp Name: <input id="corpBox" class="corpAuto" value="{{pos.corporation.name}}" name="corp" type="text" > <br />
         <span class="label label-warning" id="digiterror">Please enter digits only for planet and moon. </span><br /><br />
@@ -48,12 +48,12 @@
     }
     $('#editPOSForm').submit(function(e){
                 e.preventDefault();
-                EditPOS({{pos.pk}}, {{system.pk}});
+                EditPOS({{pos.pk}}, {{mapsystem.pk}});
                 $('#modalHolder').modal('hide');
                 return false;
                 });
     $('#btnEditPOS').click(function(e){
-                EditPOS({{pos.pk}}, {{system.pk}});
+                EditPOS({{pos.pk}}, {{mapsystem.pk}});
                 $('#modalHolder').modal('hide');
                 });
     </script>

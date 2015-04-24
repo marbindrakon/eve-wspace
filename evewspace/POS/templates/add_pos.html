@@ -59,10 +59,10 @@
     }
     $('#addPOSForm').submit(function(e){
                 e.preventDefault();
-                AddPOS({{system.pk}});
+                AddPOS({{mapsystem.pk}},{{mapsystem.system.pk}});
                 });
     $('#btnAddPOS').click(function(e){
-                AddPOS({{system.pk}});
+                AddPOS({{mapsystem.pk}},{{mapsystem.system.pk}});
                 });
     $('#auto').click(function(e){
         $('.manual-fields, #manual-help').hide();

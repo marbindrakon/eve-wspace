@@ -20,11 +20,11 @@ pospatterns = patterns('POS.views',
         )
 
 syspatterns = patterns('POS.views',
-        url(r'(?P<posID>\d+)/', include(pospatterns)),
-        url(r'add/(?P<msID>[0-9]+)/(?P<sysID>[0-9]+)/', 'add_pos'),
-        url(r'$', 'get_pos_list'),
-        )
+		url(r'(?P<posID>\d+)/', include(pospatterns)),
+		url(r'add/$', 'add_pos'),
+		url(r'$', 'get_pos_list'),
+		)
 
 urlpatterns = patterns('POS.views',
-        url(r'(?P<sysID>\d+)/', include(syspatterns)),
+        url(r'(?P<msID>\d+)/', include(syspatterns)),
         )

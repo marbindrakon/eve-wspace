@@ -1,9 +1,9 @@
 <li id="pos{{pos.pk}}" class="posListItem">
 {% if perms.POS.change_pos %}
-<i class="icon-pencil" onclick="GetEditPOSDialog({{pos.pk}}, {{system.pk}});" title="Edit POS"></i>
+<i class="icon-pencil" onclick="GetEditPOSDialog({{pos.pk}}, {{mapsystem.pk}});" title="Edit POS"></i>
 {% endif %}
 {% if perms.POS.delete_pos %}
-<i class="icon-ban-circle" onclick="DeletePOS({{pos.pk}}, {{system.pk}});" title="Delete POS"></i>
+<i class="icon-ban-circle" onclick="DeletePOS({{pos.pk}}, {{mapsystem.pk}});" title="Delete POS"></i>
 {% endif %}
 
 <div class="poslist_header" data-toggle="collapse" data-target="#pos{{pos.pk}}Details" style="position:relative">

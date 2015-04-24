@@ -16,7 +16,7 @@ from django.db import models
 from core.models import Type, Location
 from API.models import CorpAPIKey
 from core.models import Corporation, Alliance
-from Map.models import System
+from Map.models import System, MapSystem, Map
 from API import cache_handler as handler
 from django.conf import settings
 import pytz
@@ -119,6 +119,16 @@ class POS(models.Model):
         import pytz
         self.updated = datetime.now(pytz.utc)
         super(POS, self).save(*args, **kwargs)
+
+    def log(self, user, action, map_system):
+        """
+        Records a log entry for POS updates and additions.
+        """
+        map_system.map.add_log(
+            user, 
+            "%s POS (Planet %s Moon %s, owner %s) in %s (%s), %s jumps out from root system."
+            %(action, self.planet, self.moon, self.corporation, map_system.system.name, 
+              map_system.friendlyname, map_system.distance_from_root()))
 
     def size(self):
         """

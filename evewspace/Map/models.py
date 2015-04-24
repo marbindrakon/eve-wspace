@@ -308,7 +308,6 @@ class Map(models.Model):
         log = MapLog(user=user, map=self, action=action,
                      timestamp=datetime.now(pytz.utc),
                      visible=visible)
-        print str(log)
         log.save()
 
     def get_permission(self, user):

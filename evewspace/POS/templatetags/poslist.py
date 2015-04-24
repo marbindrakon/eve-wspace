@@ -13,17 +13,20 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 from django import template
+from django.shortcuts import get_object_or_404
 from POS.models import POS
+from Map.models import System, MapSystem
 
 register=template.Library()
 
-
 @register.inclusion_tag('poslist.html', takes_context=True)
-def poslist(context, system):
-    poses = POS.objects.filter(system=system)
-    return {'poses': poses, 'system': system, 'request': context['request']}
+def poslist(context, mapsystem):
+	mapsystem = get_object_or_404(MapSystem, pk=mapsystem)
+	system = get_object_or_404(System, pk=mapsystem.system.pk)
+	poses = POS.objects.filter(system=system)
+	return {'poses': poses, 'mapsystem': mapsystem, 'request': context['request']}
 
 
 @register.inclusion_tag('posdetails_small.html', takes_context=True)
-def posdetails(context, system, pos):
-    return {'pos' : pos, 'system': system, 'perms': context['perms']}
+def posdetails(context, mapsystem, pos):
+	return {'pos' : pos, 'mapsystem': mapsystem, 'perms': context['perms']}

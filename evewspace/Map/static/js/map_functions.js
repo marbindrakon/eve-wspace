@@ -217,7 +217,7 @@ function DisplaySystemDetails(msID, sysID) {
                     $('#sysInfoDiv').focus();
                 }
             });
-            GetPOSList(sysID);
+            GetPOSList(msID);
             GetDestinations(msID);
             $('#btnImport').off();
             $('#btnImport').click(function(e){
@@ -229,13 +229,13 @@ function DisplaySystemDetails(msID, sysID) {
     });
 }
 
-function GetPOSList(sysID) {
-    var address = "/pos/" + sysID + "/";
+function GetPOSList(msID) {
+    var address = "/pos/" + msID + "/";
     $.ajax({
         type: "GET",
         url: address,
         success: function (data) {
-            var POSlist = $('#sys' + sysID + "POSDiv");
+            var POSlist = $('#sys' + msID + "POSDiv");
             POSlist.empty();
             POSlist.html(data);
         }
@@ -403,11 +403,8 @@ function GetSystemTooltips() {
     });
 }
 
-function GetAddPOSDialog(msID, sysID) {
-    var address = "/pos/add/" + msID + "/" + sysID + "/";
-    // LYN DEBUG
-    //var address = "/pos/" + sysID + "/add/";
-    alert("Loading " + address);
+function GetAddPOSDialog(msID) {
+    var address = "/pos/" + msID + "/add/";
     $.ajax({
         url: address,
         type: "GET",
@@ -434,10 +431,9 @@ function GetSiteSpawns(msID, sigID) {
     });
 }
 
-function AddPOS(msID, sysID) {
+function AddPOS(msID) {
     //This function adds a system using the information in a form named #sysAddForm
-    var address = "/pos/" + msID + "/" + sysID + "/add/";
-    alert(address);
+    var address = "/pos/" + msID + "/add/";
     var btnAddPOS = $('#btnAddPOS');
     var pos_message = $('#pos_message');
     pos_message.hide();
@@ -448,7 +444,7 @@ function AddPOS(msID, sysID) {
         url: address,
         data: $('#addPOSForm').serialize(),
         success: function (data) {
-            GetPOSList(sysID);
+            GetPOSList(msID);
             $('#modalHolder').modal('hide');
             btnAddPOS.html('Add POS');
             btnAddPOS.removeClass('disabled');
@@ -462,19 +458,19 @@ function AddPOS(msID, sysID) {
     });
 }
 
-function DeletePOS(posID, sysID) {
-    var address = "/pos/" + sysID + "/" + posID + "/remove/";
+function DeletePOS(posID, msID) {
+    var address = "/pos/" + msID + "/" + posID + "/remove/";
     $.ajax({
         type: "POST",
         url: address,
         success: function () {
-            GetPOSList(sysID);
+            GetPOSList(msID);
         }
     });
 }
 
-function GetEditPOSDialog(posID, sysID) {
-    var address = "/pos/" + sysID + "/" + posID + "/edit/";
+function GetEditPOSDialog(posID, msID) {
+    var address = "/pos/" + msID + "/" + posID + "/edit/";
     $.ajax({
         url: address,
         type: "GET",
@@ -487,8 +483,8 @@ function GetEditPOSDialog(posID, sysID) {
     });
 }
 
-function EditPOS(posID, sysID) {
-    var address = "/pos/" + sysID + "/" + posID + "/edit/";
+function EditPOS(posID, msID) {
+    var address = "/pos/" + msID + "/" + posID + "/edit/";
     var btnEditPOS = $('#btnAddPOS');
     $('#pos_message').hide();
     btnEditPOS.html('Saving...');
@@ -498,7 +494,7 @@ function EditPOS(posID, sysID) {
         url: address,
         data: $('#editPOSForm').serialize(),
         success: function (data) {
-            GetPOSList(sysID);
+            GetPOSList(msID);
             $('#modalHolder').modal('hide');
             btnEditPOS.html('Save POS');
             btnEditPOS.removeClass('disabled');
