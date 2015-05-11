@@ -1,1120 +1,1120 @@
 [
-{
-    "pk": 68, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "A239", 
-        "destination": 8, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 69, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "A641", 
-        "destination": 7, 
-        "source": "H", 
-        "jumpmass": 1000000000, 
-        "target": "Highsec", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 70, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "A982", 
-        "destination": 6, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 71, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "B041", 
-        "destination": 6, 
-        "source": "H", 
-        "jumpmass": 300000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 48, 
-        "maxmass": 5000000000
-    }
-},
-{
-    "pk": 72, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "B274", 
-        "destination": 7, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "Highsec", 
-        "lifetime": 24, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 73, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "B449", 
-        "destination": 7, 
-        "source": "NH", 
-        "jumpmass": 1000000000, 
-        "target": "Highsec", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 74, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "C125", 
-        "destination": 2, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 75, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "C140", 
-        "destination": 8, 
-        "source": "Z", 
-        "jumpmass": 1350000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 76, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "C247", 
-        "destination": 3, 
-        "source": "4", 
-        "jumpmass": 300000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 77, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "C248", 
-        "destination": 9, 
-        "source": 6, 
-        "jumpmass": 1800000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 5000000000
-    }
-},
-{
-    "pk": 78, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "C391", 
-        "destination": 8, 
-        "source": 6, 
-        "jumpmass": 1800000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 5000000000
-    }
-},
-{
-    "pk": 79, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "D364", 
-        "destination": 2, 
-        "source": "5", 
-        "jumpmass": 300000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 80, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "D382", 
-        "destination": 2, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 81, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "D792", 
-        "destination": 7, 
-        "source": "Z", 
-        "jumpmass": 1000000000, 
-        "target": "Highsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 82, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "D845", 
-        "destination": 7, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "Highsec", 
-        "lifetime": 24, 
-        "maxmass": 5000000000
-    }
-},
-{
-    "pk": 83, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "E175", 
-        "destination": 4, 
-        "source": "5", 
-        "jumpmass": 300000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 84, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "E545", 
-        "destination": 9, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 85, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "G024", 
-        "destination": 2, 
-        "source": "6", 
-        "jumpmass": 300000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 86, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "H121", 
-        "destination": 1, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 87, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "H296", 
-        "destination": 5, 
-        "source": "5", 
-        "jumpmass": 1350000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 88, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "H900", 
-        "destination": 5, 
-        "source": "4", 
-        "jumpmass": 300000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 89, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "I182", 
-        "destination": 2, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 90, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "J244", 
-        "destination": 8, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 91, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "K162", 
-        "destination": 0, 
-        "source": "X", 
-        "jumpmass": 0, 
-        "target": "Generic Exit", 
-        "lifetime": 0, 
-        "maxmass": 0
-    }
-},
-{
-    "pk": 92, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "K329", 
-        "destination": 9, 
-        "source": "NH", 
-        "jumpmass": 1800000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 5000000000
-    }
-},
-{
-    "pk": 93, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "K346", 
-        "destination": 9, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 94, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "L477", 
-        "destination": 3, 
-        "source": "6", 
-        "jumpmass": 300000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 95, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "L614", 
-        "destination": 5, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 96, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "M267", 
-        "destination": 3, 
-        "source": "5", 
-        "jumpmass": 300000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 97, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "M555", 
-        "destination": 5, 
-        "source": "H", 
-        "jumpmass": 1000000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 98, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "M609", 
-        "destination": 4, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 99, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N062", 
-        "destination": 5, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 100, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N110", 
-        "destination": 7, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "Highsec", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 101, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N290", 
-        "destination": 8, 
-        "source": "9", 
-        "jumpmass": 1350000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 102, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N432", 
-        "destination": 5, 
-        "source": "NH", 
-        "jumpmass": 1350000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 103, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N766", 
-        "destination": 2, 
-        "source": "4", 
-        "jumpmass": 300000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 104, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N770", 
-        "destination": 5, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 105, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N968", 
-        "destination": 3, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 106, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "O128", 
-        "destination": 4, 
-        "source": "K", 
-        "jumpmass": 300000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 107, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "O477", 
-        "destination": 3, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 108, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "O883", 
-        "destination": 3, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 109, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "P060", 
-        "destination": 1, 
-        "source": "4", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 110, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Q317", 
-        "destination": 1, 
-        "source": "6", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 111, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "R051", 
-        "destination": 8, 
-        "source": "H", 
-        "jumpmass": 1000000000, 
-        "target": "Lowsec", 
-        "lifetime": 16, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 112, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "R474", 
-        "destination": 6, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 113, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "R943", 
-        "destination": 2, 
-        "source": "K", 
-        "jumpmass": 300000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 750000000
-    }
-},
-{
-    "pk": 114, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "S047", 
-        "destination": 7, 
-        "source": "4", 
-        "jumpmass": 300000000, 
-        "target": "Highsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 115, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "S199", 
-        "destination": 9, 
-        "source": "9", 
-        "jumpmass": 1350000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 116, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "S804", 
-        "destination": 6, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 117, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "T405", 
-        "destination": 4, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 118, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "U210", 
-        "destination": 8, 
-        "source": "3", 
-        "jumpmass": 300000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 119, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "U319", 
-        "destination": 6, 
-        "source": "NH", 
-        "jumpmass": 1350000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 48, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 120, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "U574", 
-        "destination": 6, 
-        "source": "4", 
-        "jumpmass": 300000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 121, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "V283", 
-        "destination": 9, 
-        "source": "H", 
-        "jumpmass": 1000000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 122, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "V301", 
-        "destination": 1, 
-        "source": "3", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 123, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "V753", 
-        "destination": 6, 
-        "source": "5", 
-        "jumpmass": 1350000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 124, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "V911", 
-        "destination": 5, 
-        "source": "6", 
-        "jumpmass": 1350000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 125, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "W237", 
-        "destination": 6, 
-        "source": "6", 
-        "jumpmass": 1350000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 126, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "X702", 
-        "destination": 3, 
-        "source": "K", 
-        "jumpmass": 300000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 127, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "X877", 
-        "destination": 4, 
-        "source": "4", 
-        "jumpmass": 300000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 128, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Y683", 
-        "destination": 4, 
-        "source": "2", 
-        "jumpmass": 300000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 129, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Y790", 
-        "destination": 1, 
-        "source": "5", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 130, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Z060", 
-        "destination": 9, 
-        "source": "1", 
-        "jumpmass": 20000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 131, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Z142", 
-        "destination": 9, 
-        "source": "Z", 
-        "jumpmass": 1350000000, 
-        "target": "Nullsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 132, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Z457", 
-        "destination": 4, 
-        "source": "6", 
-        "jumpmass": 300000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 133, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Z647", 
-        "destination": 1, 
-        "source": "2", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 134, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Z971", 
-        "destination": 1, 
-        "source": "K", 
-        "jumpmass": 20000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 100000000
-    }
-},
-{
-    "pk": 135, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "GATE", 
-        "destination": 0, 
-        "source": "K", 
-        "jumpmass": 0, 
-        "target": "K-Space", 
-        "lifetime": 0, 
-        "maxmass": 0
-    }
-},
-{
-    "pk": 136, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "N944", 
-        "destination": 8, 
-        "source": "NH", 
-        "jumpmass": 1350000000, 
-        "target": "Lowsec", 
-        "lifetime": 24, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 137, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "E004", 
-        "destination": 1, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "C1 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 138, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "L005", 
-        "destination": 2, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "C2 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 139, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Z006", 
-        "destination": 3, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "C3 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 140, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "M001", 
-        "destination": 4, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "C4 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 141, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "C008", 
-        "destination": 5, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "C5 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 142, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "G008", 
-        "destination": 6, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "C6 W-Space", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 143, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Q003", 
-        "destination": 9, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "Nullsec", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 144, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "A009", 
-        "destination": 13, 
-        "source": "W", 
-        "jumpmass": 5000000, 
-        "target": "Small Ship", 
-        "lifetime": 16, 
-        "maxmass": 1000000000
-    }
-},
-{
-    "pk": 145, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "T458", 
-        "destination": 12, 
-        "source": 7, 
-        "jumpmass": 20000000, 
-        "target": "Thera", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 146, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "M164", 
-        "destination": 12, 
-        "source": 8, 
-        "jumpmass": 300000000, 
-        "target": "Thera", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 147, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "L031", 
-        "destination": 12, 
-        "source": 9, 
-        "jumpmass": 1000000000, 
-        "target": "Thera", 
-        "lifetime": 16, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 148, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "Q063", 
-        "destination": 7, 
-        "source": 12, 
-        "jumpmass": 20000000, 
-        "target": "Highsec", 
-        "lifetime": 16, 
-        "maxmass": 500000000
-    }
-},
-{
-    "pk": 149, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "V898", 
-        "destination": 8, 
-        "source": 12, 
-        "jumpmass": 300000000, 
-        "target": "Lowsec", 
-        "lifetime": 16, 
-        "maxmass": 2000000000
-    }
-},
-{
-    "pk": 150, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "E587", 
-        "destination": 9, 
-        "source": 12, 
-        "jumpmass": 1000000000, 
-        "target": "Nullsec", 
-        "lifetime": 16, 
-        "maxmass": 3000000000
-    }
-},
-{
-    "pk": 151, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "F135", 
-        "destination": 12, 
-        "source": "W", 
-        "jumpmass": 300000000, 
-        "target": "Thera", 
-        "lifetime": 16, 
-        "maxmass": 750000000
-    }
-},
-{
-    "pk": 152, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "F355", 
-        "destination": 12, 
-        "source": 1, 
-        "jumpmass": 20000000, 
-        "target": "Thera", 
-        "lifetime": 16, 
-        "maxmass": 100000000
-    }
-},
-{
-    "pk": 152, 
-    "model": "Map.wormholetype", 
-    "fields": {
-        "name": "F355", 
-        "destination": 12, 
-        "source": 1, 
-        "jumpmass": 20000000, 
-        "target": "Thera", 
-        "lifetime": 16, 
-        "maxmass": 100000000
-    }
-}
+  {
+    "pk": 68,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "A239",
+      "destination": 8,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 69,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "A641",
+      "destination": 7,
+      "source": "H",
+      "jumpmass": 1000000000,
+      "target": "Highsec",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 70,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "A982",
+      "destination": 6,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "C6 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 71,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "B041",
+      "destination": 6,
+      "source": "H",
+      "jumpmass": 300000000,
+      "target": "C6 W-Space",
+      "lifetime": 48,
+      "maxmass": 5000000000
+    }
+  },
+  {
+    "pk": 72,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "B274",
+      "destination": 7,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "Highsec",
+      "lifetime": 24,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 73,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "B449",
+      "destination": 7,
+      "source": "NH",
+      "jumpmass": 1000000000,
+      "target": "Highsec",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 74,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C125",
+      "destination": 2,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 75,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C140",
+      "destination": 8,
+      "source": "Z",
+      "jumpmass": 1350000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 76,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C247",
+      "destination": 3,
+      "source": "4",
+      "jumpmass": 300000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 77,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C248",
+      "destination": 9,
+      "source": 6,
+      "jumpmass": 1800000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 5000000000
+    }
+  },
+  {
+    "pk": 78,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C391",
+      "destination": 8,
+      "source": 6,
+      "jumpmass": 1800000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 5000000000
+    }
+  },
+  {
+    "pk": 79,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "D364",
+      "destination": 2,
+      "source": "5",
+      "jumpmass": 300000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 80,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "D382",
+      "destination": 2,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 81,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "D792",
+      "destination": 7,
+      "source": "Z",
+      "jumpmass": 1000000000,
+      "target": "Highsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 82,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "D845",
+      "destination": 7,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "Highsec",
+      "lifetime": 24,
+      "maxmass": 5000000000
+    }
+  },
+  {
+    "pk": 83,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "E175",
+      "destination": 4,
+      "source": "5",
+      "jumpmass": 300000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 84,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "E545",
+      "destination": 9,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 85,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "G024",
+      "destination": 2,
+      "source": "6",
+      "jumpmass": 300000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 86,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "H121",
+      "destination": 1,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 87,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "H296",
+      "destination": 5,
+      "source": "5",
+      "jumpmass": 1350000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 88,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "H900",
+      "destination": 5,
+      "source": "4",
+      "jumpmass": 300000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 89,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "I182",
+      "destination": 2,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 90,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "J244",
+      "destination": 8,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 91,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "K162",
+      "destination": 0,
+      "source": "X",
+      "jumpmass": 0,
+      "target": "Generic Exit",
+      "lifetime": 0,
+      "maxmass": 0
+    }
+  },
+  {
+    "pk": 92,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "K329",
+      "destination": 9,
+      "source": "NH",
+      "jumpmass": 1800000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 5000000000
+    }
+  },
+  {
+    "pk": 93,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "K346",
+      "destination": 9,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 94,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "L477",
+      "destination": 3,
+      "source": "6",
+      "jumpmass": 300000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 95,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "L614",
+      "destination": 5,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 96,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "M267",
+      "destination": 3,
+      "source": "5",
+      "jumpmass": 300000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 97,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "M555",
+      "destination": 5,
+      "source": "H",
+      "jumpmass": 1000000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 98,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "M609",
+      "destination": 4,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 99,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N062",
+      "destination": 5,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 100,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N110",
+      "destination": 7,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "Highsec",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 101,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N290",
+      "destination": 8,
+      "source": "9",
+      "jumpmass": 1350000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 102,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N432",
+      "destination": 5,
+      "source": "NH",
+      "jumpmass": 1350000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 103,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N766",
+      "destination": 2,
+      "source": "4",
+      "jumpmass": 300000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 104,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N770",
+      "destination": 5,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 105,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N968",
+      "destination": 3,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 106,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "O128",
+      "destination": 4,
+      "source": "K",
+      "jumpmass": 300000000,
+      "target": "C4 W-Space",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 107,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "O477",
+      "destination": 3,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 108,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "O883",
+      "destination": 3,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 109,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "P060",
+      "destination": 1,
+      "source": "4",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 110,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Q317",
+      "destination": 1,
+      "source": "6",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 111,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "R051",
+      "destination": 8,
+      "source": "H",
+      "jumpmass": 1000000000,
+      "target": "Lowsec",
+      "lifetime": 16,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 112,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "R474",
+      "destination": 6,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "C6 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 113,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "R943",
+      "destination": 2,
+      "source": "K",
+      "jumpmass": 300000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
+  },
+  {
+    "pk": 114,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "S047",
+      "destination": 7,
+      "source": "4",
+      "jumpmass": 300000000,
+      "target": "Highsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 115,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "S199",
+      "destination": 9,
+      "source": "9",
+      "jumpmass": 1350000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 116,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "S804",
+      "destination": 6,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "C6 W-Space",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 117,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "T405",
+      "destination": 4,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 118,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "U210",
+      "destination": 8,
+      "source": "3",
+      "jumpmass": 300000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 119,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "U319",
+      "destination": 6,
+      "source": "NH",
+      "jumpmass": 1350000000,
+      "target": "C6 W-Space",
+      "lifetime": 48,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 120,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "U574",
+      "destination": 6,
+      "source": "4",
+      "jumpmass": 300000000,
+      "target": "C6 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 121,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "V283",
+      "destination": 9,
+      "source": "H",
+      "jumpmass": 1000000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 122,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "V301",
+      "destination": 1,
+      "source": "3",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 123,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "V753",
+      "destination": 6,
+      "source": "5",
+      "jumpmass": 1350000000,
+      "target": "C6 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 124,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "V911",
+      "destination": 5,
+      "source": "6",
+      "jumpmass": 1350000000,
+      "target": "C5 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 125,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "W237",
+      "destination": 6,
+      "source": "6",
+      "jumpmass": 1350000000,
+      "target": "C6 W-Space",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 126,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "X702",
+      "destination": 3,
+      "source": "K",
+      "jumpmass": 300000000,
+      "target": "C3 W-Space",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 127,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "X877",
+      "destination": 4,
+      "source": "4",
+      "jumpmass": 300000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 128,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Y683",
+      "destination": 4,
+      "source": "2",
+      "jumpmass": 300000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 129,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Y790",
+      "destination": 1,
+      "source": "5",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 130,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Z060",
+      "destination": 9,
+      "source": "1",
+      "jumpmass": 20000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 131,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Z142",
+      "destination": 9,
+      "source": "Z",
+      "jumpmass": 1350000000,
+      "target": "Nullsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 132,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Z457",
+      "destination": 4,
+      "source": "6",
+      "jumpmass": 300000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 133,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Z647",
+      "destination": 1,
+      "source": "2",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 134,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Z971",
+      "destination": 1,
+      "source": "K",
+      "jumpmass": 20000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 100000000
+    }
+  },
+  {
+    "pk": 135,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "GATE",
+      "destination": 0,
+      "source": "K",
+      "jumpmass": 0,
+      "target": "K-Space",
+      "lifetime": 0,
+      "maxmass": 0
+    }
+  },
+  {
+    "pk": 136,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "N944",
+      "destination": 8,
+      "source": "NH",
+      "jumpmass": 1350000000,
+      "target": "Lowsec",
+      "lifetime": 24,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 137,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "E004",
+      "destination": 1,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "C1 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 138,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "L005",
+      "destination": 2,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "C2 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 139,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Z006",
+      "destination": 3,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "C3 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 140,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "M001",
+      "destination": 4,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "C4 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 141,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C008",
+      "destination": 5,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "C5 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 142,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "G008",
+      "destination": 6,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "C6 W-Space",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 143,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Q003",
+      "destination": 9,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "Nullsec",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 144,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "A009",
+      "destination": 13,
+      "source": "W",
+      "jumpmass": 5000000,
+      "target": "Small Ship",
+      "lifetime": 16,
+      "maxmass": 1000000000
+    }
+  },
+  {
+    "pk": 145,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "T458",
+      "destination": 12,
+      "source": 7,
+      "jumpmass": 20000000,
+      "target": "Thera",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 146,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "M164",
+      "destination": 12,
+      "source": 8,
+      "jumpmass": 300000000,
+      "target": "Thera",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 147,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "L031",
+      "destination": 12,
+      "source": 9,
+      "jumpmass": 1000000000,
+      "target": "Thera",
+      "lifetime": 16,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 148,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "Q063",
+      "destination": 7,
+      "source": 12,
+      "jumpmass": 20000000,
+      "target": "Highsec",
+      "lifetime": 16,
+      "maxmass": 500000000
+    }
+  },
+  {
+    "pk": 149,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "V898",
+      "destination": 8,
+      "source": 12,
+      "jumpmass": 300000000,
+      "target": "Lowsec",
+      "lifetime": 16,
+      "maxmass": 2000000000
+    }
+  },
+  {
+    "pk": 150,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "E587",
+      "destination": 9,
+      "source": 12,
+      "jumpmass": 1000000000,
+      "target": "Nullsec",
+      "lifetime": 16,
+      "maxmass": 3000000000
+    }
+  },
+  {
+    "pk": 151,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "F135",
+      "destination": 12,
+      "source": "W",
+      "jumpmass": 300000000,
+      "target": "Thera",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
+  },
+  {
+    "pk": 152,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "F355",
+      "destination": 12,
+      "source": 1,
+      "jumpmass": 20000000,
+      "target": "Thera",
+      "lifetime": 16,
+      "maxmass": 100000000
+    }
+  },
+  {
+    "pk": 152,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "F355",
+      "destination": 12,
+      "source": 1,
+      "jumpmass": 20000000,
+      "target": "Thera",
+      "lifetime": 16,
+      "maxmass": 100000000
+    }
+  }
 ]

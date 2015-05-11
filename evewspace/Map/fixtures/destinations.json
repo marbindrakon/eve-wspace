@@ -1,1 +1,27 @@
-[{"pk": 1, "model": "Map.destination", "fields": {"system": 30000142}}, {"pk": 2, "model": "Map.destination", "fields": {"system": 30002187}}, {"pk": 3, "model": "Map.destination", "fields": {"system": 30002659}}, {"pk": 4, "model": "Map.destination", "fields": {"system": 30002510}}, {"pk": 5, "model": "Map.destination", "fields": {"system": 30002053}}]
+[
+  {
+    "pk": 1,
+    "model": "Map.destination",
+    "fields": { "system": 30000142 }
+  },
+  {
+    "pk": 2,
+    "model": "Map.destination",
+    "fields": { "system": 30002187 }
+  },
+  {
+    "pk": 3,
+    "model": "Map.destination",
+    "fields": { "system": 30002659 }
+  },
+  {
+    "pk": 4,
+    "model": "Map.destination",
+    "fields": { "system": 30002510 }
+  },
+  {
+    "pk": 5,
+    "model": "Map.destination",
+    "fields": { "system": 30002053 }
+  }
+]
