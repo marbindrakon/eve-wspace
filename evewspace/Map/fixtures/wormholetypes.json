@@ -1103,5 +1103,70 @@
       "lifetime": 16,
       "maxmass": 100000000
     }
+  },
+  {
+    "pk": 153,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "B735",
+      "destination": 15,
+      "source": 0,
+      "jumpmass": 300000000,
+      "target": "UNKNOWN",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
+  },
+  {
+    "pk": 154,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "C414",
+      "destination": 17,
+      "source": 0,
+      "jumpmass": 300000000,
+      "target": "UNKNOWN",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
+  },
+  {
+    "pk": 155,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "R259",
+      "destination": 18,
+      "source": 0,
+      "jumpmass": 300000000,
+      "target": "UNKNOWN",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
+  },
+  {
+    "pk": 156,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "S877",
+      "destination": 14,
+      "source": 0,
+      "jumpmass": 300000000,
+      "target": "UNKNOWN",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
+  },
+  {
+    "pk": 0,
+    "model": "Map.wormholetype",
+    "fields": {
+      "name": "V928",
+      "destination": 16,
+      "source": 0,
+      "jumpmass": 300000000,
+      "target": "UNKNOWN",
+      "lifetime": 16,
+      "maxmass": 750000000
+    }
   }
 ]
