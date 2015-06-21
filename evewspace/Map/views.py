@@ -36,7 +36,6 @@ from core.models import ConfigEntry
 # Permissions are 0 = None, 1 = View, 2 = Change
 # When used without a permission=x specification, requires Change access
 
-
 def require_map_permission(permission=2):
     def _dec(view_func):
         def _view(request, map_id, *args, **kwargs):
@@ -113,6 +112,8 @@ def map_refresh(request, map_id):
     if not request.is_ajax():
         raise PermissionDenied
     current_map = get_object_or_404(Map, pk=map_id)
+
+
     result = [
         datetime.now(pytz.utc).strftime("%Y-%m-%d %H:%M:%S.%f"),
         utils.MapJSONGenerator(current_map, request.user).get_systems_json(),
@@ -962,11 +963,28 @@ def destination_list(request, map_id, ms_id):
         rf = utils.RouteFinder()
         result = []
         for destination in destinations:
-            result.append((
-                destination.system,
-                rf.route_length(system, destination.system) - 1,
-                round(rf.ly_distance(system, destination.system), 3),
-            ))
+            result.append((destination.system,
+                           rf.route_length(system,
+                                           destination.system) - 1,
+                           round(rf.ly_distance(system,
+                                        destination.system), 3),
+                           "(preset)",
+                           "preset"
+                           ))
+
+        #Get k-space systems from ALL maps
+        for destination in MapSystem.objects.filter(system__sysclass__gte=7, system__sysclass__lte=11):
+            destinationsystem = destination.system.ksystem #get the relevant KSystem object
+            if system.name != destinationsystem.name and not destinationsystem in [ x[0] for x in result]: #no self and no duplicates
+                result.append((destinationsystem,
+                            rf.route_length(system,
+                                            destinationsystem) - 1,
+                            round(rf.ly_distance(system,
+                                            destinationsystem), 3),
+                            destination.map.name,
+                            "self" if destination.map.name == map_system.map.name else "other"
+                            ))
+
     except ObjectDoesNotExist:
         return HttpResponse()
     return render(request, 'system_destinations.html',

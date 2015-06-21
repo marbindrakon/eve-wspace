@@ -69,11 +69,11 @@
     <div class="detailsLeft detailsLeftCombined">
     {% if system.occupied or system.poses.all %}
     <div class="occupiedDiv label label-important">
-        <span class="occupiedTitle">Occupied:</span> <br /> {{system.occupied|linebreaks}}</p>
+        <span class="occupiedTitle">Occupied:</span> <br /> {{system.occupied|linebreaks}}
         Towers:
         <ul>
             {% for pos in system.poses.all %}
-            <li>P:{{pos.planet}} &nbsp;M: {{pos.moon}} - {{pos.towertype.name}} - {{pos.corporation.name}} - 
+            <li>P:{{pos.planet}} &nbsp;M: {{pos.moon}} - {{pos.posname}} - <a href="javascript:CCPEVE.showInfo(2,{{pos.corporation.pk}});">{{pos.corporation.name}}</a> - <span class="towertype">{{pos.towertype.name}}</span> -
                 {% if pos.status == 0 %}
 	            <span class="label label-info">Status: UNANCHORED</span>
 	           	{% endif %}
@@ -124,9 +124,13 @@
   <a name="sigsPanel"></a>
   <hr class="sysInfoCombinedHr">
   <div id="sigsPanel" class="sigsPanel tab-pane">
+            <h4>Signatures: {{system.name}}</h4>
+            <div id="sys{{mapsys.pk}}Signatures" class="signatureListDiv">
+            </div>
             <div id="sigAddPanel" class"sigAddPanel">
+                <div id="sys{{mapsys.pk}}SigAddForm">
+                </div>
                 <div style="margin-bottom: 10px; text-align: center;">
-                    <h4>Signatures: {{system.name}}</h4>
                     {% if can_edit %}
                     <form id="bulkSigForm" class="bulkSigForm" method="post" action="system/{{mapsys.pk}}/signatures/bulkadd/">
                         <textarea id="pasteField" rows="4" name="paste"></textarea>
@@ -143,10 +147,6 @@
                     {% endif %}
 
                 </div>
-                <div id="sys{{mapsys.pk}}SigAddForm">
-                </div>
-            </div>
-            <div id="sys{{mapsys.pk}}Signatures" class="signatureListDiv">
             </div>
     </div>
     <a name="activePlayerPanel"></a>
@@ -178,10 +178,10 @@
     <div id="systemPosPanel" class="systemPosPanel tab-pane">
         <div style="text-align: center; margin-bottom: 10px;">
             <h4>Starbases: {{system.name}}</h4>
-            {% if can_edit %}<button class="btn" onclick="GetAddPOSDialog({{mapsys.system.pk}});"><img height=32 width=32 title="Add POS" src='{{STATIC_URL}}images/plus.png'/>Add POS</button>{% endif %}
+            {% if can_edit %}<button class="btn" onclick="GetAddPOSDialog({{mapsys.pk}});"><img height=32 width=32 title="Add POS" src='{{STATIC_URL}}images/plus.png'/>Add POS</button>{% endif %}
         </div>
         <div id="systemPosWell" class="systemPosWell">
-            <div id="sys{{system.pk}}POSDiv">
+            <div id="sys{{mapsys.pk}}POSDiv">
             </div>
         </div>
     </div>

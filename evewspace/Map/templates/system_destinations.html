@@ -3,15 +3,17 @@
         <th>System</th>
         <th>Jumps</th>
         <th>LY</th>
+        <th>Map</th>
         {% if is_igb_trusted %}
         <th>Autopilot</th>
         {% endif %}
     </tr>
-    {% for dest, jumps, ly in destinations %}
-        <tr>
+    {% for dest, jumps, ly, mapname, typeclass in destinations %}
+        <tr class="destination{{typeclass}}">
             <td>{{dest.name}}</td>
             <td>{{jumps}}</td>
             <td>{{ly}}</td>
+            <td>{{mapname}}</td>
             {% if is_igb_trusted %}
             <td width="10%"><button class='btn btn-mini btn-info' onclick="CCPEVE.setDestination({{dest.pk}});">D</button></td>
             {% endif %}

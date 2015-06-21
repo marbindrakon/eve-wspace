@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}POS Database{% endblock %}
+{% block scripts %}
+    <link rel="stylesheet" href="{{STATIC_URL}}css/pos.css" type="text/css" />
+{% endblock %}
+{% block content %}
+<div id="posdb">
+<table>
+<tr>
+    <th>Corporation</th>
+    <th>Alliance</th>
+    <th>System</th>
+    <th>Class</th>
+    <th>POS Name</th>
+    <th>POS Location</th>
+    <th>POS Status</th>
+    <th>Guns</th>
+    <th>Ewar</th>
+    <th>SMA</th>
+</tr>
+{% for pos in poses %}
+{% if pos.system.id in mapped %}
+<tr class="mapped">
+{% else %}
+<tr>
+{% endif %}
+    <td class="corp"><a href="javascript:CCPEVE.showInfo(2,{{pos.corporation.pk}});">{{ pos.corporation.name }} 
+    {% if pos.corporation.ticker %}
+    [{{pos.corporation.ticker}}]
+    {% endif %}
+    </a>
+    </td>
+    <td class="alliance">
+    {% if pos.corporation.alliance %}
+    <a href="javascript:CCPEVE.showInfo(16159,{{pos.corporation.alliance.pk}});"> 
+    {{ pos.corporation.alliance.name }} 
+    {% if pos.corporation.alliance.ticker %}
+    [{{pos.corporation.alliance.ticker}}]
+    {% endif %}
+    </a>
+    {% else %}
+    {% endif %}
+    </td>
+    <td class="sysname"><a href="javascript:CCPEVE.showInfo(5,{{pos.system.pk}});">{{ pos.system.name }}</a></td>
+    <td class="sysclass{{pos.system.class}}">{{pos.system.class_string}}</td>
+    <td class="posname">{{ pos.posname }}</td>
+    <td class="location">P{{ pos.planet }}-M{{ pos.moon }}</td>
+    <td class="status">{{ pos.statuslabel }}</td>
+    <td>{{ pos.guns }}</td>
+    <td>{{ pos.ewar }}</td>
+    <td>{{ pos.sma }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

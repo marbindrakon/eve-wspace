@@ -43,6 +43,9 @@
     <strong>Region: {{mapsys.system.region}}</strong>
     <br />
     {% endif %}
+    {% for m in mapsys.overlapmaps %}
+    <span class="overlapnotice">OVERLAPS WITH MAP {{ m.map.name }} !!</span>
+    {% endfor %}
     {% load humanize %}
     <span class="sysLastScanned label {% if scanwarning  %} label-important {% endif %}">
         Last Scanned: {{mapsys.system.lastscanned|naturaltime}}

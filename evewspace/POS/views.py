@@ -15,11 +15,15 @@
 from datetime import datetime, timedelta
 import re
 
-from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.http import HttpResponse, Http404
 from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
+from datetime import datetime, timedelta, time
+import pytz
+import eveapi
+import re
 
 from POS.models import *
 from Map.models import System, MapSystem
@@ -61,15 +65,21 @@ def remove_pos(request, msID, posID):
 
 
 @login_required
-def get_pos_list(request, msID):    
+def get_pos_list(request, msID):
     if not request.is_ajax():
         raise PermissionDenied
     mapsystem = get_object_or_404(MapSystem, pk=msID)
     system = get_object_or_404(System, pk=mapsystem.system.pk)
-    poses = POS.objects.filter(system=system).all()    
+    poses = POS.objects.filter(system=system).all()
 
     return TemplateResponse(request, 'poslist.html', {'mapsystem': mapsystem,
         'poses': poses})
+
+@login_required
+def posdb(request):
+    mapped = [ ms.system.id for ms in MapSystem.objects.all() ]
+    poses = POS.objects.all().order_by('corporation__name')
+    return TemplateResponse(request, 'posdb.html',{'poses': poses,'mapped': mapped})
 
 
 @permission_required('POS.change_pos', raise_exception=True)
@@ -162,7 +172,7 @@ def add_pos(request, msID):
                 corp = core_tasks.update_corporation(corp_id, True)
             except:
                 # Error while talking to the EVE API
-                return HttpResponse('Could not verify Corp name. Please try again later.', status=404)                
+                return HttpResponse('Could not verify Corp name. Please try again later.', status=404)
         else:
             # Have the async worker update the corp so that it is up to date
             core_tasks.update_corporation.delay(corp.id)

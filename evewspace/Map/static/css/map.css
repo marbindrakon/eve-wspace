@@ -120,6 +120,7 @@
 {
     text-align: left;
     white-space: nowrap;
+    clear: both;
 }
 .sysSigsList
 {
@@ -291,6 +292,28 @@ label[for=massStatusCritical], label[for=sysTypeDangerous] {
 #legendDiv ul.inline {
     display: inline;
 }
+div#systemDestinationsDiv {
+    width: 100%;
+}
+div#systemDestinationsDiv tr.destinationpreset td {
+    color: #40d964;
+}
+div#systemDestinationsDiv tr.destinationself td {
+    color: #40c9d9;
+}
+div#systemDestinationsDiv tr.destinationother td {
+    font-style: italic;
+}
+.overlapnotice {
+    display: block;
+    font-weight: bold;
+    color: red;
+    background: yellow;
+    padding: 5px;
+}
+.towertype {
+    font-size: 60%;
+    font-style: italic;
 
 div.activePlayerList {
     text-align: center;

@@ -125,6 +125,7 @@ $(document).ready(function () {
 });
 
 
+
 //Make sure timers stop when unloading the page
 $(document).ready(function () {
     $(window).bind('unload', function () {

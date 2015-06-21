@@ -134,9 +134,9 @@ class POS(models.Model):
         Records a log entry for POS updates and additions.
         """
         map_system.map.add_log(
-            user, 
+            user,
             "%s POS (Planet %s Moon %s, owner %s) in %s (%s), %s jumps out from root system."
-            %(action, self.planet, self.moon, self.corporation, map_system.system.name, 
+            %(action, self.planet, self.moon, self.corporation, map_system.system.name,
               map_system.friendlyname, map_system.distance_from_root()))
 
     def size(self):
@@ -215,6 +215,17 @@ class POS(models.Model):
         else:
             raise AttributeError('Too many towers detected in the D-Scan!')
 
+    def statuslabel(self):
+        if self.status == 0:
+            return "Unanchored"
+        if self.status == 1:
+            return "Anchored"
+        if self.status == 2:
+            return "Onlining"
+        if self.status == 3:
+            return "Reinforced"
+        if self.status == 4:
+            return "Online"
 
 class CorpPOS(POS):
     """A corp-controlled POS with manager and password data."""

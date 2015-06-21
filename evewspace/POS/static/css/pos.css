@@ -1,0 +1,15 @@
+#posdb table {
+    width: 100%;
+}
+#posdb table td {
+    max-width: 20%;
+}
+#posdb .corp {
+    font-weight: bold;
+}
+#posdb .system {
+    font-weight: italic;
+}
+#posdb tr.mapped {
+    background: #3c7241;
+}

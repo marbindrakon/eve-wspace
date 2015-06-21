@@ -19,6 +19,7 @@ from core.models import SystemData
 from django import forms
 from django.forms import ModelForm
 from datetime import datetime, timedelta
+from django.db.models import Q
 import pytz
 import time
 import yaml
@@ -592,11 +593,18 @@ class MapSystem(models.Model):
         }
         return data
 
+    def overlaps(self):
+        return MapSystem.objects.filter(~Q(map__id=self.map.id) & Q(system__id=self.system.id) ).exists() #TODO: has no regard for permissions
+
+
     def has_siblings(self):
         parent_sys = self.parentsystem
         if parent_sys is None:
             return False
         return parent_sys.childsystems.count() > 1
+
+    def overlapmaps(self):
+        return MapSystem.objects.filter(~Q(map__id=self.map.id) & Q(system__id=self.system.id) ) #TODO: has no regard for permissions
 
     def distance_from_root(self):
         distance = 0
@@ -774,7 +782,7 @@ class Signature(models.Model):
 
     def update_from_tsv(self, user, wascreated, row, map_system):
         """Takes a line of copied data, converts it into a signature and checks if the
-        import updated an existing signature on the map, and whether or not the update 
+        import updated an existing signature on the map, and whether or not the update
         includes new scan data (for logging purposes).
 
         """
@@ -794,7 +802,7 @@ class Signature(models.Model):
             # new sig
             updated = False
             action = "Created"
-        
+
         # Is there a valid signature type from pasted data - is it valid?
         scan_group = self._translate_client_string(row[COL_SIG_SCAN_GROUP])
         if scan_group == "Cosmic Signature" or scan_group == "Cosmic Anomaly":
@@ -821,10 +829,10 @@ class Signature(models.Model):
             if self.info != info:
                 self.info = info
                 if action != "Created":
-                    action = "Updated"                    
+                    action = "Updated"
                     if scan_group == "Cosmic Signature":
                         # only record new scanning activity for signatures
-                        action = "Scanned"                        
+                        action = "Scanned"
         if action != "None":
             self.log_sig(user, action, map_system)
 
@@ -839,20 +847,20 @@ class Signature(models.Model):
 
     def log_sig(self, user, action, map_system):
         """Log the fact that the signature was scanned."""
-        
+
         # only include advanced logging if enabled
         include_distance = get_config("MAP_ADVANCED_LOGGING", None).value
         if include_distance == "1":
             map_system.map.add_log(
-                user, 
+                user,
                 "%s signature %s in %s (%s), %s jumps out from root system."
-                %(action, self.sigid, map_system.system.name, 
+                %(action, self.sigid, map_system.system.name,
                   map_system.friendlyname, map_system.distance_from_root()))
         else:
             map_system.map.add_log(
-                user, 
+                user,
                 "%s signature %s in %s (%s)."
-                %(action, self.sigid, map_system.system.name, 
+                %(action, self.sigid, map_system.system.name,
                   map_system.friendlyname))
 
     def toggle_ownership(self, user):
@@ -877,6 +885,11 @@ class Signature(models.Model):
         self.log_sig(user, "Deleted", mapsys)
         self.system.clear_sig_cache()
         super(Signature, self).delete(*args, **kwargs)
+
+    def age(self):
+        """Seconds since last modification"""
+        age = datetime.now() - self.modified_time
+        return age.seconds
 
     def _translate_client_string(self, client_text):
         """Translate text strings from EVE client.

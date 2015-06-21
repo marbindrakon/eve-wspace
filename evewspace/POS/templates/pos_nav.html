@@ -1,7 +1,7 @@
 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">POS</a><ul class="dropdown-menu">
 	<li><a href="#">My Towers</a></li>
 	<li><a href="#">Add POS</a></li>
-	<li><a href="#">POS Database</a></li>
+    <li><a href="{% url 'POS.views.posdb' %}">POS Database</a></li>
 	{% if perms.POS.add_posapplication %}
 	<li><a href="#">Personal POS Application</a></li>
 	{% endif %}
