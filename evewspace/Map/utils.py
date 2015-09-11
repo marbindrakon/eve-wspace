@@ -241,55 +241,54 @@ class MapJSONGenerator(object):
                 todo.append((child, x + 1))
 
         # repeat until nothing changed:
-        #   - move one child system down to match parent
         #   - move all parents down to match first child
+        #   - move one child system down to match parent
+        ncols = len(columns)
         map_changed = True
         while map_changed:
             map_changed = False
 
-            # ensure child.y >= parent.y
-            for x, column in enumerate(columns):
-                if map_changed:
-                    break
-                for sys_id in column:
-                    if map_changed:
-                        break
-                    if sys_id is None:
-                        continue
+            # move all parents down
+            for x in range(ncols - 2, 0, -1):  # first and last col never move
+                column = columns[x]
+                for sys_id in [i for i in column
+                               if i is not None]:
                     try:
-                        child = children[sys_id][0]
+                        child_id = children[sys_id][0]
+                    # skip systems without children
                     except IndexError:
                         continue
-                    y_child = ys[child]
-                    dy = ys[sys_id] - y_child
-                    if dy > 0:
-                        map_changed = True
-                        child_col = columns[x + 1]
-                        for i in child_col[y_child:]:
-                            if i is not None:
-                                ys[i] += dy
-                        for i in range(dy):
-                            child_col.insert(y_child, None)
 
-            # ensure parent.y >= parent.children[0].y
-            for column in columns:
-                for sys_id in column:
-                    if sys_id is None:
-                        continue
+                    sys_y = ys[sys_id]
+                    child_y = ys[child_id]
+                    delta = child_y - sys_y
+                    if delta > 0:
+                        for mov_id in [i for i in column[sys_y:]
+                                       if i is not None]:
+                            ys[mov_id] += delta
+                        for _ in range(delta):
+                            column.insert(sys_y, None)
+                        map_changed = True
+
+            # move a child down
+            for x in range(ncols - 1, 0, -1):  # first col never moves
+                column = columns[x]
+                for sys_id in [i for i in column
+                               if i is not None]:
                     parent_id = parents[sys_id]
-                    if parent_id is None:
-                        continue
-                    if children[parent_id][0] == sys_id:
-                        y_parent = ys[parent_id]
-                        dy = ys[sys_id] - y_parent
-                        if dy > 0:
-                            map_changed = True
-                            parent_column = columns[xs[parent_id]]
-                            for i in parent_column[y_parent:]:
-                                if i >= 0:
-                                    ys[i] += dy
-                            for i in range(dy):
-                                parent_column.insert(y_parent, None)
+                    sys_y = ys[sys_id]
+                    parent_y = ys[parent_id]
+                    delta = parent_y - sys_y
+                    if delta > 0:
+                        for mov_id in [i for i in column[sys_y:]
+                                       if i is not None]:
+                            ys[mov_id] += delta
+                        for _ in range(delta):
+                            column.insert(sys_y, None)
+                        map_changed = True
+                        break
+                if map_changed:
+                    break
 
         # create list of system dicts from system ids in columns
         syslist = []
