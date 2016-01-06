@@ -25333,9 +25333,9 @@
     "pk": 31002534, 
     "model": "Map.wsystem", 
     "fields": {
-        "static1": null, 
+        "static1": 118, 
         "is_shattered": true, 
-        "static2": null, 
+        "static2": 93, 
         "effect": null
     }
 },
