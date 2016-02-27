@@ -784,6 +784,28 @@ class Signature(models.Model):
         self.updated = True
         self.save()
 
+    null_races = ["Angel", "Sansha", "Gurista", "Blood Raider"]
+
+
+    def abbreviate_info(self):
+        if self.sigtype and self.info:
+            type = self.sigtype.shortname
+            info = self.info
+
+            if type == "GAS":
+                self.info = info.split(' ', 1)[0]
+            elif (type == "DATA") or (type == "RELIC"):
+                new_info = ""
+                for race in self.null_races:
+                    if race in info:
+                        new_info += "NULL " + race
+                        if ("Covert Research" in info):
+                            new_info += " Covert Research"
+                        self.info = new_info
+                        return
+                self.info = info.split(' ', 3)[2]
+
+
     def update_from_tsv(self, user, wascreated, row, map_system):
         """Takes a line of copied data, converts it into a signature and checks if the
         import updated an existing signature on the map, and whether or not the update
@@ -832,11 +854,14 @@ class Signature(models.Model):
             # if there is a signature info (site name) field, mark as scanned
             if self.info != info:
                 self.info = info
+                if self.sigtype:
+                    self.abbreviate_info()
                 if action != "Created":
                     action = "Updated"
                     if scan_group == "Cosmic Signature":
                         # only record new scanning activity for signatures
                         action = "Scanned"
+
         if action != "None":
             self.log_sig(user, action, map_system)
 
