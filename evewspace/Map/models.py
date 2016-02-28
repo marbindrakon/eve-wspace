@@ -803,7 +803,7 @@ class Signature(models.Model):
                             new_info += " Covert Research"
                         self.info = new_info
                         return
-                self.info = info.split(' ', 3)[2]
+                self.info = ' '.join(info.split(' ')[-2:])
 
 
     def update_from_tsv(self, user, wascreated, row, map_system):
