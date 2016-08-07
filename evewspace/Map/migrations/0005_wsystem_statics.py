@@ -17,7 +17,7 @@ def combine_statics(apps, schema_editor):
         # Get all the static wormholes
         hole1 = wsystem.static1
         hole2 = wsystem.static2
-        hole3 = wsystem.static3
+        #hole3 = wsystem.static3
         # Add the wormholes to statics if the static exists
         try:
             static1 = WormholeType.objects.get(name=hole1)
