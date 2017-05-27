@@ -1,10 +1,6 @@
 <div class="btn-toolbar" style="margin-top: 7px">
     <button class="btn btn-default btn-xs" onclick="RefreshMap();"><i class="icon-refresh"></i> Refresh</button>
     <button id="btnRefreshToggle" class="btn btn-xs btn-primary" onclick="ToggleAutoRefresh();">Auto Refresh: <span></span></button>
-    {% if is_igb %}
-    <button id="btnSilentAdd" class="btn btn-xs btn-primary" onclick="ToggleSilentAdd();">Silent IGB Mapping: <span></span></button>
-    <button id="btnKspaceIGB" class="btn btn-xs btn-primary" onclick="ToggleKspaceMapping();">Map K-Space Connections: <span></span></button>
-    {% endif %}
     <button id="btnPilotList" class="btn btn-xs btn-primary" onclick="TogglePilotList();">Pilot List: <span></span></button>
     <button id="btnExportMap" class="btn btn-xs btn-primary" onclick="GetExportMap();">Export</button>
     <button id="btnZen" class="btn btn-xs btn-primary" onclick="ToggleZen()">Zen: <span></span></button>

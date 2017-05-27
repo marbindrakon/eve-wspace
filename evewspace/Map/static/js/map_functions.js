@@ -1192,11 +1192,6 @@ function DrawSystem(system) {
     sysText.click(onSysClick);
 
     // Open system information window if IGB is used.
-    if (is_igb === true) {
-        curSys.dblclick(onSysDblClick);
-        sysText.dblclick(onSysDblClick);
-    }
-
     if (showPilotList === true) {
         pilotText = paper.text(sysX, sysY + s(32), pilotText);
         pilotText.msID = system.msID;

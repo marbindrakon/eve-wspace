@@ -43,4 +43,4 @@ class SlackAlertMethod(AlertMethodBase):
         """
         Return a one-liner to describe the method.
         """
-        return u"Recieve alerts via Slack."
+        return "Recieve alerts via Slack."

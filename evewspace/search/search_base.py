@@ -33,7 +33,7 @@ class SearchBase(object):
         return choice.pk
 
     def choice_label(self, choice):
-        return unicode(choice)
+        return str(choice)
 
     def order_choices(self, choices):
         order_by = getattr(self, 'order_by', None)
@@ -61,6 +61,6 @@ class SearchBase(object):
     def result_json(self):
         result = []
         for res in self.choices_for_request():
-            result.append(unicode(res))
+            result.append(str(res))
         return json.dumps(result)
 

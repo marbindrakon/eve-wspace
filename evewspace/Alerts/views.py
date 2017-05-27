@@ -19,9 +19,9 @@ from django.template.response import TemplateResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404
-from method_registry import registry as method_registry
-from models import SubscriptionGroup
-import tasks
+from .method_registry import registry as method_registry
+from .models import SubscriptionGroup
+from . import tasks
 
 def send_ping(request):
     """"

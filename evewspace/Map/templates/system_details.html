@@ -25,9 +25,6 @@
 		<div class="panel panel-default">
 			<div id="sysPanelHeader" class="panel-heading center_text">
 			    <h4>{% if can_edit %}<i title="Edit Info" class="glyphicon glyphicon-pencil" onclick="GetEditSystemDialog({{mapsys.pk}});"></i>{% endif %} System Details: {{mapsys.system.name}} {% if mapsys.friendlyname %}<span class="friendlyname">({{ mapsys.friendlyname }})</span>{% endif %} &nbsp;
-			    	{% if system.is_kspace and is_igb %}
-			        	<button class='btn btn-xs btn-info' onclick="CCPEVE.setDestination({{system.pk}});">Set destination</button>
-			        {% endif %}
 			    </h4>
 			</div>
 			<div id="sysPanelBody" class="panel-body">

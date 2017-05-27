@@ -15,7 +15,7 @@
 from django.core.cache import cache
 from datetime import datetime
 
-import cPickle as pickle
+import pickle as pickle
 import time
 import zlib
 import pytz
@@ -29,7 +29,7 @@ def store(host, path, params, doc, obj):
     # We will set a default cache timer of 60 seconds
     if cacheTimer <= 0:
         cacheTimer = 60
-    cache.set(hash(cacheKey), zlib.compress(unicode(doc)), cacheTimer)
+    cache.set(hash(cacheKey), zlib.compress(str(doc)), cacheTimer)
 
 
 def retrieve(host, path, params):

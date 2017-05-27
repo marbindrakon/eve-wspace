@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 from search import registry
-from models import Type, Corporation, Alliance
+from .models import Type, Corporation, Alliance
 
 registry.register(Corporation, 'corp', 'name')
 registry.register(Alliance, 'alliance', 'name')

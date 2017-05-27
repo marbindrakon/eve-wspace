@@ -14,7 +14,7 @@
 #   limitations under the License.
 from django.conf.urls import patterns, include, url
 from django.views.decorators.csrf import csrf_exempt
-from views import search_view
+from .views import search_view
 urlpatterns = patterns('search.views',
         url(r'^(?P<search>[-\w]+)/$',
             csrf_exempt(search_view),

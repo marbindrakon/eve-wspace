@@ -10,11 +10,6 @@
         <script type="text/javascript" src="{{STATIC_URL}}js/base.js"></script>
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
         <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}bootstrap/css/bootstrap.css" />
-        {% if is_igb and not is_igb_trusted %}
-        <script type="text/javascript">
-            CCPEVE.requestTrust(window.location.protocol + '//' + window.location.host);
-        </script>
-        {% endif %}
 		{% block scripts %}{%endblock%}
 		{% block head %}{%endblock%}
 	</head>

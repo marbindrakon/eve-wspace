@@ -79,11 +79,10 @@ class RegistryMeta(type):
                     print("  \\- %s" % (row,))
 
 
-class Registry(object):
+class Registry(object, metaclass=RegistryMeta):
     """
     Dict with methods for handling content registration.
     """
-    __metaclass__ = RegistryMeta
 
     def __init__(self, name, baseclass=None):
         if name in self.__class__._ALL_REGISTRIES:

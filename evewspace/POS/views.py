@@ -179,7 +179,7 @@ def add_pos(request, msID):
                     if cols[1] == 'Moon' and cols[2].endswith('km'):
                         # found a moon close by
                         distance = int(cols[2][:-3].replace(',', '')
-                                       .replace('.', '').replace(u'\xa0', ''))
+                                       .replace('.', '').replace('\xa0', ''))
                         if distance < moon_distance:
                             # closest moon so far
                             moon_distance = distance

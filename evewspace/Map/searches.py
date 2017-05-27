@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 from search import registry
-from models import System, WormholeType, SiteSpawn
+from .models import System, WormholeType, SiteSpawn
 
 registry.register(System, 'system', 'name')
 registry.register(WormholeType, 'whtype', 'name')

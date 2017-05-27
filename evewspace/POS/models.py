@@ -143,12 +143,12 @@ class POS(models.Model):
         """
         Returns the size of the tower, Small Medium or Large.
         """
-        if u'Small' in self.towertype.name:
-            return u'Small'
-        if u'Medium' in self.towertype.name:
-            return u'Medium'
+        if 'Small' in self.towertype.name:
+            return 'Small'
+        if 'Medium' in self.towertype.name:
+            return 'Medium'
 
-        return u'Large'
+        return 'Large'
 
     def fit_from_dscan(self, dscan):
         """

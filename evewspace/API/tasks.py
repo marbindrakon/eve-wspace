@@ -27,13 +27,14 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import json
 import base64
 import sys
 import pytz
+import imp
 
-reload(sys)
+imp.reload(sys)
 sys.setdefaultencoding("utf-8")
 
 User = get_user_model()
