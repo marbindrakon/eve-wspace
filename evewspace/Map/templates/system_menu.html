@@ -1,10 +1,5 @@
 	    <a href="#systemOptions" data-toggle='dropdown' class='dropdown-toggle'>Options <b class="caret"></b></a>
         <ul class="dropdown-menu" role="menu">
-            {% if is_igb and mapsys.system.is_kspace %}
-	            <li><a href="#systemOptions" onclick="CCPEVE.setDestination({{mapsys.system.pk}});">Set Destination</a></li>
-	            <li><a href="#systemOptions" onclick="CCPEVE.addWaypoint({{mapsys.system.pk}});">Add Waypoint</a></li>
-	            <li class="divider"></li>            
-            {% endif %}
 			{% if can_edit %}
 				<li><a href="#systemOptions" onclick="GetAddSystemDialog({{mapsys.pk}});">Add System</a></li>
 	            {% if isinterest %}
@@ -24,7 +19,6 @@
 		        	<li><a href="#systemOptions" onclick="CollapseSystem({{mapsys.pk}});">Collapse System</a></li>
 		        {% endif %}
     		{% endif %}
-    		{% if not is_igb %}
 			    <li><a href="#systemOptions" onclick="AssertLocation({{mapsys.pk}});">I'm Here</a></li>
 		    {% endif %}
 		    <li class="divider"></li>
@@ -32,7 +26,6 @@
 			    <li><a href="#systemOptions" onclick="MoveSystem({{mapsys.pk}}, 'up');">Move Up</a></li>
 	            <li><a href="#systemOptions" onclick="MoveSystem({{mapsys.pk}}, 'down');">Move Down</a></li>
 	            <li class="divider"></li>
-	        {% endif %}
 	        {% if perms.SiteTracker.can_sitetracker and not stfleets|length %}
     			<li><a href="#systemOptions" onclick="STCreateFleet({{mapsys.system.pk}});">Start ST Fleet</a></li>
     			<li class="divider"></li>

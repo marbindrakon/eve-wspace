@@ -19,7 +19,7 @@ This is based on the registry modules from django_autocomplete_light
 """
 
 from django.db import models
-from search_base import SearchBase
+from .search_base import SearchBase
 
 class SearchRegistry(dict):
     """

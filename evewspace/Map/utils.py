@@ -332,8 +332,8 @@ class RouteFinder(object):
         if not cache.get('route_graph'):
             self._cache_graph()
         else:
-            import cPickle
-            self.graph = cPickle.loads(cache.get('route_graph'))
+            import pickle
+            self.graph = pickle.loads(cache.get('route_graph'))
 
     @staticmethod
     def _get_ly_distance(sys1, sys2):
@@ -370,7 +370,7 @@ class RouteFinder(object):
         from Map.models import KSystem
         from core.models import SystemJump
         from django.core.cache import cache
-        import cPickle
+        import pickle
         import networkx as nx
         if not cache.get('route_graph'):
             graph = nx.Graph()
@@ -379,7 +379,7 @@ class RouteFinder(object):
                                   .filter(fromsystem=from_system.pk)):
                     graph.add_edge(from_system.pk, to_system.tosystem)
             cache.set('route_graph',
-                      cPickle.dumps(graph, cPickle.HIGHEST_PROTOCOL), 0)
+                      pickle.dumps(graph, pickle.HIGHEST_PROTOCOL), 0)
             self.graph = graph
 
     def _find_route(self, sys1, sys2):
@@ -388,14 +388,14 @@ class RouteFinder(object):
         Returns a list of system IDs that comprise the route.
         """
         import networkx as nx
-        import cPickle
+        import pickle
         if not self.graph:
             from django.core.cache import cache
             if not cache.get('route_graph'):
                 self._cache_graph()
-                self.graph = cPickle.loads(cache.get('route_graph'))
+                self.graph = pickle.loads(cache.get('route_graph'))
             else:
-                self.graph = cPickle.loads(cache.get('route_graph'))
+                self.graph = pickle.loads(cache.get('route_graph'))
         return nx.shortest_path(self.graph, source=sys1.pk, target=sys2.pk)
 
 

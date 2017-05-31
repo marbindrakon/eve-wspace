@@ -87,10 +87,6 @@ def map_checkin(request, map_id):
     load_time = datetime.strptime(time_string, "%Y-%m-%d %H:%M:%S.%f")
     load_time = load_time.replace(tzinfo=pytz.utc)
 
-    if request.is_igb_trusted:
-        dialog_html = _checkin_igb_trusted(request, current_map)
-        if dialog_html is not None:
-            json_values.update({'dialogHTML': dialog_html})
     log_list = MapLog.objects.filter(timestamp__gt=load_time,
                                      visible=True,
                                      map=current_map)
@@ -347,10 +343,7 @@ def system_details(request, map_id, ms_id):
         raise PermissionDenied
     system = get_object_or_404(MapSystem, pk=ms_id)
     if system.system.sysclass == 99:
-        if request.is_igb_trusted:
-            current_system = System.objects.get(name=request.eve_systemname)
-        else:
-            current_system = ""
+        current_system = ""
         wormhole = get_object_or_404(Wormhole, bottom=ms_id)
         template = 'edit_unknown_system.html'
         return render(request, template, {'ms_id': ms_id, 'system': system, 'wormhole': wormhole})
@@ -801,10 +794,7 @@ def manual_add_system(request, map_id, ms_id):
     A GET request gets a blank add system form with the provided MapSystem
     as top system. The form is then POSTed to the add_system view.
     """
-    if request.is_igb_trusted:
-        current_system = System.objects.get(name=request.eve_systemname)
-    else:
-        current_system = ""
+    current_system = ""
     top_map_system = get_object_or_404(MapSystem, pk=ms_id)
     systems = System.objects.all()
     wormholes = WormholeType.objects.all()

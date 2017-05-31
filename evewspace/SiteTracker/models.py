@@ -36,7 +36,7 @@ class Fleet(models.Model):
         permissions = (("can_sitetracker", "Use the Site Tracker system."),)
 
     def __unicode__(self):
-        return u"MapSystem: %s Boss: %s  Started: %s  Ended: %s" % (self.system.name,
+        return "MapSystem: %s Boss: %s  Started: %s  Ended: %s" % (self.system.name,
                 self.current_boss.username, self.started, self.ended)
 
     def __contains__(self, user):
@@ -181,7 +181,7 @@ class SiteRecord(models.Model):
     weighted_points = models.FloatField()
 
     def __unicode__(self):
-        return u"System: %s Time: %s  Type: %s" % (self.system.name, self.timestamp, self.type.shortname)
+        return "System: %s Time: %s  Type: %s" % (self.system.name, self.timestamp, self.type.shortname)
 
     def __contains__(self, user):
         """

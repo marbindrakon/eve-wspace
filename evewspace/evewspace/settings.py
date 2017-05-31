@@ -88,9 +88,9 @@ DATABASES = {
 }
 CACHES = {
     'default': {
-        'BACKEND': 'infinite_memcached.cache.MemcachedCache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 0
+        'TIMEOUT': None
     }
 }
 # Local time zone for this installation. Choices can be found here:

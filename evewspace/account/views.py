@@ -47,7 +47,7 @@ def register(request):
                     register_groups(newUser, form.cleaned_data['regcode'])
                     return HttpResponseRedirect(reverse('login'))
                 else:
-                    form._errors['regcode'] = ErrorList([u'Invalid Registration Code.'])
+                    form._errors['regcode'] = ErrorList(['Invalid Registration Code.'])
             else:
                 newUser = form.save()
                 newUser.email = form.cleaned_data['email']
@@ -67,7 +67,7 @@ def edit_profile(request):
         form = EditProfileForm(request.POST)
         if form.is_valid():
             if not request.user.check_password(form.cleaned_data['password']):
-                form._errors['password'] = ErrorList([u'The password you entered is incorrect.'])
+                form._errors['password'] = ErrorList(['The password you entered is incorrect.'])
             else:
                 request.user.email = form.cleaned_data['email']
                 if form.cleaned_data['password1']:

@@ -244,4 +244,4 @@ class Faction(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True)
     class Meta:
         managed = False
-        db_table = u'chrFactions'
+        db_table = 'chrFactions'

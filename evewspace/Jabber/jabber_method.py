@@ -13,10 +13,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 from Alerts.method_base import AlertMethodBase
-from models import JabberAccount, JabberSubscription
+from .models import JabberAccount, JabberSubscription
 from django.template.loader import render_to_string
 from core.utils import get_config
-from jabber_client import JabberClient
+from .jabber_client import JabberClient
 from datetime import datetime
 import pytz
 
@@ -80,5 +80,5 @@ class JabberAlertMethod(AlertMethodBase):
         """
         Return a one-liner to describe the method.
         """
-        return u"Recieve alerts via Jabber (XMPP)."
+        return "Recieve alerts via Jabber (XMPP)."
 

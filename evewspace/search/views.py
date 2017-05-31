@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 from django.http import HttpResponse, Http404
-import registry
+from . import registry
 
 # Create your views here.
 

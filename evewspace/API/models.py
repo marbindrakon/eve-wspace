@@ -15,7 +15,7 @@
 from core.models import Corporation
 from core.tasks import update_corporation
 from core.utils import get_config
-import cache_handler as handler
+from . import cache_handler as handler
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
@@ -85,7 +85,7 @@ class CorpAPIKey(APIKey):
             self.validation_error("Access Denied: Key not valid.")
             self.save()
             return False
-        if result.key.type == u'Corporation':
+        if result.key.type == 'Corporation':
             self.valid = True
             self.character_name = result.key.characters[0].characterName
             self.access_mask = result.key.accessMask
@@ -136,7 +136,7 @@ class MemberAPIKey(APIKey):
             self.validation_error = "Access Denied: Key not valid."
             self.save()
             return False
-        if result.key.type == u'Character' and not char_allowed:
+        if result.key.type == 'Character' and not char_allowed:
             self.valid = False
             self.validation_error = ("API Key is a character key which is not "
                         "allowed by the administrator.")

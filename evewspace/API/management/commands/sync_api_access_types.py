@@ -57,10 +57,10 @@ class Command(NoArgsCommand):
 
         for call in APIAccessType.objects.all():
             if call.call_type == 2:
-                call_type = u'Corporation'
+                call_type = 'Corporation'
             elif call.call_type == 1:
-                call_type = u'Character'
+                call_type = 'Character'
 
             if (call.call_mask, call_type) not in result.calls._items:
-                print call.name
+                print(call.name)
                 call.delete()

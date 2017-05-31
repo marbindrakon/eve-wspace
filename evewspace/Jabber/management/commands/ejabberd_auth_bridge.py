@@ -65,7 +65,7 @@ class Command(BaseCommand):
         except User.DoesNotExist:
             self.log('No username ' + str(username))
             return False
-        except Exception, ex:
+        except Exception as ex:
             self.log('Unhandled error: ' + str(ex))
             return False
 
@@ -96,7 +96,7 @@ class Command(BaseCommand):
             else:
                 self.log(username + ' is not a valid user')
                 return False
-        except Exception, ex:
+        except Exception as ex:
             self.log('Unhandled error: ' + str(ex))
             return False
 

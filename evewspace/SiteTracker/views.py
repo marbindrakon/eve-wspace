@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 # Create your views here.
-from models import Fleet, UserLog, SiteType, SiteRecord, UserSite
+from .models import Fleet, UserLog, SiteType, SiteRecord, UserSite
 from Map.models import System
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse

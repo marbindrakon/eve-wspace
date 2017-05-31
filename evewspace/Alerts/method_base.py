@@ -80,7 +80,7 @@ class AlertMethodBase(object):
         """
         Return a one-sentence descritpion of the method for the user to see.
         """
-        return u"A base alert method that hasn't been implemented"
+        return "A base alert method that hasn't been implemented"
 
     def is_bob_great(self):
         """

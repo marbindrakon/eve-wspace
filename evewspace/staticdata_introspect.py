@@ -13,7 +13,7 @@ class Agtagenttypes(models.Model):
     agenttypeid = models.IntegerField(primary_key=True, db_column='agentTypeID') # Field name made lowercase.
     agenttype = models.CharField(max_length=150, db_column='agentType', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'agtAgentTypes'
+        db_table = 'agtAgentTypes'
 
 class Agtagents(models.Model):
     agentid = models.IntegerField(primary_key=True, db_column='agentID') # Field name made lowercase.
@@ -25,13 +25,13 @@ class Agtagents(models.Model):
     agenttypeid = models.IntegerField(null=True, db_column='agentTypeID', blank=True) # Field name made lowercase.
     islocator = models.IntegerField(null=True, db_column='isLocator', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'agtAgents'
+        db_table = 'agtAgents'
 
 class Agtresearchagents(models.Model):
     agentid = models.IntegerField(primary_key=True, db_column='agentID') # Field name made lowercase.
     typeid = models.IntegerField(db_column='typeID') # Field name made lowercase.
     class Meta:
-        db_table = u'agtResearchAgents'
+        db_table = 'agtResearchAgents'
 
 class Chrancestries(models.Model):
     ancestryid = models.IntegerField(primary_key=True, db_column='ancestryID') # Field name made lowercase.
@@ -46,7 +46,7 @@ class Chrancestries(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     shortdescription = models.CharField(max_length=1500, db_column='shortDescription', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'chrAncestries'
+        db_table = 'chrAncestries'
 
 class Chrattributes(models.Model):
     attributeid = models.IntegerField(primary_key=True, db_column='attributeID') # Field name made lowercase.
@@ -56,7 +56,7 @@ class Chrattributes(models.Model):
     shortdescription = models.CharField(max_length=1500, db_column='shortDescription', blank=True) # Field name made lowercase.
     notes = models.CharField(max_length=1500, blank=True)
     class Meta:
-        db_table = u'chrAttributes'
+        db_table = 'chrAttributes'
 
 class Chrbloodlines(models.Model):
     bloodlineid = models.IntegerField(primary_key=True, db_column='bloodlineID') # Field name made lowercase.
@@ -77,7 +77,7 @@ class Chrbloodlines(models.Model):
     shortmaledescription = models.CharField(max_length=1500, db_column='shortMaleDescription', blank=True) # Field name made lowercase.
     shortfemaledescription = models.CharField(max_length=1500, db_column='shortFemaleDescription', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'chrBloodlines'
+        db_table = 'chrBloodlines'
 
 class Chrfactions(models.Model):
     factionid = models.IntegerField(primary_key=True, db_column='factionID') # Field name made lowercase.
@@ -92,7 +92,7 @@ class Chrfactions(models.Model):
     militiacorporationid = models.IntegerField(null=True, db_column='militiaCorporationID', blank=True) # Field name made lowercase.
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'chrFactions'
+        db_table = 'chrFactions'
 
 class Chrraces(models.Model):
     raceid = models.IntegerField(primary_key=True, db_column='raceID') # Field name made lowercase.
@@ -101,33 +101,33 @@ class Chrraces(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     shortdescription = models.CharField(max_length=1500, db_column='shortDescription', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'chrRaces'
+        db_table = 'chrRaces'
 
 class Crpactivities(models.Model):
     activityid = models.IntegerField(primary_key=True, db_column='activityID') # Field name made lowercase.
     activityname = models.CharField(max_length=300, db_column='activityName', blank=True) # Field name made lowercase.
     description = models.CharField(max_length=3000, blank=True)
     class Meta:
-        db_table = u'crpActivities'
+        db_table = 'crpActivities'
 
 class Crpnpccorporationdivisions(models.Model):
     corporationid = models.IntegerField(primary_key=True, db_column='corporationID') # Field name made lowercase.
     divisionid = models.IntegerField(primary_key=True, db_column='divisionID') # Field name made lowercase.
     size = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'crpNPCCorporationDivisions'
+        db_table = 'crpNPCCorporationDivisions'
 
 class Crpnpccorporationresearchfields(models.Model):
     skillid = models.IntegerField(primary_key=True, db_column='skillID') # Field name made lowercase.
     corporationid = models.IntegerField(primary_key=True, db_column='corporationID') # Field name made lowercase.
     class Meta:
-        db_table = u'crpNPCCorporationResearchFields'
+        db_table = 'crpNPCCorporationResearchFields'
 
 class Crpnpccorporationtrades(models.Model):
     corporationid = models.IntegerField(primary_key=True, db_column='corporationID') # Field name made lowercase.
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
     class Meta:
-        db_table = u'crpNPCCorporationTrades'
+        db_table = 'crpNPCCorporationTrades'
 
 class Crpnpccorporations(models.Model):
     corporationid = models.IntegerField(primary_key=True, db_column='corporationID') # Field name made lowercase.
@@ -159,7 +159,7 @@ class Crpnpccorporations(models.Model):
     description = models.CharField(max_length=12000, blank=True)
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'crpNPCCorporations'
+        db_table = 'crpNPCCorporations'
 
 class Crpnpcdivisions(models.Model):
     divisionid = models.IntegerField(primary_key=True, db_column='divisionID') # Field name made lowercase.
@@ -167,14 +167,14 @@ class Crpnpcdivisions(models.Model):
     description = models.CharField(max_length=3000, blank=True)
     leadertype = models.CharField(max_length=300, db_column='leaderType', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'crpNPCDivisions'
+        db_table = 'crpNPCDivisions'
 
 class Crtcategories(models.Model):
     categoryid = models.IntegerField(primary_key=True, db_column='categoryID') # Field name made lowercase.
     description = models.CharField(max_length=1500, blank=True)
     categoryname = models.CharField(max_length=768, db_column='categoryName', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'crtCategories'
+        db_table = 'crtCategories'
 
 class Crtcertificates(models.Model):
     certificateid = models.IntegerField(primary_key=True, db_column='certificateID') # Field name made lowercase.
@@ -185,14 +185,14 @@ class Crtcertificates(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     description = models.CharField(max_length=1500, blank=True)
     class Meta:
-        db_table = u'crtCertificates'
+        db_table = 'crtCertificates'
 
 class Crtclasses(models.Model):
     classid = models.IntegerField(primary_key=True, db_column='classID') # Field name made lowercase.
     description = models.CharField(max_length=1500, blank=True)
     classname = models.CharField(max_length=768, db_column='className', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'crtClasses'
+        db_table = 'crtClasses'
 
 class Crtrecommendations(models.Model):
     recommendationid = models.IntegerField(primary_key=True, db_column='recommendationID') # Field name made lowercase.
@@ -200,7 +200,7 @@ class Crtrecommendations(models.Model):
     certificateid = models.IntegerField(null=True, db_column='certificateID', blank=True) # Field name made lowercase.
     recommendationlevel = models.IntegerField(db_column='recommendationLevel') # Field name made lowercase.
     class Meta:
-        db_table = u'crtRecommendations'
+        db_table = 'crtRecommendations'
 
 class Crtrelationships(models.Model):
     relationshipid = models.IntegerField(primary_key=True, db_column='relationshipID') # Field name made lowercase.
@@ -209,14 +209,14 @@ class Crtrelationships(models.Model):
     parentlevel = models.IntegerField(null=True, db_column='parentLevel', blank=True) # Field name made lowercase.
     childid = models.IntegerField(null=True, db_column='childID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'crtRelationships'
+        db_table = 'crtRelationships'
 
 class Dgmattributecategories(models.Model):
     categoryid = models.IntegerField(primary_key=True, db_column='categoryID') # Field name made lowercase.
     categoryname = models.CharField(max_length=150, db_column='categoryName', blank=True) # Field name made lowercase.
     categorydescription = models.CharField(max_length=600, db_column='categoryDescription', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'dgmAttributeCategories'
+        db_table = 'dgmAttributeCategories'
 
 class Dgmattributetypes(models.Model):
     attributeid = models.IntegerField(primary_key=True, db_column='attributeID') # Field name made lowercase.
@@ -231,7 +231,7 @@ class Dgmattributetypes(models.Model):
     highisgood = models.IntegerField(null=True, db_column='highIsGood', blank=True) # Field name made lowercase.
     categoryid = models.IntegerField(null=True, db_column='categoryID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'dgmAttributeTypes'
+        db_table = 'dgmAttributeTypes'
 
 class Dgmeffects(models.Model):
     effectid = models.IntegerField(primary_key=True, db_column='effectID') # Field name made lowercase.
@@ -262,7 +262,7 @@ class Dgmeffects(models.Model):
     npcactivationchanceattributeid = models.IntegerField(null=True, db_column='npcActivationChanceAttributeID', blank=True) # Field name made lowercase.
     fittingusagechanceattributeid = models.IntegerField(null=True, db_column='fittingUsageChanceAttributeID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'dgmEffects'
+        db_table = 'dgmEffects'
 
 class Dgmtypeattributes(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
@@ -270,14 +270,14 @@ class Dgmtypeattributes(models.Model):
     valueint = models.IntegerField(null=True, db_column='valueInt', blank=True) # Field name made lowercase.
     valuefloat = models.FloatField(null=True, db_column='valueFloat', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'dgmTypeAttributes'
+        db_table = 'dgmTypeAttributes'
 
 class Dgmtypeeffects(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
     effectid = models.IntegerField(primary_key=True, db_column='effectID') # Field name made lowercase.
     isdefault = models.IntegerField(null=True, db_column='isDefault', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'dgmTypeEffects'
+        db_table = 'dgmTypeEffects'
 
 class Evegraphics(models.Model):
     graphicid = models.IntegerField(primary_key=True, db_column='graphicID') # Field name made lowercase.
@@ -290,14 +290,14 @@ class Evegraphics(models.Model):
     directoryid = models.IntegerField(null=True, db_column='directoryID', blank=True) # Field name made lowercase.
     graphicname = models.TextField(db_column='graphicName', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'eveGraphics'
+        db_table = 'eveGraphics'
 
 class Eveicons(models.Model):
     iconid = models.IntegerField(primary_key=True, db_column='iconID') # Field name made lowercase.
     iconfile = models.CharField(max_length=1500, db_column='iconFile') # Field name made lowercase.
     description = models.TextField(blank=True)
     class Meta:
-        db_table = u'eveIcons'
+        db_table = 'eveIcons'
 
 class Eveunits(models.Model):
     unitid = models.IntegerField(primary_key=True, db_column='unitID') # Field name made lowercase.
@@ -305,7 +305,7 @@ class Eveunits(models.Model):
     displayname = models.CharField(max_length=150, db_column='displayName', blank=True) # Field name made lowercase.
     description = models.CharField(max_length=3000, blank=True)
     class Meta:
-        db_table = u'eveUnits'
+        db_table = 'eveUnits'
 
 class Invblueprinttypes(models.Model):
     blueprinttypeid = models.IntegerField(primary_key=True, db_column='blueprintTypeID') # Field name made lowercase.
@@ -322,7 +322,7 @@ class Invblueprinttypes(models.Model):
     wastefactor = models.IntegerField(null=True, db_column='wasteFactor', blank=True) # Field name made lowercase.
     maxproductionlimit = models.IntegerField(null=True, db_column='maxProductionLimit', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invBlueprintTypes'
+        db_table = 'invBlueprintTypes'
 
 class Invcategories(models.Model):
     categoryid = models.IntegerField(primary_key=True, db_column='categoryID') # Field name made lowercase.
@@ -331,7 +331,7 @@ class Invcategories(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     published = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'invCategories'
+        db_table = 'invCategories'
 
 class Invcontrabandtypes(models.Model):
     factionid = models.IntegerField(primary_key=True, db_column='factionID') # Field name made lowercase.
@@ -341,13 +341,13 @@ class Invcontrabandtypes(models.Model):
     finebyvalue = models.FloatField(null=True, db_column='fineByValue', blank=True) # Field name made lowercase.
     attackminsec = models.FloatField(null=True, db_column='attackMinSec', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invContrabandTypes'
+        db_table = 'invContrabandTypes'
 
 class Invcontroltowerresourcepurposes(models.Model):
     purpose = models.IntegerField(primary_key=True)
     purposetext = models.CharField(max_length=300, db_column='purposeText', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invControlTowerResourcePurposes'
+        db_table = 'invControlTowerResourcePurposes'
 
 class Invcontroltowerresources(models.Model):
     controltowertypeid = models.IntegerField(primary_key=True, db_column='controlTowerTypeID') # Field name made lowercase.
@@ -357,7 +357,7 @@ class Invcontroltowerresources(models.Model):
     minsecuritylevel = models.FloatField(null=True, db_column='minSecurityLevel', blank=True) # Field name made lowercase.
     factionid = models.IntegerField(null=True, db_column='factionID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invControlTowerResources'
+        db_table = 'invControlTowerResources'
 
 class Invflags(models.Model):
     flagid = models.IntegerField(primary_key=True, db_column='flagID') # Field name made lowercase.
@@ -365,7 +365,7 @@ class Invflags(models.Model):
     flagtext = models.CharField(max_length=300, db_column='flagText', blank=True) # Field name made lowercase.
     orderid = models.IntegerField(null=True, db_column='orderID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invFlags'
+        db_table = 'invFlags'
 
 class Invgroups(models.Model):
     groupid = models.IntegerField(primary_key=True, db_column='groupID') # Field name made lowercase.
@@ -381,7 +381,7 @@ class Invgroups(models.Model):
     fittablenonsingleton = models.IntegerField(null=True, db_column='fittableNonSingleton', blank=True) # Field name made lowercase.
     published = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'invGroups'
+        db_table = 'invGroups'
 
 class Invitems(models.Model):
     itemid = models.BigIntegerField(primary_key=True, db_column='itemID') # Field name made lowercase.
@@ -391,7 +391,7 @@ class Invitems(models.Model):
     flagid = models.IntegerField(db_column='flagID') # Field name made lowercase.
     quantity = models.IntegerField()
     class Meta:
-        db_table = u'invItems'
+        db_table = 'invItems'
 
 class Invmarketgroups(models.Model):
     marketgroupid = models.IntegerField(primary_key=True, db_column='marketGroupID') # Field name made lowercase.
@@ -401,7 +401,7 @@ class Invmarketgroups(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     hastypes = models.IntegerField(null=True, db_column='hasTypes', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invMarketGroups'
+        db_table = 'invMarketGroups'
 
 class Invmetagroups(models.Model):
     metagroupid = models.IntegerField(primary_key=True, db_column='metaGroupID') # Field name made lowercase.
@@ -409,20 +409,20 @@ class Invmetagroups(models.Model):
     description = models.CharField(max_length=3000, blank=True)
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invMetaGroups'
+        db_table = 'invMetaGroups'
 
 class Invmetatypes(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
     parenttypeid = models.IntegerField(null=True, db_column='parentTypeID', blank=True) # Field name made lowercase.
     metagroupid = models.IntegerField(null=True, db_column='metaGroupID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invMetaTypes'
+        db_table = 'invMetaTypes'
 
 class Invnames(models.Model):
     itemid = models.BigIntegerField(primary_key=True, db_column='itemID') # Field name made lowercase.
     itemname = models.CharField(max_length=600, db_column='itemName') # Field name made lowercase.
     class Meta:
-        db_table = u'invNames'
+        db_table = 'invNames'
 
 class Invpositions(models.Model):
     itemid = models.BigIntegerField(primary_key=True, db_column='itemID') # Field name made lowercase.
@@ -433,14 +433,14 @@ class Invpositions(models.Model):
     pitch = models.FloatField(null=True, blank=True)
     roll = models.FloatField(null=True, blank=True)
     class Meta:
-        db_table = u'invPositions'
+        db_table = 'invPositions'
 
 class Invtypematerials(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
     materialtypeid = models.IntegerField(primary_key=True, db_column='materialTypeID') # Field name made lowercase.
     quantity = models.IntegerField()
     class Meta:
-        db_table = u'invTypeMaterials'
+        db_table = 'invTypeMaterials'
 
 class Invtypereactions(models.Model):
     reactiontypeid = models.IntegerField(primary_key=True, db_column='reactionTypeID') # Field name made lowercase.
@@ -448,7 +448,7 @@ class Invtypereactions(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
     quantity = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'invTypeReactions'
+        db_table = 'invTypeReactions'
 
 class Invtypes(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
@@ -467,14 +467,14 @@ class Invtypes(models.Model):
     chanceofduplicating = models.FloatField(null=True, db_column='chanceOfDuplicating', blank=True) # Field name made lowercase.
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invTypes'
+        db_table = 'invTypes'
 
 class Invuniquenames(models.Model):
     itemid = models.IntegerField(primary_key=True, db_column='itemID') # Field name made lowercase.
     itemname = models.CharField(max_length=600, db_column='itemName') # Field name made lowercase.
     groupid = models.IntegerField(null=True, db_column='groupID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'invUniqueNames'
+        db_table = 'invUniqueNames'
 
 class Mapcelestialstatistics(models.Model):
     celestialid = models.IntegerField(primary_key=True, db_column='celestialID') # Field name made lowercase.
@@ -498,7 +498,7 @@ class Mapcelestialstatistics(models.Model):
     radius = models.FloatField(null=True, blank=True)
     mass = models.FloatField(null=True, blank=True)
     class Meta:
-        db_table = u'mapCelestialStatistics'
+        db_table = 'mapCelestialStatistics'
 
 class Mapconstellationjumps(models.Model):
     fromregionid = models.IntegerField(null=True, db_column='fromRegionID', blank=True) # Field name made lowercase.
@@ -506,7 +506,7 @@ class Mapconstellationjumps(models.Model):
     toconstellationid = models.IntegerField(primary_key=True, db_column='toConstellationID') # Field name made lowercase.
     toregionid = models.IntegerField(null=True, db_column='toRegionID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapConstellationJumps'
+        db_table = 'mapConstellationJumps'
 
 class Mapconstellations(models.Model):
     regionid = models.IntegerField(null=True, db_column='regionID', blank=True) # Field name made lowercase.
@@ -524,7 +524,7 @@ class Mapconstellations(models.Model):
     factionid = models.IntegerField(null=True, db_column='factionID', blank=True) # Field name made lowercase.
     radius = models.FloatField(null=True, blank=True)
     class Meta:
-        db_table = u'mapConstellations'
+        db_table = 'mapConstellations'
 
 class Mapdenormalize(models.Model):
     itemid = models.IntegerField(primary_key=True, db_column='itemID') # Field name made lowercase.
@@ -543,13 +543,13 @@ class Mapdenormalize(models.Model):
     celestialindex = models.IntegerField(null=True, db_column='celestialIndex', blank=True) # Field name made lowercase.
     orbitindex = models.IntegerField(null=True, db_column='orbitIndex', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapDenormalize'
+        db_table = 'mapDenormalize'
 
 class Mapjumps(models.Model):
     stargateid = models.IntegerField(primary_key=True, db_column='stargateID') # Field name made lowercase.
     celestialid = models.IntegerField(null=True, db_column='celestialID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapJumps'
+        db_table = 'mapJumps'
 
 class Maplandmarks(models.Model):
     landmarkid = models.IntegerField(primary_key=True, db_column='landmarkID') # Field name made lowercase.
@@ -563,25 +563,25 @@ class Maplandmarks(models.Model):
     iconid = models.IntegerField(null=True, db_column='iconID', blank=True) # Field name made lowercase.
     importance = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'mapLandmarks'
+        db_table = 'mapLandmarks'
 
 class Maplocationscenes(models.Model):
     locationid = models.IntegerField(primary_key=True, db_column='locationID') # Field name made lowercase.
     graphicid = models.IntegerField(null=True, db_column='graphicID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapLocationScenes'
+        db_table = 'mapLocationScenes'
 
 class Maplocationwormholeclasses(models.Model):
     locationid = models.IntegerField(primary_key=True, db_column='locationID') # Field name made lowercase.
     wormholeclassid = models.IntegerField(null=True, db_column='wormholeClassID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapLocationWormholeClasses'
+        db_table = 'mapLocationWormholeClasses'
 
 class Mapregionjumps(models.Model):
     fromregionid = models.IntegerField(primary_key=True, db_column='fromRegionID') # Field name made lowercase.
     toregionid = models.IntegerField(primary_key=True, db_column='toRegionID') # Field name made lowercase.
     class Meta:
-        db_table = u'mapRegionJumps'
+        db_table = 'mapRegionJumps'
 
 class Mapregions(models.Model):
     regionid = models.IntegerField(primary_key=True, db_column='regionID') # Field name made lowercase.
@@ -598,7 +598,7 @@ class Mapregions(models.Model):
     factionid = models.IntegerField(null=True, db_column='factionID', blank=True) # Field name made lowercase.
     radius = models.FloatField(null=True, blank=True)
     class Meta:
-        db_table = u'mapRegions'
+        db_table = 'mapRegions'
 
 class Mapsolarsystemjumps(models.Model):
     fromregionid = models.IntegerField(null=True, db_column='fromRegionID', blank=True) # Field name made lowercase.
@@ -608,7 +608,7 @@ class Mapsolarsystemjumps(models.Model):
     toconstellationid = models.IntegerField(null=True, db_column='toConstellationID', blank=True) # Field name made lowercase.
     toregionid = models.IntegerField(null=True, db_column='toRegionID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapSolarSystemJumps'
+        db_table = 'mapSolarSystemJumps'
 
 class Mapsolarsystems(models.Model):
     regionid = models.IntegerField(null=True, db_column='regionID', blank=True) # Field name made lowercase.
@@ -638,7 +638,7 @@ class Mapsolarsystems(models.Model):
     suntypeid = models.IntegerField(null=True, db_column='sunTypeID', blank=True) # Field name made lowercase.
     securityclass = models.CharField(max_length=6, db_column='securityClass', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'mapSolarSystems'
+        db_table = 'mapSolarSystems'
 
 class Mapuniverse(models.Model):
     universeid = models.IntegerField(primary_key=True, db_column='universeID') # Field name made lowercase.
@@ -654,20 +654,20 @@ class Mapuniverse(models.Model):
     zmax = models.FloatField(null=True, db_column='zMax', blank=True) # Field name made lowercase.
     radius = models.FloatField(null=True, blank=True)
     class Meta:
-        db_table = u'mapUniverse'
+        db_table = 'mapUniverse'
 
 class Planetschematics(models.Model):
     schematicid = models.IntegerField(primary_key=True, db_column='schematicID') # Field name made lowercase.
     schematicname = models.CharField(max_length=765, db_column='schematicName', blank=True) # Field name made lowercase.
     cycletime = models.IntegerField(null=True, db_column='cycleTime', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'planetSchematics'
+        db_table = 'planetSchematics'
 
 class Planetschematicspinmap(models.Model):
     schematicid = models.IntegerField(primary_key=True, db_column='schematicID') # Field name made lowercase.
     pintypeid = models.IntegerField(primary_key=True, db_column='pinTypeID') # Field name made lowercase.
     class Meta:
-        db_table = u'planetSchematicsPinMap'
+        db_table = 'planetSchematicsPinMap'
 
 class Planetschematicstypemap(models.Model):
     schematicid = models.IntegerField(primary_key=True, db_column='schematicID') # Field name made lowercase.
@@ -675,7 +675,7 @@ class Planetschematicstypemap(models.Model):
     quantity = models.IntegerField(null=True, blank=True)
     isinput = models.IntegerField(null=True, db_column='isInput', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'planetSchematicsTypeMap'
+        db_table = 'planetSchematicsTypeMap'
 
 class Ramactivities(models.Model):
     activityid = models.IntegerField(primary_key=True, db_column='activityID') # Field name made lowercase.
@@ -684,7 +684,7 @@ class Ramactivities(models.Model):
     description = models.CharField(max_length=3000, blank=True)
     published = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'ramActivities'
+        db_table = 'ramActivities'
 
 class Ramassemblylinestations(models.Model):
     stationid = models.IntegerField(primary_key=True, db_column='stationID') # Field name made lowercase.
@@ -695,7 +695,7 @@ class Ramassemblylinestations(models.Model):
     solarsystemid = models.IntegerField(null=True, db_column='solarSystemID', blank=True) # Field name made lowercase.
     regionid = models.IntegerField(null=True, db_column='regionID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'ramAssemblyLineStations'
+        db_table = 'ramAssemblyLineStations'
 
 class Ramassemblylinetypedetailpercategory(models.Model):
     assemblylinetypeid = models.IntegerField(primary_key=True, db_column='assemblyLineTypeID') # Field name made lowercase.
@@ -703,7 +703,7 @@ class Ramassemblylinetypedetailpercategory(models.Model):
     timemultiplier = models.FloatField(null=True, db_column='timeMultiplier', blank=True) # Field name made lowercase.
     materialmultiplier = models.FloatField(null=True, db_column='materialMultiplier', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'ramAssemblyLineTypeDetailPerCategory'
+        db_table = 'ramAssemblyLineTypeDetailPerCategory'
 
 class Ramassemblylinetypedetailpergroup(models.Model):
     assemblylinetypeid = models.IntegerField(primary_key=True, db_column='assemblyLineTypeID') # Field name made lowercase.
@@ -711,7 +711,7 @@ class Ramassemblylinetypedetailpergroup(models.Model):
     timemultiplier = models.FloatField(null=True, db_column='timeMultiplier', blank=True) # Field name made lowercase.
     materialmultiplier = models.FloatField(null=True, db_column='materialMultiplier', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'ramAssemblyLineTypeDetailPerGroup'
+        db_table = 'ramAssemblyLineTypeDetailPerGroup'
 
 class Ramassemblylinetypes(models.Model):
     assemblylinetypeid = models.IntegerField(primary_key=True, db_column='assemblyLineTypeID') # Field name made lowercase.
@@ -723,7 +723,7 @@ class Ramassemblylinetypes(models.Model):
     activityid = models.IntegerField(null=True, db_column='activityID', blank=True) # Field name made lowercase.
     mincostperhour = models.FloatField(null=True, db_column='minCostPerHour', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'ramAssemblyLineTypes'
+        db_table = 'ramAssemblyLineTypes'
 
 class Ramassemblylines(models.Model):
     assemblylineid = models.IntegerField(primary_key=True, db_column='assemblyLineID') # Field name made lowercase.
@@ -744,14 +744,14 @@ class Ramassemblylines(models.Model):
     ownerid = models.IntegerField(null=True, db_column='ownerID', blank=True) # Field name made lowercase.
     activityid = models.IntegerField(null=True, db_column='activityID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'ramAssemblyLines'
+        db_table = 'ramAssemblyLines'
 
 class Raminstallationtypecontents(models.Model):
     installationtypeid = models.IntegerField(primary_key=True, db_column='installationTypeID') # Field name made lowercase.
     assemblylinetypeid = models.IntegerField(primary_key=True, db_column='assemblyLineTypeID') # Field name made lowercase.
     quantity = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'ramInstallationTypeContents'
+        db_table = 'ramInstallationTypeContents'
 
 class Ramtyperequirements(models.Model):
     typeid = models.IntegerField(primary_key=True, db_column='typeID') # Field name made lowercase.
@@ -761,13 +761,13 @@ class Ramtyperequirements(models.Model):
     damageperjob = models.FloatField(null=True, db_column='damagePerJob', blank=True) # Field name made lowercase.
     recycle = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'ramTypeRequirements'
+        db_table = 'ramTypeRequirements'
 
 class Staoperationservices(models.Model):
     operationid = models.IntegerField(primary_key=True, db_column='operationID') # Field name made lowercase.
     serviceid = models.IntegerField(primary_key=True, db_column='serviceID') # Field name made lowercase.
     class Meta:
-        db_table = u'staOperationServices'
+        db_table = 'staOperationServices'
 
 class Staoperations(models.Model):
     activityid = models.IntegerField(null=True, db_column='activityID', blank=True) # Field name made lowercase.
@@ -785,14 +785,14 @@ class Staoperations(models.Model):
     gallentestationtypeid = models.IntegerField(null=True, db_column='gallenteStationTypeID', blank=True) # Field name made lowercase.
     jovestationtypeid = models.IntegerField(null=True, db_column='joveStationTypeID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'staOperations'
+        db_table = 'staOperations'
 
 class Staservices(models.Model):
     serviceid = models.IntegerField(primary_key=True, db_column='serviceID') # Field name made lowercase.
     servicename = models.CharField(max_length=300, db_column='serviceName', blank=True) # Field name made lowercase.
     description = models.CharField(max_length=3000, blank=True)
     class Meta:
-        db_table = u'staServices'
+        db_table = 'staServices'
 
 class Stastationtypes(models.Model):
     stationtypeid = models.IntegerField(primary_key=True, db_column='stationTypeID') # Field name made lowercase.
@@ -807,7 +807,7 @@ class Stastationtypes(models.Model):
     reprocessingefficiency = models.FloatField(null=True, db_column='reprocessingEfficiency', blank=True) # Field name made lowercase.
     conquerable = models.IntegerField(null=True, blank=True)
     class Meta:
-        db_table = u'staStationTypes'
+        db_table = 'staStationTypes'
 
 class Stastations(models.Model):
     stationid = models.IntegerField(primary_key=True, db_column='stationID') # Field name made lowercase.
@@ -829,7 +829,7 @@ class Stastations(models.Model):
     reprocessingstationstake = models.FloatField(null=True, db_column='reprocessingStationsTake', blank=True) # Field name made lowercase.
     reprocessinghangarflag = models.IntegerField(null=True, db_column='reprocessingHangarFlag', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'staStations'
+        db_table = 'staStations'
 
 class Translationtables(models.Model):
     sourcetable = models.CharField(max_length=600, primary_key=True, db_column='sourceTable') # Field name made lowercase.
@@ -838,7 +838,7 @@ class Translationtables(models.Model):
     tcgroupid = models.IntegerField(null=True, db_column='tcGroupID', blank=True) # Field name made lowercase.
     tcid = models.IntegerField(null=True, db_column='tcID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'translationTables'
+        db_table = 'translationTables'
 
 class Trntranslationcolumns(models.Model):
     tcgroupid = models.IntegerField(null=True, db_column='tcGroupID', blank=True) # Field name made lowercase.
@@ -847,14 +847,14 @@ class Trntranslationcolumns(models.Model):
     columnname = models.CharField(max_length=384, db_column='columnName') # Field name made lowercase.
     masterid = models.CharField(max_length=384, db_column='masterID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'trnTranslationColumns'
+        db_table = 'trnTranslationColumns'
 
 class Trntranslationlanguages(models.Model):
     numericlanguageid = models.IntegerField(primary_key=True, db_column='numericLanguageID') # Field name made lowercase.
     languageid = models.CharField(max_length=150, db_column='languageID', blank=True) # Field name made lowercase.
     languagename = models.CharField(max_length=600, db_column='languageName', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'trnTranslationLanguages'
+        db_table = 'trnTranslationLanguages'
 
 class Trntranslations(models.Model):
     tcid = models.IntegerField(primary_key=True, db_column='tcID') # Field name made lowercase.
@@ -862,13 +862,13 @@ class Trntranslations(models.Model):
     languageid = models.CharField(max_length=150, primary_key=True, db_column='languageID') # Field name made lowercase.
     text = models.TextField(blank=True)
     class Meta:
-        db_table = u'trnTranslations'
+        db_table = 'trnTranslations'
 
 class Warcombatzonesystems(models.Model):
     solarsystemid = models.IntegerField(primary_key=True, db_column='solarSystemID') # Field name made lowercase.
     combatzoneid = models.IntegerField(null=True, db_column='combatZoneID', blank=True) # Field name made lowercase.
     class Meta:
-        db_table = u'warCombatZoneSystems'
+        db_table = 'warCombatZoneSystems'
 
 class Warcombatzones(models.Model):
     combatzoneid = models.IntegerField(primary_key=True, db_column='combatZoneID') # Field name made lowercase.
@@ -877,4 +877,4 @@ class Warcombatzones(models.Model):
     centersystemid = models.IntegerField(null=True, db_column='centerSystemID', blank=True) # Field name made lowercase.
     description = models.CharField(max_length=1500, blank=True)
     class Meta:
-        db_table = u'warCombatZones'
+        db_table = 'warCombatZones'

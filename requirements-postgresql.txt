@@ -1,6 +1,5 @@
 Django==1.8.15
 psycopg2==2.5.4
-PyTS3==0.3
 PyYAML==3.12
 amqp==1.4.9
 amqplib==1.0.2
@@ -9,8 +8,6 @@ billiard==3.3.0.23
 celery==3.1.23
 decorator==4.0.10
 django-celery==3.1.17
-git+https://github.com/marbindrakon/django-eveigb
-django-infinite-memcached==0.1
 eveapi==1.2.6
 feedparser==5.2.1
 kombu==3.0.33
